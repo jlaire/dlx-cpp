@@ -21,13 +21,13 @@ struct linked_matrix {
 	std::vector<box *> cols;
 };
 
-linked_matrix *linked_matrix_from_boolean_matrix(const std::vector<std::vector<int>>& matrix) {
+linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int>>& rows) {
 	linked_matrix *lm = new linked_matrix;
 	lm->root = new box;
-	if (matrix.empty()) {
+	if (rows.empty()) {
 		return lm;
 	}
-	unsigned width = matrix[0].size();
+	unsigned width = rows[0].size();
 	lm->cols.resize(width);
 	for (unsigned i = 0; i < width; ++i) {
 		box *col = new box;
@@ -36,8 +36,8 @@ linked_matrix *linked_matrix_from_boolean_matrix(const std::vector<std::vector<i
 		lm->cols[i] = col;
 		lm->root->link_l(col);
 	}
-	for (unsigned i = 0; i < matrix.size(); ++i) {
-		auto& matrix_row = matrix[i];
+	for (unsigned i = 0; i < rows.size(); ++i) {
+		auto& matrix_row = rows[i];
 		if (matrix_row.size() != width) {
 			return nullptr;
 		}
@@ -142,15 +142,15 @@ int solve(linked_matrix *lm) {
 int main() {
 	int width = 0;
 	std::cin >> width;
-	std::vector<std::vector<int>> matrix;
+	std::vector<std::vector<int>> rows;
 	while (std::cin) {
 		std::vector<int> row(width);
 		for (int i = 0; i < width; ++i) {
 			std::cin >> row[i];
 		}
-		matrix.emplace_back(row);
+		rows.emplace_back(row);
 	}
-	linked_matrix *lm = linked_matrix_from_boolean_matrix(matrix);
+	linked_matrix *lm = linked_matrix_from_boolean_rows(rows);
 
 	std::cout << solve(lm) << std::endl;
 }
