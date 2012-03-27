@@ -21,15 +21,15 @@ box *create_box_from_boolean_matrix(const std::vector<std::vector<int>>& matrix)
 	if (matrix.empty()) {
 		return h;
 	}
-	unsigned columns = matrix[0].size();
-	for (unsigned i = 0; i < columns; ++i) {
+	unsigned width = matrix[0].size();
+	for (unsigned i = 0; i < width; ++i) {
 		box *col = new box;
 		col->val = 0;
 		h->link_l(col);
 	}
 	for (unsigned i = 0; i < matrix.size(); ++i) {
 		auto& matrix_row = matrix[i];
-		if (matrix_row.size() != columns) {
+		if (matrix_row.size() != width) {
 			return nullptr;
 		}
 		box *row = new box;
