@@ -3,29 +3,38 @@
 #include <vector>
 
 struct box {
-	int val; // size for columns, row index for cells
-	box *l, *r, *u, *d, *col;
+	int x, y, size;
+	box *l, *r, *u, *d;
 	box() {
-		l = r = u = d = col = this;
+		l = r = u = d = this;
 	}
 	void hide_lr() { l->r = r, r->l = l; }
 	void show_lr() { l->r = r->l = this; }
 	void hide_ud() { u->d = d, d->u = u; }
 	void show_ud() { u->d = d->u = this; }
-	void link_l(box *x) { x->r = this, x->l = l; l = l->r = x; }
-	void link_u(box *x) { x->d = this, x->u = u; u = u->d = x; }
+	void link_l(box *b) { b->r = this, b->l = l; l = l->r = b; }
+	void link_u(box *b) { b->d = this, b->u = u; u = u->d = b; }
 };
 
-box *create_box_from_boolean_matrix(const std::vector<std::vector<int>>& matrix) {
-	box* h = new box;
+struct linked_matrix {
+	box *root;
+	std::vector<box *> cols;
+};
+
+linked_matrix *linked_matrix_from_boolean_matrix(const std::vector<std::vector<int>>& matrix) {
+	linked_matrix *lm = new linked_matrix;
+	lm->root = new box;
 	if (matrix.empty()) {
-		return h;
+		return lm;
 	}
 	unsigned width = matrix[0].size();
+	lm->cols.resize(width);
 	for (unsigned i = 0; i < width; ++i) {
 		box *col = new box;
-		col->val = 0;
-		h->link_l(col);
+		col->size = 0;
+		col->x = i;
+		lm->cols[i] = col;
+		lm->root->link_l(col);
 	}
 	for (unsigned i = 0; i < matrix.size(); ++i) {
 		auto& matrix_row = matrix[i];
@@ -33,57 +42,58 @@ box *create_box_from_boolean_matrix(const std::vector<std::vector<int>>& matrix)
 			return nullptr;
 		}
 		box *row = new box;
-		box *col = h;
-		for (int x : matrix_row) {
+		box *col = lm->root;
+		for (unsigned j = 0; j < width; ++j) {
 			col = col->r;
-			if (x == 0) {
+			if (matrix_row[j] == 0) {
 				continue;
 			}
 			box *cell = new box;
-			cell->val = i;
-			cell->col = col;
+			cell->x = j;
+			cell->y = i;
 			col->link_u(cell);
-			++col->val;
+			++col->size;
 			row->link_l(cell);
 		}
 		row->hide_lr();
 		delete row;
 	}
-	return h;
+	return lm;
 }
 
 void dump(box *root) {
 	std::cout << "dump" << std::endl;
 	for (box *col = root->r; col != root; col = col->r) {
 		for (box *cell = col->d; cell != col; cell = cell->d) {
-			std::cout << " " << cell->val;
+			std::cout << " " << cell->y;
 		}
+		std::cout << " (" << col->size << ")";
 		std::cout << std::endl;
 	}
 }
 
-static void cover_column(box *col) {
+static void cover_column(linked_matrix *lm, box *col) {
 	col->hide_lr();
 	for (box *row = col->d; row != col; row = row->d) {
 		for (box *cell = row->r; cell != row; cell = cell->r) {
 			cell->hide_ud();
-			--cell->col->val;
+			--lm->cols[cell->x]->size;
 		}
 	}
 }
 
-static void uncover_column(box *col) {
+static void uncover_column(linked_matrix *lm, box *col) {
 	for (box *row = col->u; row != col; row = row->u) {
 		for (box *cell = row->l; cell != row; cell = cell->l) {
 			cell->show_ud();
-			++cell->col->val;
+			++lm->cols[cell->x]->size;
 		}
 	}
 	col->show_lr();
 }
 
-void dlx(box *root, std::vector<int>& stack, std::vector<std::vector<int>>& solutions) {
-	if (root->r == root) {
+void dlx(linked_matrix *lm, std::vector<int>& stack, std::vector<std::vector<int>>& solutions) {
+	if (lm->root->r == lm->root) {
 		bool first = true;
 		for (int row : stack) {
 			if (!first) {
@@ -96,36 +106,36 @@ void dlx(box *root, std::vector<int>& stack, std::vector<std::vector<int>>& solu
 		solutions.push_back(stack);
 		return;
 	}
-	box *col = root->r;
-	int min_size = col->val;
-	for (box *c = col->r; c != root; c = c->r) {
-		if (c->val < min_size) {
-			min_size = c->val;
+	box *col = lm->root->r;
+	int min_size = col->size;
+	for (box *c = col->r; c != lm->root; c = c->r) {
+		if (c->size < min_size) {
+			min_size = c->size;
 			col = c;
 		}
 	}
 	if (min_size < 1) {
 		return;
 	}
-	cover_column(col);
+	cover_column(lm, col);
 	for (box *row = col->d; row != col; row = row->d) {
-		stack.push_back(row->val);
+		stack.push_back(row->y);
 		for (box *cell = row->r; cell != row; cell = cell->r) {
-			cover_column(cell->col);
+			cover_column(lm, lm->cols[cell->x]);
 		}
-		dlx(root, stack, solutions);
+		dlx(lm, stack, solutions);
 		for (box *cell = row->l; cell != row; cell = cell->l) {
-			uncover_column(cell->col);
+			uncover_column(lm, lm->cols[cell->x]);
 		}
 		stack.pop_back();
 	}
-	uncover_column(col);
+	uncover_column(lm, col);
 }
 
-int solve(box *root) {
+int solve(linked_matrix *lm) {
 	std::vector<int> stack;
 	std::vector<std::vector<int>> solutions;
-	dlx(root, stack, solutions);
+	dlx(lm, stack, solutions);
 	return solutions.size();
 }
 
@@ -140,7 +150,7 @@ int main() {
 		}
 		matrix.emplace_back(row);
 	}
-	box *root = create_box_from_boolean_matrix(matrix);
+	linked_matrix *lm = linked_matrix_from_boolean_matrix(matrix);
 
-	std::cout << solve(root) << std::endl;
+	std::cout << solve(lm) << std::endl;
 }
