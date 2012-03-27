@@ -131,14 +131,14 @@ int solve(box *root) {
 
 int main() {
 	int width = 0;
-	int height = 0;
-	std::cin >> width >> height;
-	std::vector<std::vector<int>> matrix(height);
-	for (int i = 0; i < height; ++i) {
-		matrix[i].resize(width);
-		for (int j = 0; j < width; ++j) {
-			std::cin >> matrix[i][j];
+	std::cin >> width;
+	std::vector<std::vector<int>> matrix;
+	while (std::cin) {
+		std::vector<int> row(width);
+		for (int i = 0; i < width; ++i) {
+			std::cin >> row[i];
 		}
+		matrix.emplace_back(row);
 	}
 	box *root = create_box_from_boolean_matrix(matrix);
 
