@@ -62,6 +62,7 @@ uint64_t solve(linked_matrix *lm) {
 }
 
 uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
+	static uint64_t counter;
 	if (lm->root->r == lm->root) {
 		if (opt_print_solutions) {
 			bool first = true;
@@ -73,6 +74,10 @@ uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 				std::cout << row;
 			}
 			std::cout << std::endl;
+		}
+		++counter;
+		if ((counter & (counter - 1)) == 0) {
+			std::cerr << "solutions found: " << counter << std::endl;
 		}
 		return 1;
 	}
