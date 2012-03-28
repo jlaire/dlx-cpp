@@ -12,28 +12,39 @@ uint64_t solve(linked_matrix *lm);
 uint64_t dlx(linked_matrix *lm, std::vector<int>& stack);
 void cover_column(linked_matrix *lm, box *col);
 void uncover_column(linked_matrix *lm, box *col);
+void print_vector(const std::vector<int>& xs);
+void print_solution(const std::vector<int>& rows);
 
 bool opt_print_solutions;
+bool opt_verbose;
+std::vector<std::vector<int>> input_rows;
 
 int main(int argc, char *argv[]) {
-	switch (getopt(argc, argv, "p")) {
-		case 'p':
-			opt_print_solutions = true;
-			break;
+	for (;;) {
+		switch (getopt(argc, argv, "pv")) {
+			case -1:
+				goto getopt_done;
+			case 'p':
+				opt_print_solutions = true;
+				break;
+			case 'v':
+				opt_verbose = true;
+				break;
+		}
 	}
+	getopt_done:
 
 	unsigned width = 0;
 	unsigned secondary_columns = 0;
 	std::cin >> width >> secondary_columns;
-	std::vector<std::vector<int>> rows;
 	while (std::cin) {
 		std::vector<int> row(width);
 		for (unsigned i = 0; i < width; ++i) {
 			std::cin >> row[i];
 		}
-		rows.emplace_back(row);
+		input_rows.emplace_back(row);
 	}
-	linked_matrix *lm = linked_matrix_from_boolean_rows(rows, secondary_columns);
+	linked_matrix *lm = linked_matrix_from_boolean_rows(input_rows, secondary_columns);
 
 	std::cout << solve(lm) << std::endl;
 }
@@ -66,15 +77,7 @@ uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 	static uint64_t counter;
 	if (lm->root->r == lm->root) {
 		if (opt_print_solutions) {
-			bool first = true;
-			for (int row : stack) {
-				if (!first) {
-					std::cout << " ";
-				}
-				first = false;
-				std::cout << row;
-			}
-			std::cout << std::endl;
+			print_solution(stack);
 		}
 		++counter;
 		if ((counter & (counter - 1)) == 0) {
@@ -158,6 +161,30 @@ void dump(box *root) {
 		}
 		std::cout << " (" << col->size << ")";
 		std::cout << std::endl;
+	}
+}
+
+void print_vector(const std::vector<int>& xs) {
+	bool first = true;
+	for (int x : xs) {
+		if (!first) {
+			std::cout << " ";
+		}
+		first = false;
+		std::cout << x;
+	}
+	std::cout << std::endl;
+}
+
+void print_solution(const std::vector<int>& row_indices) {
+	if (opt_verbose) {
+		for (int i : row_indices) {
+			print_vector(input_rows[i]);
+		}
+		std::cout << std::endl;
+	}
+	else {
+		print_vector(row_indices);
 	}
 }
 
