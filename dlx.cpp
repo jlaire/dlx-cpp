@@ -7,7 +7,7 @@
 struct box;
 struct linked_matrix;
 
-linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int>>& rows);
+linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int>>& rows, unsigned secondary = 0);
 uint64_t solve(linked_matrix *lm);
 uint64_t dlx(linked_matrix *lm, std::vector<int>& stack);
 static void cover_column(linked_matrix *lm, box *col);
@@ -22,17 +22,18 @@ int main(int argc, char *argv[]) {
 			break;
 	}
 
-	int width = 0;
-	std::cin >> width;
+	unsigned width = 0;
+	unsigned secondary_columns = 0;
+	std::cin >> width >> secondary_columns;
 	std::vector<std::vector<int>> rows;
 	while (std::cin) {
 		std::vector<int> row(width);
-		for (int i = 0; i < width; ++i) {
+		for (unsigned i = 0; i < width; ++i) {
 			std::cin >> row[i];
 		}
 		rows.emplace_back(row);
 	}
-	linked_matrix *lm = linked_matrix_from_boolean_rows(rows);
+	linked_matrix *lm = linked_matrix_from_boolean_rows(rows, secondary_columns);
 
 	std::cout << solve(lm) << std::endl;
 }
@@ -53,6 +54,7 @@ struct box {
 
 struct linked_matrix {
 	box *root;
+	box *root2;
 	std::vector<box *> cols;
 };
 
@@ -63,7 +65,11 @@ uint64_t solve(linked_matrix *lm) {
 
 uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 	static uint64_t counter;
-	if (lm->root->r == lm->root) {
+	uint64_t solutions = 0;
+	box *col = lm->root->r;
+	box *root = lm->root;
+	if (col == root) {
+		solutions = 1;
 		if (opt_print_solutions) {
 			bool first = true;
 			for (int row : stack) {
@@ -79,20 +85,22 @@ uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 		if ((counter & (counter - 1)) == 0) {
 			std::cerr << "solutions found: " << counter << std::endl;
 		}
-		return 1;
+		col = lm->root2->r;
+		root = lm->root2;
+		if (col == root) {
+			return solutions;
+		}
 	}
-	box *col = lm->root->r;
 	int min_size = col->size;
-	for (box *c = col->r; c != lm->root; c = c->r) {
+	for (box *c = col->r; c != root; c = c->r) {
 		if (c->size < min_size) {
 			min_size = c->size;
 			col = c;
 		}
 	}
 	if (min_size < 1) {
-		return 0;
+		return solutions;
 	}
-	uint64_t solutions = 0;
 	cover_column(lm, col);
 	for (box *row = col->d; row != col; row = row->d) {
 		stack.push_back(row->y);
@@ -109,9 +117,10 @@ uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 	return solutions;
 }
 
-linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int>>& rows) {
+linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int>>& rows, unsigned secondary) {
 	linked_matrix *lm = new linked_matrix;
 	lm->root = new box;
+	lm->root2 = new box;
 	if (rows.empty()) {
 		return lm;
 	}
@@ -122,7 +131,12 @@ linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int
 		col->size = 0;
 		col->x = i;
 		lm->cols[i] = col;
-		lm->root->link_l(col);
+		if (i < secondary) {
+			lm->root2->link_l(col);
+		}
+		else {
+			lm->root->link_l(col);
+		}
 	}
 	for (unsigned i = 0; i < rows.size(); ++i) {
 		auto& matrix_row = rows[i];

@@ -33,8 +33,9 @@ for my $c ('a' .. 'w') {
 }
 
 my $mode = shift // 'gen';
+my $secondaries = shift // 0;
 if ($mode eq 'gen') {
-	print scalar(@points) . "\n";
+	print scalar(@points) . " $secondaries \n";
 	print "$rows{$_}\n" for sort keys %rows;
 }
 elsif ($mode eq 'decode') {
