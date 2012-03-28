@@ -15,18 +15,35 @@ for my $p (0 .. $#names) {
 	$p{$_} = $points[$p] for @{$names[$p]};
 }
 
-print scalar(@points) . "\n";
 my %groove_size = map { $_ => 1 } 'a' .. 'w';
 for (map @$_, @grooves) {
 	/(\w)(\d)/ or next;
 	$groove_size{$1} = $2 if $2 > $groove_size{$1};
 }
+my %rows;
 for my $c ('a' .. 'w') {
 	my $s = $groove_size{$c};
 	for my $l (2 .. 3) {
 		for (1 .. $s-$l+1) {
 			my %ps = map { $p{$c . $_} => 1 } $_ .. $_+$l-1;
-			print join(" ", map { $ps{$_} // 0 } @points) . "\n";
+			my $name = $c . join "", $_ .. $_+$l-1;
+			$rows{$name} = join " ", map { $ps{$_} // 0 } @points;
 		}
 	}
+}
+
+my $mode = shift // 'gen';
+if ($mode eq 'gen') {
+	print scalar(@points) . "\n";
+	print "$rows{$_}\n" for sort keys %rows;
+}
+elsif ($mode eq 'decode') {
+	my @row_names = sort keys %rows;
+	while (<STDIN>) {
+		print join(" ", map $row_names[$_] // $_, grep /\S/, split /\s+/) . "\n";
+	}
+}
+else {
+	print "unknown mode: $mode\n";
+	exit 1;
 }
