@@ -2,6 +2,9 @@
 use warnings FATAL => 'all';
 use strict;
 
+my $mode = shift // 'gen';
+my $full = $mode eq 'genfull';
+
 my @points = map "P$_", grep /\S/, split /\s+/, `cat points.txt`;
 my @grooves = map [grep /\S/, split /\s+/], split /\n\n/, `cat grooves.txt`;
 
@@ -23,7 +26,7 @@ for (map @$_, @grooves) {
 my %rows;
 for my $c ('a' .. 'w') {
 	my $s = $groove_size{$c};
-	for my $l (2 .. 3) {
+	for my $l (($full ? 1 : 2) .. 3) {
 		for (1 .. $s-$l+1) {
 			my %ps = map { $p{$c . $_} => 1 } $_ .. $_+$l-1;
 			my $name = $c . join "", $_ .. $_+$l-1;
@@ -32,10 +35,8 @@ for my $c ('a' .. 'w') {
 	}
 }
 
-my $mode = shift // 'gen';
-my $secondaries = shift // 0;
 if ($mode eq 'gen') {
-	print scalar(@points) . " $secondaries \n";
+	print scalar(@points) . " 0 \n";
 	print "$rows{$_}\n" for sort keys %rows;
 }
 elsif ($mode eq 'decode') {

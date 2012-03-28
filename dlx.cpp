@@ -54,7 +54,6 @@ struct box {
 
 struct linked_matrix {
 	box *root;
-	box *root2;
 	std::vector<box *> cols;
 };
 
@@ -65,11 +64,7 @@ uint64_t solve(linked_matrix *lm) {
 
 uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 	static uint64_t counter;
-	uint64_t solutions = 0;
-	box *col = lm->root->r;
-	box *root = lm->root;
-	if (col == root) {
-		solutions = 1;
+	if (lm->root->r == lm->root) {
 		if (opt_print_solutions) {
 			bool first = true;
 			for (int row : stack) {
@@ -85,22 +80,20 @@ uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 		if ((counter & (counter - 1)) == 0) {
 			std::cerr << "solutions found: " << counter << std::endl;
 		}
-		col = lm->root2->r;
-		root = lm->root2;
-		if (col == root) {
-			return solutions;
-		}
+		return 1;
 	}
+	box *col = lm->root->r;
 	int min_size = col->size;
-	for (box *c = col->r; c != root; c = c->r) {
+	for (box *c = col->r; c != lm->root; c = c->r) {
 		if (c->size < min_size) {
 			min_size = c->size;
 			col = c;
 		}
 	}
 	if (min_size < 1) {
-		return solutions;
+		return 0;
 	}
+	uint64_t solutions = 0;
 	cover_column(lm, col);
 	for (box *row = col->d; row != col; row = row->d) {
 		stack.push_back(row->y);
@@ -120,7 +113,6 @@ uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int>>& rows, unsigned secondary) {
 	linked_matrix *lm = new linked_matrix;
 	lm->root = new box;
-	lm->root2 = new box;
 	if (rows.empty()) {
 		return lm;
 	}
@@ -131,10 +123,7 @@ linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int
 		col->size = 0;
 		col->x = i;
 		lm->cols[i] = col;
-		if (i < secondary) {
-			lm->root2->link_l(col);
-		}
-		else {
+		if (i >= secondary) {
 			lm->root->link_l(col);
 		}
 	}
