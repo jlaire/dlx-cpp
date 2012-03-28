@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <stdint.h>
 
 struct box {
 	int x, y, size;
@@ -92,7 +93,7 @@ static void uncover_column(linked_matrix *lm, box *col) {
 	col->show_lr();
 }
 
-void dlx(linked_matrix *lm, std::vector<int>& stack, std::vector<std::vector<int>>& solutions) {
+uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 	if (lm->root->r == lm->root) {
 		bool first = true;
 		for (int row : stack) {
@@ -103,8 +104,7 @@ void dlx(linked_matrix *lm, std::vector<int>& stack, std::vector<std::vector<int
 			std::cout << row;
 		}
 		std::cout << std::endl;
-		solutions.push_back(stack);
-		return;
+		return 1;
 	}
 	box *col = lm->root->r;
 	int min_size = col->size;
@@ -115,28 +115,28 @@ void dlx(linked_matrix *lm, std::vector<int>& stack, std::vector<std::vector<int
 		}
 	}
 	if (min_size < 1) {
-		return;
+		return 0;
 	}
+	uint64_t solutions = 0;
 	cover_column(lm, col);
 	for (box *row = col->d; row != col; row = row->d) {
 		stack.push_back(row->y);
 		for (box *cell = row->r; cell != row; cell = cell->r) {
 			cover_column(lm, lm->cols[cell->x]);
 		}
-		dlx(lm, stack, solutions);
+		solutions += dlx(lm, stack);
 		for (box *cell = row->l; cell != row; cell = cell->l) {
 			uncover_column(lm, lm->cols[cell->x]);
 		}
 		stack.pop_back();
 	}
 	uncover_column(lm, col);
+	return solutions;
 }
 
-int solve(linked_matrix *lm) {
+uint64_t solve(linked_matrix *lm) {
 	std::vector<int> stack;
-	std::vector<std::vector<int>> solutions;
-	dlx(lm, stack, solutions);
-	return solutions.size();
+	return dlx(lm, stack);
 }
 
 int main() {
