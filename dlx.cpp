@@ -130,17 +130,15 @@ linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int
 			return nullptr;
 		}
 		box *row = new box;
-		box *col = lm->root;
 		for (unsigned j = 0; j < width; ++j) {
-			col = col->r;
 			if (matrix_row[j] == 0) {
 				continue;
 			}
 			box *cell = new box;
 			cell->x = j;
 			cell->y = i;
-			col->link_u(cell);
-			++col->size;
+			lm->cols[j]->link_u(cell);
+			++lm->cols[j]->size;
 			row->link_l(cell);
 		}
 		row->hide_lr();
