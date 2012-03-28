@@ -153,17 +153,6 @@ linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int
 	return lm;
 }
 
-void dump(box *root) {
-	std::cout << "dump" << std::endl;
-	for (box *col = root->r; col != root; col = col->r) {
-		for (box *cell = col->d; cell != col; cell = cell->d) {
-			std::cout << " " << cell->y;
-		}
-		std::cout << " (" << col->size << ")";
-		std::cout << std::endl;
-	}
-}
-
 void print_vector(const std::vector<int>& xs) {
 	bool first = true;
 	for (int x : xs) {
