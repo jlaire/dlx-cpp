@@ -10,8 +10,8 @@ struct linked_matrix;
 linked_matrix *linked_matrix_from_boolean_rows(const std::vector<std::vector<int>>& rows, unsigned secondary = 0);
 uint64_t solve(linked_matrix *lm);
 uint64_t dlx(linked_matrix *lm, std::vector<int>& stack);
-static void cover_column(linked_matrix *lm, box *col);
-static void uncover_column(linked_matrix *lm, box *col);
+void cover_column(linked_matrix *lm, box *col);
+void uncover_column(linked_matrix *lm, box *col);
 
 bool opt_print_solutions;
 
@@ -161,7 +161,7 @@ void dump(box *root) {
 	}
 }
 
-static void cover_column(linked_matrix *lm, box *col) {
+void cover_column(linked_matrix *lm, box *col) {
 	col->hide_lr();
 	for (box *row = col->d; row != col; row = row->d) {
 		for (box *cell = row->r; cell != row; cell = cell->r) {
@@ -171,7 +171,7 @@ static void cover_column(linked_matrix *lm, box *col) {
 	}
 }
 
-static void uncover_column(linked_matrix *lm, box *col) {
+void uncover_column(linked_matrix *lm, box *col) {
 	for (box *row = col->u; row != col; row = row->u) {
 		for (box *cell = row->l; cell != row; cell = cell->l) {
 			cell->show_ud();
