@@ -2,6 +2,9 @@
 #include <unordered_map>
 #include <vector>
 #include <stdint.h>
+#include <unistd.h>
+
+bool opt_print_solutions;
 
 struct box {
 	int x, y, size;
@@ -95,15 +98,17 @@ static void uncover_column(linked_matrix *lm, box *col) {
 
 uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 	if (lm->root->r == lm->root) {
-		bool first = true;
-		for (int row : stack) {
-			if (!first) {
-				std::cout << " ";
+		if (opt_print_solutions) {
+			bool first = true;
+			for (int row : stack) {
+				if (!first) {
+					std::cout << " ";
+				}
+				first = false;
+				std::cout << row;
 			}
-			first = false;
-			std::cout << row;
+			std::cout << std::endl;
 		}
-		std::cout << std::endl;
 		return 1;
 	}
 	box *col = lm->root->r;
@@ -139,7 +144,13 @@ uint64_t solve(linked_matrix *lm) {
 	return dlx(lm, stack);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+	switch (getopt(argc, argv, "p")) {
+		case 'p':
+			opt_print_solutions = true;
+			break;
+	}
+
 	int width = 0;
 	std::cin >> width;
 	std::vector<std::vector<int>> rows;
