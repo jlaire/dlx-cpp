@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 	}
 	linked_matrix *lm = linked_matrix_from_boolean_rows(input_rows, secondary_columns);
 
-	std::cout << solve(lm) << std::endl;
+	std::cout << "solutions: " << solve(lm) << std::endl;
 }
 
 struct box {
