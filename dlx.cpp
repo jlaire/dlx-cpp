@@ -80,7 +80,7 @@ uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 		}
 		++counter;
 		if ((counter & (counter - 1)) == 0) {
-			std::cerr << "solutions found: " << counter << std::endl;
+			std::cerr << "... solutions found: " << counter << std::endl;
 		}
 		return 1;
 	}
