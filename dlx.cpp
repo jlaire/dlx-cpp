@@ -21,11 +21,12 @@ void print_solution(const std::vector<int>& rows);
 bool opt_print_solutions;
 bool opt_verbose;
 bool opt_sparse;
+bool opt_running_count;
 std::vector<std::vector<int>> input_rows;
 
 int main(int argc, char *argv[]) {
 	for (;;) {
-		switch (getopt(argc, argv, "pvs")) {
+		switch (getopt(argc, argv, "pvsr")) {
 			case -1:
 				goto getopt_done;
 			case 'p':
@@ -36,6 +37,9 @@ int main(int argc, char *argv[]) {
 				break;
 			case 's':
 				opt_sparse = true;
+				break;
+			case 'r':
+				opt_running_count = true;
 				break;
 		}
 	}
@@ -113,9 +117,11 @@ uint64_t dlx(linked_matrix *lm, std::vector<int>& stack) {
 		if (opt_print_solutions) {
 			print_solution(stack);
 		}
-		++counter;
-		if ((counter & (counter - 1)) == 0) {
-			std::cerr << "... solutions found: " << counter << std::endl;
+		if (opt_running_count) {
+			++counter;
+			if ((counter & (counter - 1)) == 0) {
+				std::cerr << "... solutions found: " << counter << std::endl;
+			}
 		}
 		return 1;
 	}
