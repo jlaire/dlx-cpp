@@ -13,12 +13,12 @@ open IN, '<', $spec or die $!;
 my @cols = sort grep /\S/, split /\s+/, <IN>;
 my @rows = map [grep /\S/, split /\s+/], <IN>;
 my @row_names = map { shift @$_ } @rows;
+my %col_names = map { $cols[$_] => $_ } 0 .. $#cols;
 
 if ($action eq 'in') {
 	say scalar(@cols) . " 0";
-	for my $i (0 .. $#rows) {
-		my %row = map { $_ => 1 } @{$rows[$i]};
-		say join " ", map { $row{$_} // 0 } @cols;
+	for (@rows) {
+		say join " ", map $col_names{$_}, @$_;
 	}
 }
 elsif ($action eq 'out') {
