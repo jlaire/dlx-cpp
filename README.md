@@ -38,6 +38,4 @@ TODO
 
   - Plain pointers and new are used, and I'm not even trying to clean up.
 
-  - Sparse input format.
-
   - Examples.
