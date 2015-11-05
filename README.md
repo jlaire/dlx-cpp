@@ -44,7 +44,7 @@ Sudoku example
 ==============
 
 Some interesting problems are just exact cover in disguise. Sudoku for example.
-To solve a Sudoku puzzle using `dlx`, you can a small wrapper script:
+You can solve Sudokus using `dlx` with a happy little wrapper script:
 
     $ ./sudoku.sh sudoku/in.1
     846937152
