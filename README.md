@@ -1,27 +1,19 @@
 Minimal C++ implementation of Knuth's Dancing Links algorithm.
 
-dlx reads from stdin and prints to stdout. First line of input should contain
-two integers, the number of columns and the number of secondary columns. For
+`dlx' reads from stdin and prints to stdout. First line of input should contain
+two integers: the number of columns and the number of secondary columns. For
 normal exact cover problems, the second number is 0. If it's positive, the
 leftmost columns are the secondary ones.
 
-The rest of input contains the matrix.
+The rest of the input contains the matrix.
 
 Output can be controlled by flags. By default, only the number of solutions is
 printed. If -p is given, every solution is printed on its own line by giving
-the rows' indices. With -v, the full rows are printed and solutions are
-separated by two newlines.
+the indices of the selected rows. With -v, the full rows are printed and
+solutions are separated by two newlines.
 
     $ make
     g++ -std=c++0x -Wall -o dlx dlx.cpp
-    $ cat knuth-example.in
-    7 0
-    0 0 1 0 1 1 0
-    1 0 0 1 0 0 1
-    0 1 1 0 0 1 0
-    1 0 0 1 0 0 0
-    0 1 0 0 0 0 1
-    0 0 0 1 1 0 1
     $ ./dlx < knuth-example.in
     solutions: 1
     $ ./dlx -p < knuth-example.in
@@ -36,14 +28,6 @@ separated by two newlines.
 
 Input can also be given as a sparse matrix.
 
-    $ cat knuth-example-sparse.in 
-    7 0
-    2 4 5
-    0 3 6
-    1 2 5
-    0 3
-    1 6
-    3 4 6
     $ ./dlx -s < knuth-example-sparse.in
     solutions: 1
     $ ./dlx -ps < knuth-example-sparse.in 
@@ -56,9 +40,26 @@ Input can also be given as a sparse matrix.
 
     solutions: 1
 
+Sudoku example
+==============
+
+Some interesting problems are just exact cover in disguise. Sudoku for example.
+To solve a Sudoku puzzle using `dlx', you can a small wrapper script:
+
+    $ ./sudoku.sh sudoku/in.1
+    846937152
+    319625847
+    752184963
+    285713694
+    463859271
+    971246385
+    127598436
+    638471529
+    594362718
+
 TODO
 ====
 
-  - Plain pointers and new are used, and I'm not even trying to clean up.
+  - Clean up the code, it's awful.
 
-  - Examples.
+  - More examples would be nice.
