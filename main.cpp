@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
       input_rows.emplace_back(row);
     }
   }
-  linked_matrix *lm;
+  std::unique_ptr<linked_matrix> lm;
   if (opt_sparse) {
     lm = linked_matrix::from_sparse_matrix(input_rows, secondary_columns);
   }
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     }
   };
 
-  dlx solver(lm, print);
+  dlx solver(std::move(lm), print);
   solver.solve();
   std::cout << "solutions: " << solution_count << '\n';
 }

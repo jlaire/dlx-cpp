@@ -2,10 +2,10 @@
 
 #include <algorithm>
 
-linked_matrix *linked_matrix::from_boolean_rows(
-    const std::vector<std::vector<unsigned>>& rows, unsigned secondary)
+std::unique_ptr<linked_matrix> linked_matrix::from_boolean_rows(
+    const VectorVector& rows, unsigned secondary)
 {
-  std::vector<std::vector<unsigned>> sparse(rows.size());
+  VectorVector sparse(rows.size());
   for (unsigned i = 0; i < rows.size(); ++i) {
     for (unsigned j = 0; j < rows[i].size(); ++j) {
       if (rows[i][j]) {
@@ -13,13 +13,13 @@ linked_matrix *linked_matrix::from_boolean_rows(
       }
     }
   }
-  return linked_matrix::from_sparse_matrix(sparse, secondary, rows[0].size());
+  return from_sparse_matrix(sparse, secondary, rows[0].size());
 }
 
-linked_matrix *linked_matrix::from_sparse_matrix(
-    const std::vector<std::vector<unsigned>>& rows, unsigned secondary, unsigned width)
+std::unique_ptr<linked_matrix> linked_matrix::from_sparse_matrix(
+    const VectorVector& rows, unsigned secondary, unsigned width)
 {
-  linked_matrix *lm = new linked_matrix;
+  std::unique_ptr<linked_matrix> lm{new linked_matrix};
   lm->root = new box;
   if (rows.empty()) {
     return lm;

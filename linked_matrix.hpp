@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 struct box {
@@ -17,11 +18,13 @@ struct box {
 };
 
 struct linked_matrix {
+  using VectorVector = std::vector<std::vector<unsigned>>;
+
   box *root;
   std::vector<box *> cols;
 
-  static linked_matrix *from_boolean_rows(const std::vector<std::vector<unsigned>>& rows, unsigned secondary);
-  static linked_matrix *from_sparse_matrix(const std::vector<std::vector<unsigned>>& rows, unsigned secondary, unsigned width = 0);
+  static std::unique_ptr<linked_matrix> from_boolean_rows(const VectorVector& rows, unsigned secondary);
+  static std::unique_ptr<linked_matrix> from_sparse_matrix(const VectorVector& rows, unsigned secondary, unsigned width = 0);
 
   void cover_column(box *col);
   void uncover_column(box *col);

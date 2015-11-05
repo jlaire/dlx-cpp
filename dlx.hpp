@@ -9,15 +9,15 @@ struct dlx {
   using SolutionHandler = std::function<void(const std::vector<unsigned>&)>;
   bool print_running_count = false;
 
-  explicit dlx(linked_matrix *lm, SolutionHandler sh)
-    : lm(lm), solution_handler(std::move(sh))
+  explicit dlx(std::unique_ptr<linked_matrix>&& lm, SolutionHandler sh)
+    : lm(std::move(lm)), solution_handler(std::move(sh))
   {
   }
 
   void solve();
 
 private:
-  linked_matrix *lm;
+  std::unique_ptr<linked_matrix> lm;
   SolutionHandler solution_handler;
   std::vector<unsigned> stack;
 };
