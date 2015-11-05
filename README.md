@@ -1,6 +1,6 @@
 Minimal C++ implementation of Knuth's Dancing Links algorithm.
 
-`dlx' reads from stdin and prints to stdout. First line of input should contain
+`dlx` reads from stdin and prints to stdout. First line of input should contain
 two integers: the number of columns and the number of secondary columns. For
 normal exact cover problems, the second number is 0. If it's positive, the
 leftmost columns are the secondary ones.
@@ -44,7 +44,7 @@ Sudoku example
 ==============
 
 Some interesting problems are just exact cover in disguise. Sudoku for example.
-To solve a Sudoku puzzle using `dlx', you can a small wrapper script:
+To solve a Sudoku puzzle using `dlx`, you can a small wrapper script:
 
     $ ./sudoku.sh sudoku/in.1
     846937152
