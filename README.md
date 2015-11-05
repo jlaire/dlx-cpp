@@ -60,6 +60,6 @@ To solve a Sudoku puzzle using `dlx', you can a small wrapper script:
 TODO
 ====
 
-  - Clean up the code, it's awful.
+  - Get rid of them raw pointers.
 
   - More examples would be nice.
