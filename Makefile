@@ -1,2 +1,2 @@
 all:
-	g++ -std=c++0x -Wall -o dlx dlx.cpp
+	g++ -std=c++11 -pedantic -Wall -O2 -o dlx *.cpp
