@@ -6,7 +6,7 @@
 #include <functional>
 
 struct dlx {
-  using SolutionHandler = std::function<void(const std::vector<int>&)>;
+  using SolutionHandler = std::function<void(const std::vector<unsigned>&)>;
   bool print_running_count = false;
 
   explicit dlx(linked_matrix *lm, SolutionHandler sh)
@@ -19,5 +19,5 @@ struct dlx {
 private:
   linked_matrix *lm;
   SolutionHandler solution_handler;
-  std::vector<int> stack;
+  std::vector<unsigned> stack;
 };

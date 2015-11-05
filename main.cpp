@@ -10,7 +10,7 @@
 
 namespace {
 
-void print_vector(const std::vector<int>& xs) {
+void print_vector(const std::vector<unsigned>& xs) {
   for (unsigned i = 0; i < xs.size(); ++i) {
     std::cout << xs[i] << " \n"[i == xs.size() - 1];
   }
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
   bool opt_verbose = false;
   bool opt_sparse = false;
   bool opt_running_count = false;
-  std::vector<std::vector<int>> input_rows;
+  std::vector<std::vector<unsigned>> input_rows;
 
   for (int opt; (opt = getopt(argc, argv, "pvsr")) != -1;) {
     switch (opt) {
@@ -40,6 +40,9 @@ int main(int argc, char *argv[]) {
     case 'r':
       opt_running_count = true;
       break;
+    default:
+      std::cerr << "Bug in getopt loop! Unexpected char: " << opt << '\n';
+      return 1;
     }
   }
 
@@ -51,23 +54,20 @@ int main(int argc, char *argv[]) {
     std::istringstream ss(line);
     ss >> width >> secondary_columns;
   }
-  while (std::cin) {
-    std::string line;
-    std::getline(std::cin, line);
+  for (std::string line; std::getline(std::cin, line);) {
     std::istringstream ss(line);
 
-    std::vector<int> row;
+    std::vector<unsigned> row;
     if (opt_sparse) {
-      unsigned x;
-      while (ss >> x) {
+      for (unsigned x; ss >> x;) {
         row.push_back(x);
       }
       std::sort(row.begin(), row.end());
     }
     else {
       row.resize(width);
-      for (unsigned i = 0; i < width; ++i) {
-        ss >> row[i];
+      for (unsigned& x : row) {
+        ss >> x;
       }
     }
     if (!row.empty()) {
@@ -83,10 +83,10 @@ int main(int argc, char *argv[]) {
   }
 
   uint64_t solution_count = 0;
-  auto print = [&](const std::vector<int>& row_indices) {
+  auto print = [&](const std::vector<unsigned>& row_indices) {
     if (opt_print_solutions) {
       if (opt_verbose) {
-        for (int i : row_indices) {
+        for (unsigned i : row_indices) {
           print_vector(input_rows[i]);
         }
         std::cout << '\n';

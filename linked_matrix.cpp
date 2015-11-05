@@ -1,7 +1,11 @@
 #include "linked_matrix.hpp"
 
-linked_matrix *linked_matrix::from_boolean_rows(const std::vector<std::vector<int>>& rows, unsigned secondary) {
-  std::vector<std::vector<int>> sparse(rows.size());
+#include <algorithm>
+
+linked_matrix *linked_matrix::from_boolean_rows(
+    const std::vector<std::vector<unsigned>>& rows, unsigned secondary)
+{
+  std::vector<std::vector<unsigned>> sparse(rows.size());
   for (unsigned i = 0; i < rows.size(); ++i) {
     for (unsigned j = 0; j < rows[i].size(); ++j) {
       if (rows[i][j]) {
@@ -12,7 +16,9 @@ linked_matrix *linked_matrix::from_boolean_rows(const std::vector<std::vector<in
   return linked_matrix::from_sparse_matrix(sparse, secondary);
 }
 
-linked_matrix *linked_matrix::from_sparse_matrix(const std::vector<std::vector<int>>& rows, unsigned secondary) {
+linked_matrix *linked_matrix::from_sparse_matrix(
+    const std::vector<std::vector<unsigned>>& rows, unsigned secondary)
+{
   linked_matrix *lm = new linked_matrix;
   lm->root = new box;
   if (rows.empty()) {
@@ -21,11 +27,7 @@ linked_matrix *linked_matrix::from_sparse_matrix(const std::vector<std::vector<i
 
   unsigned width = 0;
   for (auto& row : rows) {
-    for (int x : row) {
-      if (x >= (int)width) {
-        width = x + 1;
-      }
-    }
+    width = std::max(width, 1 + *std::max_element(row.begin(), row.end()));
   }
 
   lm->cols.resize(width);
@@ -40,8 +42,8 @@ linked_matrix *linked_matrix::from_sparse_matrix(const std::vector<std::vector<i
   for (unsigned i = 0; i < rows.size(); ++i) {
     auto& xs = rows[i];
     box *row = new box;
-    for (int x : xs) {
-      if (x < 0 || x >= (int)width) {
+    for (unsigned x : xs) {
+      if (x >= width) {
         return nullptr;
       }
       box *cell = new box;
