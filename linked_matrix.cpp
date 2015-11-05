@@ -13,11 +13,11 @@ linked_matrix *linked_matrix::from_boolean_rows(
       }
     }
   }
-  return linked_matrix::from_sparse_matrix(sparse, secondary);
+  return linked_matrix::from_sparse_matrix(sparse, secondary, rows[0].size());
 }
 
 linked_matrix *linked_matrix::from_sparse_matrix(
-    const std::vector<std::vector<unsigned>>& rows, unsigned secondary)
+    const std::vector<std::vector<unsigned>>& rows, unsigned secondary, unsigned width)
 {
   linked_matrix *lm = new linked_matrix;
   lm->root = new box;
@@ -25,9 +25,12 @@ linked_matrix *linked_matrix::from_sparse_matrix(
     return lm;
   }
 
-  unsigned width = 0;
   for (auto& row : rows) {
-    width = std::max(width, 1 + *std::max_element(row.begin(), row.end()));
+    for (unsigned x : row) {
+      if (x + 1 > width) {
+	width = x + 1;
+      }
+    }
   }
 
   lm->cols.resize(width);

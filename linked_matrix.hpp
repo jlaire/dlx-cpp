@@ -21,7 +21,7 @@ struct linked_matrix {
   std::vector<box *> cols;
 
   static linked_matrix *from_boolean_rows(const std::vector<std::vector<unsigned>>& rows, unsigned secondary);
-  static linked_matrix *from_sparse_matrix(const std::vector<std::vector<unsigned>>& rows, unsigned secondary);
+  static linked_matrix *from_sparse_matrix(const std::vector<std::vector<unsigned>>& rows, unsigned secondary, unsigned width = 0);
 
   void cover_column(box *col);
   void uncover_column(box *col);
