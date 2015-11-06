@@ -2,13 +2,6 @@
 
 #include <algorithm>
 
-void Box::hide_lr(linked_matrix& M) { M[l].r = r, M[r].l = l; }
-void Box::show_lr(linked_matrix& M) { M[l].r = M[r].l = id; }
-void Box::hide_ud(linked_matrix& M) { M[u].d = d, M[d].u = u; }
-void Box::show_ud(linked_matrix& M) { M[u].d = M[d].u = id; }
-void Box::link_l(linked_matrix& M, Box& b) { b.r = id, b.l = l; l = M[l].r = b.id; }
-void Box::link_u(linked_matrix& M, Box& b) { b.d = id, b.u = u; u = M[u].d = b.id; }
-
 std::unique_ptr<linked_matrix> linked_matrix::from_boolean_rows(
     const VectorVector& rows, unsigned secondary)
 {
