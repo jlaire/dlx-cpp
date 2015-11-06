@@ -60,6 +60,4 @@ You can solve Sudokus using `dlx` with a happy little wrapper script:
 TODO
 ====
 
-  - Get rid of them raw pointers.
-
-  - More examples would be nice.
+  - C++ Sudoku solver and more examples.
