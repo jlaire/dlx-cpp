@@ -16,7 +16,7 @@ my @row_names = map { shift @$_ } @rows;
 my %col_names = map { $cols[$_] => $_ } 0 .. $#cols;
 
 if ($action eq 'in') {
-	say scalar(@cols) . " 0";
+	say scalar(@cols);
 	for (@rows) {
 		say join " ", map $col_names{$_}, @$_;
 	}

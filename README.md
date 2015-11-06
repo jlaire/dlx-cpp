@@ -1,9 +1,7 @@
 Minimal C++ implementation of Knuth's Dancing Links algorithm.
 
-`dlx` reads from stdin and prints to stdout. First line of input should contain
-two integers: the number of columns and the number of secondary columns. For
-normal exact cover problems, the second number is 0. If it's positive, the
-leftmost columns are the secondary ones.
+`dlx` reads from stdin and prints to stdout. The first line of input should
+contain one integer, the number of columns.
 
 The rest of the input contains the matrix.
 
@@ -39,6 +37,15 @@ Input can also be given as a sparse matrix.
     1 6
 
     solutions: 1
+
+Generalized exact cover
+=======================
+
+`dlx` can also solve generalized exact cover problems. The columns of the
+matrix should be sorted so that all secondary columns are on the left, before
+primary columns. The number of secondary columns can be given on the first line
+of input, after the number of columns. It defaults to zero, i.e., a regular
+exact cover problem.
 
 Sudoku example
 ==============
