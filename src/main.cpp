@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
 
   std::unique_ptr<LinkedMatrix> lm;
   if (opt_sparse) {
-    lm = LinkedMatrix::from_sparse_matrix(input_rows, secondary_columns);
+    lm = LinkedMatrix::from_sparse_matrix(input_rows, secondary_columns, width);
   }
   else {
     lm = LinkedMatrix::from_boolean_rows(input_rows, secondary_columns);
