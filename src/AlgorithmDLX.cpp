@@ -7,17 +7,16 @@ AlgorithmDLX::AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A, SolutionHandler ca
 
 void AlgorithmDLX::search() {
   auto h = A_->root_id();
-  if (A_->R(h) == h) {
+  if (R(h) == h) {
     callback_(stack_);
     return;
   }
 
   unsigned min_size = ~0;
   auto c = h;
-  for (auto j = A_->R(h); j != h; j = A_->R(j)) {
-    unsigned size = A_->S(j);
-    if (size < min_size) {
-      min_size = size;
+  for (auto j = R(h); j != h; j = R(j)) {
+    if (S(j) < min_size) {
+      min_size = S(j);
       c = j;
     }
   }
@@ -25,17 +24,17 @@ void AlgorithmDLX::search() {
     return;
   }
 
-  A_->cover_column(c);
-  for (auto r = A_->D(c); r != c; r = A_->D(r)) {
+  cover_column(c);
+  for (auto r = D(c); r != c; r = D(r)) {
     stack_.push_back(A_->row(r));
-    for (auto j = A_->R(r); j != r; j = A_->R(j)) {
-      A_->cover_column(j);
+    for (auto j = R(r); j != r; j = R(j)) {
+      cover_column(j);
     }
     search();
-    for (auto j = A_->L(r); j != r; j = A_->L(j)) {
-      A_->uncover_column(j);
+    for (auto j = L(r); j != r; j = L(j)) {
+      uncover_column(j);
     }
     stack_.pop_back();
   }
-  A_->uncover_column(c);
+  uncover_column(c);
 }
