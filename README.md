@@ -1,37 +1,42 @@
-Minimal C++ implementation of Knuth's Dancing Links algorithm.
+Dancing Links
+=============
 
-`dlx` reads from stdin and prints to stdout. The first line of input should
-contain one integer, the number of columns.
+This is an efficient C++ implementation of Algorithm DLX from Knuth's *Dancing
+Links* paper for the exact cover problem.
 
-The rest of the input contains the matrix.
+Knuth's paper gives a very readable explanation of the problem, the algorithm,
+and several applications. http://arxiv.org/pdf/cs/0011047v1.pdf
+
+`dlx`
+=====
+
+The executable `dlx` reads an exact cover problem from stdin and solves it. The
+first line should contain one integer, the number of columns, and the following
+lines contain the rows of the matrix.
 
 Output can be controlled by flags. By default, only the number of solutions is
-printed. If -p is given, every solution is printed on its own line by giving
-the indices of the selected rows. With -v, the full rows are printed and
+printed. If `-p` is given, every solution is printed on its own line by giving
+the indices of the selected rows. With `-v`, the full rows are printed and
 solutions are separated by two newlines.
 
     $ make
     g++ -std=c++0x -Wall -o dlx dlx.cpp
-    $ ./dlx < knuth-example.in
+    $ ./dlx < data/knuth_example.txt
     solutions: 1
-    $ ./dlx -p < knuth-example.in
+    $ ./dlx -p < data/knuth_example.txt
     3 0 4
     solutions: 1
-    $ ./dlx -pv < knuth-example.in
+    $ ./dlx -pv < data/knuth_example.txt
     1 0 0 1 0 0 0
     0 0 1 0 1 1 0
     0 1 0 0 0 0 1
 
     solutions: 1
 
-Input can also be given as a sparse matrix.
+With `-s`, input can also be given as a sparse matrix. The output of `-v` will
+also be sparse.
 
-    $ ./dlx -s < knuth-example-sparse.in
-    solutions: 1
-    $ ./dlx -ps < knuth-example-sparse.in 
-    3 0 4
-    solutions: 1
-    $ ./dlx -pvs < knuth-example-sparse.in 
+    $ ./dlx -pvs < data/knuth_example_sparse.txt 
     0 3
     2 4 5
     1 6
@@ -44,16 +49,23 @@ Generalized exact cover
 `dlx` can also solve generalized exact cover problems. The columns of the
 matrix should be sorted so that all secondary columns are on the left, before
 primary columns. The number of secondary columns can be given on the first line
-of input, after the number of columns. It defaults to zero, i.e., a regular
-exact cover problem.
+of input, right after the width of the matrix. It defaults to zero, i.e., a
+regular exact cover problem.
+
+A very trivial example:
+
+    $ ./dlx -pv < data/generalized_example.txt
+    0 1 1
+
+    solutions: 1
 
 Sudoku example
 ==============
 
-Some interesting problems are just exact cover in disguise. Sudoku for example.
+Some interesting problems, such as Sudoku, are just exact cover in disguise.
 You can solve Sudokus using `dlx` with a happy little wrapper script:
 
-    $ ./sudoku.sh sudoku/in.1
+    $ ./scripts/sudoku.sh data/sudoku_1.txt
     846937152
     319625847
     752184963
@@ -67,4 +79,8 @@ You can solve Sudokus using `dlx` with a happy little wrapper script:
 TODO
 ====
 
-  - C++ Sudoku solver and more examples.
+  - Unit tests.
+
+  - C++ implementations of the applications in Knuth's paper.
+
+  - `rm -rf scripts`

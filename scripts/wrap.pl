@@ -16,21 +16,21 @@ my @row_names = map { shift @$_ } @rows;
 my %col_names = map { $cols[$_] => $_ } 0 .. $#cols;
 
 if ($action eq 'in') {
-	say scalar(@cols);
-	for (@rows) {
-		say join " ", map $col_names{$_}, @$_;
-	}
+  say scalar(@cols);
+  for (@rows) {
+    say join " ", map $col_names{$_}, @$_;
+  }
 }
 elsif ($action eq 'out') {
-	while (<STDIN>) {
-		if (/^solutions: \d+$/) {
-			print;
-		}
-		else {
-			say join " ", map { $row_names[$_] // $_ } split /\s+/;
-		}
-	}
+  while (<STDIN>) {
+    if (/^solutions: \d+$/) {
+      print;
+    }
+    else {
+      say join " ", map { $row_names[$_] // $_ } split /\s+/;
+    }
+  }
 }
 else {
-	die $usage;
+  die $usage;
 }

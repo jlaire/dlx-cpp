@@ -1,5 +1,5 @@
-#include "linked_matrix.hpp"
-#include "dlx.hpp"
+#include "LinkedMatrix.hpp"
+#include "AlgorithmDLX.hpp"
 
 #include <unistd.h>
 #include <algorithm>
@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
   bool opt_verbose = false;
   bool opt_sparse = false;
   bool opt_running_count = false;
-  std::vector<std::vector<unsigned>> input_rows;
 
   for (int opt; (opt = getopt(argc, argv, "pvsr")) != -1;) {
     switch (opt) {
@@ -54,6 +53,8 @@ int main(int argc, char *argv[]) {
     std::istringstream ss(line);
     ss >> width >> secondary_columns;
   }
+
+  std::vector<std::vector<unsigned>> input_rows;
   for (std::string line; std::getline(std::cin, line);) {
     std::istringstream ss(line);
 
@@ -74,12 +75,13 @@ int main(int argc, char *argv[]) {
       input_rows.emplace_back(row);
     }
   }
-  std::unique_ptr<linked_matrix> lm;
+
+  std::unique_ptr<LinkedMatrix> lm;
   if (opt_sparse) {
-    lm = linked_matrix::from_sparse_matrix(input_rows, secondary_columns);
+    lm = LinkedMatrix::from_sparse_matrix(input_rows, secondary_columns);
   }
   else {
-    lm = linked_matrix::from_boolean_rows(input_rows, secondary_columns);
+    lm = LinkedMatrix::from_boolean_rows(input_rows, secondary_columns);
   }
 
   uint64_t solution_count = 0;
@@ -102,7 +104,7 @@ int main(int argc, char *argv[]) {
     }
   };
 
-  dlx solver(std::move(lm), print);
-  solver.solve();
+  AlgorithmDLX dlx(std::move(lm), print);
+  dlx.search();
   std::cout << "solutions: " << solution_count << '\n';
 }
