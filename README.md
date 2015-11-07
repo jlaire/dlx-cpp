@@ -55,7 +55,6 @@ the indices of the selected rows. With `-v`, the full rows are printed and
 solutions are separated by two newlines.
 
     $ make
-    g++ -std=c++0x -Wall -o dlx dlx.cpp
     $ ./dlx < data/knuth_example.txt
     solutions: 1
     $ ./dlx -p < data/knuth_example.txt
