@@ -17,7 +17,7 @@ public:
 private:
   std::unique_ptr<LinkedMatrix> A_;
   SolutionHandler callback_;
-  std::vector<unsigned> stack_;
+  std::vector<unsigned> O;
 
   // These make the implementation look just like in "Dancing Links".
   //

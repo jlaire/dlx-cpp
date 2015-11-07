@@ -10,9 +10,13 @@
 
 namespace {
 
-void print_vector(const std::vector<unsigned>& xs) {
-  for (unsigned i = 0; i < xs.size(); ++i) {
-    std::cout << xs[i] << " \n"[i == xs.size() - 1];
+template <typename T>
+void print_range(const T& xs) {
+  auto it = std::begin(xs);
+  auto end = std::end(xs);
+  for (; it != end;) {
+    std::cout << *it;
+    std::cout << " \n"[++it == end];
   }
 }
 
@@ -85,16 +89,16 @@ int main(int argc, char *argv[]) {
   }
 
   uint64_t solution_count = 0;
-  auto print = [&](const std::vector<unsigned>& row_indices) {
+  auto callback = [&](const std::vector<unsigned>& row_indices) {
     if (opt_print_solutions) {
       if (opt_verbose) {
         for (unsigned i : row_indices) {
-          print_vector(input_rows[i]);
+          print_range(input_rows[i]);
         }
         std::cout << '\n';
       }
       else {
-        print_vector(row_indices);
+        print_range(row_indices);
       }
     }
 
@@ -104,7 +108,7 @@ int main(int argc, char *argv[]) {
     }
   };
 
-  AlgorithmDLX dlx(std::move(lm), print);
+  AlgorithmDLX dlx(std::move(lm), callback);
   dlx.search();
   std::cout << "solutions: " << solution_count << '\n';
 }

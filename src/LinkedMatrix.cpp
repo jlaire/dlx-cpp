@@ -11,6 +11,7 @@ LinkedMatrix::LinkedMatrix() {
 LinkedMatrix::NodeId LinkedMatrix::root_id() const { return 0; }
 unsigned LinkedMatrix::row(NodeId id) const { return nodes_[id].y; }
 unsigned LinkedMatrix::S(NodeId id) const { return sizes_[nodes_[id].x]; }
+LinkedMatrix::NodeId LinkedMatrix::C(NodeId id) const { return col_ids_[nodes_[id].x]; }
 LinkedMatrix::NodeId LinkedMatrix::L(NodeId id) const { return nodes_[id].l; }
 LinkedMatrix::NodeId LinkedMatrix::R(NodeId id) const { return nodes_[id].r; }
 LinkedMatrix::NodeId LinkedMatrix::U(NodeId id) const { return nodes_[id].u; }
@@ -78,7 +79,7 @@ void LinkedMatrix::initialize_from_sparse_matrix(
 }
 
 void LinkedMatrix::cover_column(NodeId c) {
-  c = col_ids_[nodes_[c].x];
+  c = C(c);
   nodes_[c].hide_lr(*this);
   for (NodeId i = D(c); i != c; i = D(i)) {
     for (NodeId j = R(i); j != i; j = R(j)) {
@@ -89,7 +90,7 @@ void LinkedMatrix::cover_column(NodeId c) {
 }
 
 void LinkedMatrix::uncover_column(NodeId c) {
-  c = col_ids_[nodes_[c].x];
+  c = C(c);
   for (NodeId i = U(c); i != c; i = U(i)) {
     for (NodeId j = L(i); j != i; j = L(j)) {
       nodes_[j].show_ud(*this);

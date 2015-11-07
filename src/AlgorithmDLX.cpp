@@ -8,7 +8,7 @@ AlgorithmDLX::AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A, SolutionHandler ca
 void AlgorithmDLX::search() {
   auto h = A_->root_id();
   if (R(h) == h) {
-    callback_(stack_);
+    callback_(O);
     return;
   }
 
@@ -26,7 +26,7 @@ void AlgorithmDLX::search() {
 
   cover_column(c);
   for (auto r = D(c); r != c; r = D(r)) {
-    stack_.push_back(A_->row(r));
+    O.push_back(row(r));
     for (auto j = R(r); j != r; j = R(j)) {
       cover_column(j);
     }
@@ -34,7 +34,7 @@ void AlgorithmDLX::search() {
     for (auto j = L(r); j != r; j = L(j)) {
       uncover_column(j);
     }
-    stack_.pop_back();
+    O.pop_back();
   }
   uncover_column(c);
 }

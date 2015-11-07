@@ -17,6 +17,7 @@ struct LinkedMatrix {
 
   unsigned row(NodeId id) const;
   unsigned S(NodeId id) const;
+  NodeId C(NodeId id) const;
   NodeId L(NodeId id) const;
   NodeId R(NodeId id) const;
   NodeId U(NodeId id) const;
