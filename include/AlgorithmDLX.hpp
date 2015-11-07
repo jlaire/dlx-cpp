@@ -5,19 +5,17 @@
 #include <stdint.h>
 #include <functional>
 
-struct AlgorithmDLX {
+class AlgorithmDLX {
+public:
   using Solution = std::vector<unsigned>;
   using SolutionHandler = std::function<void(const Solution&)>;
 
-  AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& lm, SolutionHandler sh)
-    : lm(std::move(lm)), solution_handler(std::move(sh))
-  {
-  }
+  AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A, SolutionHandler callback);
 
   void search();
 
 private:
-  std::unique_ptr<LinkedMatrix> lm;
-  SolutionHandler solution_handler;
-  std::vector<unsigned> stack;
+  std::unique_ptr<LinkedMatrix> A_;
+  SolutionHandler callback_;
+  std::vector<unsigned> stack_;
 };

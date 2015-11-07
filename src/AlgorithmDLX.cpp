@@ -1,35 +1,41 @@
 #include "AlgorithmDLX.hpp"
 
+AlgorithmDLX::AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A, SolutionHandler callback)
+  : A_(std::move(A)), callback_(std::move(callback))
+{
+}
+
 void AlgorithmDLX::search() {
-  auto col_id = lm->root().r;
-  if (col_id == lm->root_id) {
-    solution_handler(stack);
+  auto h = A_->root_id();
+  if (A_->R(h) == h) {
+    callback_(stack_);
     return;
   }
-  unsigned min_size = lm->sizes[lm->node(col_id).x];
-  for (auto id = lm->node(col_id).r; id != lm->root_id; id = lm->node(id).r) {
-    unsigned size = lm->sizes[lm->node(id).x];
+
+  unsigned min_size = ~0;
+  auto c = h;
+  for (auto j = A_->R(h); j != h; j = A_->R(j)) {
+    unsigned size = A_->S(j);
     if (size < min_size) {
       min_size = size;
-      col_id = id;
+      c = j;
     }
   }
   if (min_size < 1) {
     return;
   }
-  unsigned x = lm->node(col_id).x;
-  lm->cover_column(x);
-  for (auto id = lm->node(col_id).d; id != col_id; id = lm->node(id).d) {
-    int y = lm->node(id).y;
-    stack.push_back(y);
-    for (auto a = lm->node(id).r; a != id; a = lm->node(a).r) {
-      lm->cover_column(lm->node(a).x);
+
+  A_->cover_column(c);
+  for (auto r = A_->D(c); r != c; r = A_->D(r)) {
+    stack_.push_back(A_->row(r));
+    for (auto j = A_->R(r); j != r; j = A_->R(j)) {
+      A_->cover_column(j);
     }
     search();
-    for (auto a = lm->node(id).l; a != id; a = lm->node(a).l) {
-      lm->uncover_column(lm->node(a).x);
+    for (auto j = A_->L(r); j != r; j = A_->L(j)) {
+      A_->uncover_column(j);
     }
-    stack.pop_back();
+    stack_.pop_back();
   }
-  lm->uncover_column(x);
+  A_->uncover_column(c);
 }
