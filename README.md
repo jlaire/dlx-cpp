@@ -42,7 +42,7 @@ for (auto r = D(c); r != c; r = D(r)) {
 }
 ```
 
-`dlx`
+Usage
 =====
 
 The executable `dlx` reads an exact cover problem from stdin and solves it. The
