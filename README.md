@@ -7,6 +7,41 @@ Links* paper for the exact cover problem.
 Knuth's paper gives a very readable explanation of the problem, the algorithm,
 and several applications. http://arxiv.org/pdf/cs/0011047v1.pdf
 
+To make the code easy to follow, it matches the paper quite closely (to a
+fault).
+
+The core loop of the algorithm (page 5):
+
+```
+Cover column c.
+For each r ← D[c], D[D[c]], ..., while r ≠ c,
+  set O[k] ← r;
+  for each j ← R[r], R[R[r]], ..., while j ≠ r,
+    cover column j;
+  search(k + 1);
+  set r ← O[k] and c ← C[r];
+  for each j ← L[r], L[L[r]], ..., while j ≠ r,
+    uncover column j.
+Uncover column c.
+```
+
+looks like this in C++ ([AlgorithmDLX.cpp](src/AlgorithmDLX.cpp#L27)):
+
+```
+cover_column(c);
+for (auto r = D(c); r != c; r = D(r)) {
+  O.push_back(row(r));
+  for (auto j = R(r); j != r; j = R(j)) {
+    cover_column(j);
+  }
+  search();
+  for (auto j = L(r); j != r; j = L(j)) {
+    uncover_column(j);
+  }
+  O.pop_back();
+}
+```
+
 `dlx`
 =====
 
