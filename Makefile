@@ -7,5 +7,13 @@ all:
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) -o build/dlx $(LIB_SRC) src/main.cpp
 
+build_test:
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/*.cpp -lgtest -o build/test
+
+test: build_test
+	./build/test
+.PHONY: test
+
 clean:
 	rm -rf build
