@@ -96,24 +96,31 @@ Sudoku example
 ==============
 
 Some interesting problems, such as Sudoku, are just exact cover in disguise.
-You can solve Sudokus using `dlx` with a happy little wrapper script:
+What makes this really interesting is that DLX is often more efficient than
+custom solutions!
 
-    $ ./scripts/sudoku.sh data/sudoku_1.txt
-    846937152
-    319625847
-    752184963
-    285713694
-    463859271
-    971246385
-    127598436
-    638471529
-    594362718
+There's an example Sudoku solver that uses `dlx` as a library and can solve
+17-clue Sudokus in a millisecond. There is a big downloadable collection at
+http://staffhome.ecm.uwa.edu.au/~00013890/sudokumin.php, you can feed it to the
+executable directly.
+
+    $ make examples
+    $ ./build/sudoku < data/sudokus.txt
+    846937152319625847752184963285713694463859271971246385127598436638471529594362718
+    145327698839654127672918543496185372218473956753296481367542819984761235521839764
+    693784512487512936125963874932651487568247391741398625319475268856129743274836159
+    793684512486512937125973846932751684578246391641398725319465278857129463264837159
+    961845327458723169237169584796358412524691873813274956182436795379582641645917238
+    378564192921387456654291738489672315713458269265913847897135624146829573532746981
+    681739245497562813523841769172954386865317924349628571916283457234175698758496132
+    352718946914635872687492315763984521129567438845123769298341657471856293536279184
+
 
 TODO
 ====
 
-  - Unit tests.
-  - Make `NodeId` a template parameter so that space isn't wasted.
+  - CMake, more unit tests, more examples.
+  - Move `src/main.cpp` to examples/, make `dlx` a library.
+  - AlgorithmDLX: Callback should have the option to stop the search.
+  - Make `NodeId` a template parameter to save space when possible.
   - Optimize `LinkedMatrix` construction; it uses temporary nodes that are not freed.
-  - C++ implementations of the applications in Knuth's paper.
-  - `rm -rf scripts`
