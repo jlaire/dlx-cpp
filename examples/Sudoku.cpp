@@ -12,6 +12,7 @@ std::string Sudoku::solve(std::string grid) {
       return "Invalid sudoku!";
     }
   }
+  unsigned cell_taken[9][9]{{0}};
   unsigned col_taken[9][9]{{0}};
   unsigned row_taken[9][9]{{0}};
   unsigned box_taken[9][9]{{0}};
@@ -20,6 +21,7 @@ std::string Sudoku::solve(std::string grid) {
       unsigned x = i % 9;
       unsigned y = i / 9;
       unsigned n = grid[i] - '1';
+      if (++cell_taken[x][y] > 1) return "Unsolvable sudoku :(";
       if (++col_taken[x][n] > 1) return "Unsolvable sudoku :(";
       if (++row_taken[y][n] > 1) return "Unsolvable sudoku :(";
       if (++box_taken[get_box(x, y)][n] > 1) return "Unsolvable sudoku :(";
@@ -29,6 +31,7 @@ std::string Sudoku::solve(std::string grid) {
   std::vector<std::vector<unsigned>> matrix;
   for (unsigned i = 0; i < 9; ++i) {
     for (unsigned j = 0; j < 9; ++j) {
+      if (cell_taken[i][j]) matrix.push_back({id_cell(i, j)});
       if (col_taken[i][j]) matrix.push_back({id_col(i, j)});
       if (row_taken[i][j]) matrix.push_back({id_row(i, j)});
       if (box_taken[i][j]) matrix.push_back({id_box(i, j)});
@@ -39,10 +42,11 @@ std::string Sudoku::solve(std::string grid) {
   for (unsigned y = 0; y < 9; ++y) {
     for (unsigned x = 0; x < 9; ++x) {
       for (unsigned n = 0; n < 9; ++n) {
-        if (col_taken[x][n]
+        if (cell_taken[x][y]
+            || col_taken[x][n]
             || row_taken[y][n]
             || box_taken[get_box(x, y)][n]
-	    || grid[y * 9 + x] != '0')
+            || grid[y * 9 + x] != '0')
         {
           continue;
         }
@@ -66,12 +70,12 @@ std::string Sudoku::solve(std::string grid) {
     solution = grid;
     for (unsigned i : rows) {
       if (xs.find(i) == xs.end()) {
-	continue;
+        continue;
       }
       solution[ys[i] * 9 + xs[i]] = ns[i] + '1';
     }
   };
-  auto linked_matrix = LinkedMatrix::from_sparse_matrix(matrix, 9 * 9, 4 * 9 * 9);
+  auto linked_matrix = LinkedMatrix::from_sparse_matrix(matrix, 0, 4 * 9 * 9);
   AlgorithmDLX dlx(std::move(linked_matrix), callback);
   dlx.search();
   return solution;
