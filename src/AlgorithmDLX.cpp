@@ -1,4 +1,4 @@
-#include "AlgorithmDLX.hpp"
+#include <dlx/AlgorithmDLX.hpp>
 
 AlgorithmDLX::AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A, SolutionHandler callback)
   : A_(std::move(A)), callback_(std::move(callback))

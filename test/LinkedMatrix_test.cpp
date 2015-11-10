@@ -1,4 +1,4 @@
-#include "../include/LinkedMatrix.hpp"
+#include <dlx/LinkedMatrix.hpp>
 
 #include <gtest/gtest.h>
 

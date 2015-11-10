@@ -1,9 +1,22 @@
 #include "Sudoku.hpp"
-#include "../include/AlgorithmDLX.hpp"
+
+#include <dlx/AlgorithmDLX.hpp>
 
 #include <assert.h>
 #include <unordered_map>
 #include <vector>
+
+/*
+ * One choice needs to be made when creating the exact cover problem.
+ *
+ * The column representing the constraint "there is a number in cell (x,y)" can
+ * be either primary or secondary. All cells will be naturally filled if all
+ * of the other conditions are met.
+ *
+ * I tried both options, and the performance on a large set of 17-clue Sudokus
+ * was almost identical. The current implementation makes all columns primary,
+ * so it is a proper exact cover.
+ */
 
 std::string Sudoku::solve(std::string grid) {
   assert(grid.size() == 81);

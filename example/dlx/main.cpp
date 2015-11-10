@@ -1,5 +1,4 @@
-#include "LinkedMatrix.hpp"
-#include "AlgorithmDLX.hpp"
+#include <dlx/AlgorithmDLX.hpp>
 
 #include <unistd.h>
 #include <algorithm>
