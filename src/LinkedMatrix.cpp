@@ -8,16 +8,16 @@ LinkedMatrix::LinkedMatrix() {
   assert(id == root_id());
 }
 
-LinkedMatrix::NodeId LinkedMatrix::root_id() const { return 0; }
 unsigned LinkedMatrix::row(NodeId id) const { return nodes_[id].y; }
 unsigned LinkedMatrix::S(NodeId id) const { return sizes_[nodes_[id].x]; }
-LinkedMatrix::NodeId LinkedMatrix::C(NodeId id) const { return col_ids_[nodes_[id].x]; }
-LinkedMatrix::NodeId LinkedMatrix::L(NodeId id) const { return nodes_[id].l; }
-LinkedMatrix::NodeId LinkedMatrix::R(NodeId id) const { return nodes_[id].r; }
-LinkedMatrix::NodeId LinkedMatrix::U(NodeId id) const { return nodes_[id].u; }
-LinkedMatrix::NodeId LinkedMatrix::D(NodeId id) const { return nodes_[id].d; }
+auto LinkedMatrix::root_id() const -> NodeId { return 0; }
+auto LinkedMatrix::C(NodeId id) const -> NodeId { return col_ids_[nodes_[id].x]; }
+auto LinkedMatrix::L(NodeId id) const -> NodeId { return nodes_[id].l; }
+auto LinkedMatrix::R(NodeId id) const -> NodeId { return nodes_[id].r; }
+auto LinkedMatrix::U(NodeId id) const -> NodeId { return nodes_[id].u; }
+auto LinkedMatrix::D(NodeId id) const -> NodeId { return nodes_[id].d; }
 
-std::unique_ptr<LinkedMatrix> LinkedMatrix::from_boolean_rows(
+std::unique_ptr<LinkedMatrix> LinkedMatrix::from_dense_matrix(
     const VectorVector& rows, unsigned secondary)
 {
   unsigned width = rows.empty() ? 0 : rows[0].size();

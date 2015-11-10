@@ -7,7 +7,7 @@ struct LinkedMatrix {
   using VectorVector = std::vector<std::vector<unsigned>>;
   using NodeId = unsigned;
 
-  static std::unique_ptr<LinkedMatrix> from_boolean_rows(const VectorVector& rows, unsigned secondary = 0);
+  static std::unique_ptr<LinkedMatrix> from_dense_matrix(const VectorVector& rows, unsigned secondary = 0);
   static std::unique_ptr<LinkedMatrix> from_sparse_matrix(const VectorVector& rows, unsigned secondary = 0, unsigned width = 0);
 
   void cover_column(NodeId id);

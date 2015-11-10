@@ -114,5 +114,6 @@ TODO
 
   - Unit tests.
   - Make `NodeId` a template parameter so that space isn't wasted.
+  - Optimize `LinkedMatrix` construction; it uses temporary nodes that are not freed.
   - C++ implementations of the applications in Knuth's paper.
   - `rm -rf scripts`
