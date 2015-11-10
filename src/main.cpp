@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     lm = LinkedMatrix::from_sparse_matrix(input_rows, secondary_columns, width);
   }
   else {
-    lm = LinkedMatrix::from_boolean_rows(input_rows, secondary_columns);
+    lm = LinkedMatrix::from_dense_matrix(input_rows, secondary_columns);
   }
 
   uint64_t solution_count = 0;
