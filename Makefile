@@ -1,5 +1,11 @@
 CXX ?= g++
-CXXFLAGS = -Iinclude -std=c++11 -pedantic -Wall -O2 -o dlx
+CXXFLAGS = -Iinclude -std=c++11 -pedantic -Wall -O2
+
+LIB_SRC = src/AlgorithmDLX.cpp src/LinkedMatrix.cpp
 
 all:
-	$(CXX) $(CXXFLAGS) src/*.cpp
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -o build/dlx $(LIB_SRC) src/main.cpp
+
+clean:
+	rm -rf build

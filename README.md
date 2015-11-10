@@ -54,12 +54,12 @@ the indices of the selected rows. With `-v`, the full rows are printed and
 solutions are separated by two newlines.
 
     $ make
-    $ ./dlx < data/knuth_example.txt
+    $ ./build/dlx < data/knuth_example.txt
     solutions: 1
-    $ ./dlx -p < data/knuth_example.txt
+    $ ./build/dlx -p < data/knuth_example.txt
     3 0 4
     solutions: 1
-    $ ./dlx -pv < data/knuth_example.txt
+    $ ./build/dlx -pv < data/knuth_example.txt
     1 0 0 1 0 0 0
     0 0 1 0 1 1 0
     0 1 0 0 0 0 1
@@ -69,7 +69,7 @@ solutions are separated by two newlines.
 With `-s`, input can also be given as a sparse matrix. The output of `-v` will
 also be sparse.
 
-    $ ./dlx -pvs < data/knuth_example_sparse.txt 
+    $ ./build/dlx -pvs < data/knuth_example_sparse.txt 
     0 3
     2 4 5
     1 6
@@ -87,7 +87,7 @@ regular exact cover problem.
 
 A very trivial example:
 
-    $ ./dlx -pv < data/generalized_example.txt
+    $ ./build/dlx -pv < data/generalized_example.txt
     0 1 1
 
     solutions: 1
