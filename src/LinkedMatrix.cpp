@@ -20,6 +20,7 @@ LinkedMatrix::NodeId LinkedMatrix::D(NodeId id) const { return nodes_[id].d; }
 std::unique_ptr<LinkedMatrix> LinkedMatrix::from_boolean_rows(
     const VectorVector& rows, unsigned secondary)
 {
+  unsigned width = rows.empty() ? 0 : rows[0].size();
   VectorVector sparse(rows.size());
   for (unsigned i = 0; i < rows.size(); ++i) {
     for (unsigned j = 0; j < rows[i].size(); ++j) {
@@ -28,7 +29,7 @@ std::unique_ptr<LinkedMatrix> LinkedMatrix::from_boolean_rows(
       }
     }
   }
-  return from_sparse_matrix(sparse, secondary, rows[0].size());
+  return from_sparse_matrix(sparse, secondary, width);
 }
 
 std::unique_ptr<LinkedMatrix> LinkedMatrix::from_sparse_matrix(
