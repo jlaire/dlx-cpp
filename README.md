@@ -92,17 +92,19 @@ A very trivial example:
 
     solutions: 1
 
-Sudoku example
-==============
+Example: Sudoku
+===============
 
 Some interesting problems, such as Sudoku, are just exact cover in disguise.
 What makes this really interesting is that DLX is often more efficient than
-custom solutions!
+hand-written solutions!
 
-There's an example Sudoku solver that uses `dlx` as a library and can solve
-17-clue Sudokus in a millisecond. There is a big downloadable collection at
-http://staffhome.ecm.uwa.edu.au/~00013890/sudokumin.php, you can feed it to the
-executable directly.
+[example/sudoku](example/sudoku) is based on `dlx` and can solve even
+pathological 17-clue Sudokus in under a millisecond. There is a big
+downloadable collection at
+http://staffhome.ecm.uwa.edu.au/~00013890/sudokumin.php, and you can feed it to
+the executable directly. There are also a few puzzles in
+[data/sudokus.txt](data/sudokus.txt).
 
     $ make examples
     $ ./build/sudoku < data/sudokus.txt
