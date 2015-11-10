@@ -8,7 +8,7 @@
 class AlgorithmDLX {
 public:
   using Solution = std::vector<unsigned>;
-  using SolutionHandler = std::function<void(const Solution&)>;
+  using SolutionHandler = std::function<bool(const Solution&)>;
 
   AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A, SolutionHandler callback);
 
@@ -18,11 +18,12 @@ private:
   std::unique_ptr<LinkedMatrix> A_;
   SolutionHandler callback_;
   std::vector<unsigned> O;
+  bool stop_ = false;
 
-  // These make the implementation look just like in "Dancing Links".
+  // These make the implementation look a lot cleaner.
   //
   // An alternative would be to implement `search()` in `LinkedMatrix`,
-  // but clean semantics trumps clean syntax.
+  // but no.
 
   using NodeId = LinkedMatrix::NodeId;
   void cover_column(NodeId id) { A_->cover_column(id); }

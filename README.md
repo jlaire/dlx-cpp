@@ -120,7 +120,6 @@ TODO
 ====
 
   - CMake, more unit tests, more examples.
-  - Move `src/main.cpp` to examples/, make `dlx` a library.
-  - AlgorithmDLX: Callback should have the option to stop the search.
+  - Build `clx` as a library.
   - Make `NodeId` a template parameter to save space when possible.
   - Optimize `LinkedMatrix` construction; it uses temporary nodes that are not freed.

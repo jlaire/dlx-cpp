@@ -6,9 +6,14 @@ AlgorithmDLX::AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A, SolutionHandler ca
 }
 
 void AlgorithmDLX::search() {
+  if (stop_) {
+    return;
+  }
   auto h = A_->root_id();
   if (R(h) == h) {
-    callback_(O);
+    if (callback_(O)) {
+      stop_ = true;
+    }
     return;
   }
 

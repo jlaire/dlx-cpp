@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
   }
 
   uint64_t solution_count = 0;
-  auto callback = [&](const std::vector<unsigned>& row_indices) {
+  auto callback = [&](const std::vector<unsigned>& row_indices) -> bool {
     if (opt_print_solutions) {
       if (opt_verbose) {
         for (unsigned i : row_indices) {
@@ -105,6 +105,8 @@ int main(int argc, char *argv[]) {
     if (opt_running_count && (solution_count & (solution_count - 1)) == 0) {
       std::cerr << "... solutions found: " << solution_count << '\n';
     }
+
+    return false;
   };
 
   AlgorithmDLX dlx(std::move(lm), callback);

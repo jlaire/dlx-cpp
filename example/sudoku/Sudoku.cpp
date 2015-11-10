@@ -78,8 +78,8 @@ std::string Sudoku::solve(std::string grid) {
   }
 
   std::string solution("No solution!");
-  std::function<void(const std::vector<unsigned>& rows)> callback;
-  callback = [&](const std::vector<unsigned>& rows) {
+  std::function<bool(const std::vector<unsigned>& rows)> callback;
+  callback = [&](const std::vector<unsigned>& rows) -> bool {
     solution = grid;
     for (unsigned i : rows) {
       if (xs.find(i) == xs.end()) {
@@ -87,6 +87,7 @@ std::string Sudoku::solve(std::string grid) {
       }
       solution[ys[i] * 9 + xs[i]] = ns[i] + '1';
     }
+    return true;
   };
   auto linked_matrix = LinkedMatrix::from_sparse_matrix(matrix, 0, 4 * 9 * 9);
   AlgorithmDLX dlx(std::move(linked_matrix), callback);
