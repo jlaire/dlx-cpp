@@ -2,38 +2,42 @@
 
 #include <assert.h>
 #include <string>
+#include <vector>
 
 class Sudoku
 {
 public:
-  static std::string solve(std::string grid);
+  struct SudokuTooBigException {};
 
-  static const unsigned N = 9;
-  static const unsigned size = N * N;
+  // Standard 9x9 sudoku.
+  Sudoku();
+
+  // NxN sudoku.
+  // In normal sudoku, box_size is 3.
+  explicit Sudoku(unsigned box_size);
+
+  // Sudoku with rectangle-shaped regions.
+  // In normal sudoku, the regions are 3 by 3.
+  Sudoku(unsigned region_width, unsigned region_height);
+
+  std::string solve(std::string grid) const;
+
+  bool is_cell(char) const;
+  unsigned value(char) const;
+  unsigned size() const;
 
 private:
-  static unsigned id_cell(unsigned x, unsigned y) {
-    assert(x < N && y < N);
-    return x * N + y;
-  }
+  unsigned rw_;
+  unsigned rh_;
+  unsigned n_;
+  std::string empty_chars_;
+  std::string alphabet_;
+  std::vector<unsigned> region_;
 
-  static unsigned id_col(unsigned x, unsigned n) {
-    assert(x < N && n < N);
-    return N * N + x * N + n;
-  }
-
-  static unsigned id_row(unsigned y, unsigned n) {
-    assert(y < N && n < N);
-    return 2 * N * N + y * N + n;
-  }
-
-  static unsigned id_box(unsigned i, unsigned n) {
-    assert(i < N && n < N);
-    return 3 * N * N + i * N + n;
-  }
-
-  static unsigned get_box(unsigned x, unsigned y) {
-    assert(x < N && y < N);
-    return y / 3 * 3 + x / 3;
-  }
+  unsigned pack(unsigned, unsigned) const;
+  unsigned id_cell(unsigned x, unsigned y) const;
+  unsigned id_col(unsigned x, unsigned d) const;
+  unsigned id_row(unsigned y, unsigned d) const;
+  unsigned id_region(unsigned i, unsigned d) const;
+  unsigned get_region(unsigned x, unsigned y) const;
 };

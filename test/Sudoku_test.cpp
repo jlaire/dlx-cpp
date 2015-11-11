@@ -7,7 +7,7 @@ namespace {
 
 TEST(Sudoku_test, already_solved) {
   std::string solved("846937152319625847752184963285713694463859271971246385127598436638471529594362718");
-  EXPECT_EQ(solved, Sudoku::solve(solved));
+  EXPECT_EQ(solved, Sudoku().solve(solved));
 }
 
 TEST(Sudoku_test, non_digits) {
@@ -26,19 +26,19 @@ TEST(Sudoku_test, non_digits) {
     "|521|839|764|\n"
     "+---+---+---+\n"
   );
-  EXPECT_EQ(solved, Sudoku::solve(solved));
+  EXPECT_EQ(solved, Sudoku().solve(solved));
 }
 
 TEST(Sudoku_test, invalid) {
-  EXPECT_EQ("Invalid sudoku! Not enough digits.", Sudoku::solve(std::string(80, '1')));
-  EXPECT_EQ("Invalid sudoku! Too many digits.", Sudoku::solve(std::string(82, '1')));
+  EXPECT_EQ("Invalid sudoku! Not enough digits.", Sudoku().solve(std::string(80, '1')));
+  EXPECT_EQ("Invalid sudoku! Too many digits.", Sudoku().solve(std::string(82, '1')));
 
-  auto str = Sudoku::solve(std::string(81, '1'));
+  auto str = Sudoku().solve(std::string(81, '1'));
   EXPECT_EQ(std::string::npos, str.find("Invalid sudoku!"));
 }
 
 TEST(Sudoku_test, contradictory) {
-  EXPECT_EQ("Unsolvable sudoku :(", Sudoku::solve(
+  EXPECT_EQ("Unsolvable sudoku :(", Sudoku().solve(
     "+---+---+---+\n"
     "|100|000|000|\n"
     "|010|000|000|\n"
@@ -54,7 +54,7 @@ TEST(Sudoku_test, contradictory) {
     "+---+---+---+\n"
   ));
 
-  EXPECT_EQ("Unsolvable sudoku :(", Sudoku::solve(
+  EXPECT_EQ("Unsolvable sudoku :(", Sudoku().solve(
     "+---+---+---+\n"
     "|100|010|000|\n"
     "|000|000|000|\n"
@@ -70,7 +70,7 @@ TEST(Sudoku_test, contradictory) {
     "+---+---+---+\n"
   ));
 
-  EXPECT_EQ("Unsolvable sudoku :(", Sudoku::solve(
+  EXPECT_EQ("Unsolvable sudoku :(", Sudoku().solve(
     "+---+---+---+\n"
     "|100|000|000|\n"
     "|000|000|000|\n"
@@ -115,7 +115,7 @@ TEST(Sudoku_test, almost_solved) {
 	++count;
 	char old = c;
 	c = digit;
-	ASSERT_EQ("Unsolvable sudoku :(", Sudoku::solve(copy));
+	ASSERT_EQ("Unsolvable sudoku :(", Sudoku().solve(copy));
 	c = old;
       }
     }
@@ -148,9 +148,9 @@ TEST(Sudoku_test, tenpai) {
       ++count;
       char old = c;
       c = '0';
-      ASSERT_EQ(solved, Sudoku::solve(copy));
+      ASSERT_EQ(solved, Sudoku().solve(copy));
       c = '.';
-      ASSERT_EQ(solved, Sudoku::solve(copy));
+      ASSERT_EQ(solved, Sudoku().solve(copy));
       c = old;
     }
   }
@@ -191,7 +191,7 @@ TEST(Sudoku_test, easy) {
     "+---+---+---+\n"
   );
 
-  EXPECT_EQ(solved, Sudoku::solve(easy));
+  EXPECT_EQ(solved, Sudoku().solve(easy));
 }
 
 TEST(Sudoku_test, hard) {
@@ -223,7 +223,7 @@ TEST(Sudoku_test, hard) {
     "621|354|897"
   );
 
-  EXPECT_EQ(solved, Sudoku::solve(hard));
+  EXPECT_EQ(solved, Sudoku().solve(hard));
 }
 
 }
