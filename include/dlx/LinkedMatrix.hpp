@@ -3,12 +3,16 @@
 #include <memory>
 #include <vector>
 
-struct LinkedMatrix {
+class LinkedMatrix {
+public:
   using VectorVector = std::vector<std::vector<unsigned>>;
   using NodeId = unsigned;
 
-  static std::unique_ptr<LinkedMatrix> from_dense_matrix(const VectorVector& rows, unsigned secondary = 0);
-  static std::unique_ptr<LinkedMatrix> from_sparse_matrix(const VectorVector& rows, unsigned secondary = 0, unsigned width = 0);
+  static std::unique_ptr<LinkedMatrix>
+  from_dense_matrix(const VectorVector& rows, unsigned secondary = 0);
+
+  static std::unique_ptr<LinkedMatrix>
+  from_sparse_matrix(unsigned width, const VectorVector& rows, unsigned secondary = 0);
 
   void cover_column(NodeId id);
   void uncover_column(NodeId id);

@@ -29,11 +29,11 @@ std::unique_ptr<LinkedMatrix> LinkedMatrix::from_dense_matrix(
       }
     }
   }
-  return from_sparse_matrix(sparse, secondary, width);
+  return from_sparse_matrix(width, sparse, secondary);
 }
 
 std::unique_ptr<LinkedMatrix> LinkedMatrix::from_sparse_matrix(
-    const VectorVector& rows, unsigned secondary, unsigned width)
+    unsigned width, const VectorVector& rows, unsigned secondary)
 {
   std::unique_ptr<LinkedMatrix> lm{new LinkedMatrix};
   lm->initialize_from_sparse_matrix(rows, secondary, width);

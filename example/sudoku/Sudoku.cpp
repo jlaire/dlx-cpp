@@ -28,21 +28,21 @@ std::string Sudoku::solve(std::string grid) {
     }
   }
 
-  if (digits.size() < 9 * 9) {
+  if (digits.size() < size) {
     return "Invalid sudoku! Not enough digits.";
   }
-  if (digits.size() > 9 * 9) {
+  if (digits.size() > size) {
     return "Invalid sudoku! Too many digits.";
   }
 
-  unsigned cell_taken[9][9]{{0}};
-  unsigned col_taken[9][9]{{0}};
-  unsigned row_taken[9][9]{{0}};
-  unsigned box_taken[9][9]{{0}};
-  for (unsigned i = 0; i < 9 * 9; ++i) {
+  unsigned cell_taken[N][N]{{0}};
+  unsigned col_taken[N][N]{{0}};
+  unsigned row_taken[N][N]{{0}};
+  unsigned box_taken[N][N]{{0}};
+  for (unsigned i = 0; i < size; ++i) {
     if (digits[i] != 0) {
-      unsigned x = i % 9;
-      unsigned y = i / 9;
+      unsigned x = i % N;
+      unsigned y = i / N;
       unsigned n = digits[i] - 1;
       if (++cell_taken[x][y] > 1) return "Unsolvable sudoku :(";
       if (++col_taken[x][n] > 1) return "Unsolvable sudoku :(";
@@ -52,8 +52,8 @@ std::string Sudoku::solve(std::string grid) {
   }
 
   std::vector<std::vector<unsigned>> matrix;
-  for (unsigned i = 0; i < 9; ++i) {
-    for (unsigned j = 0; j < 9; ++j) {
+  for (unsigned i = 0; i < N; ++i) {
+    for (unsigned j = 0; j < N; ++j) {
       if (cell_taken[i][j]) matrix.push_back({id_cell(i, j)});
       if (col_taken[i][j]) matrix.push_back({id_col(i, j)});
       if (row_taken[i][j]) matrix.push_back({id_row(i, j)});
@@ -62,14 +62,14 @@ std::string Sudoku::solve(std::string grid) {
   }
 
   std::unordered_map<unsigned, unsigned> xs, ys, ns;
-  for (unsigned y = 0; y < 9; ++y) {
-    for (unsigned x = 0; x < 9; ++x) {
-      for (unsigned n = 0; n < 9; ++n) {
+  for (unsigned y = 0; y < N; ++y) {
+    for (unsigned x = 0; x < N; ++x) {
+      for (unsigned n = 0; n < N; ++n) {
         if (cell_taken[x][y]
             || col_taken[x][n]
             || row_taken[y][n]
             || box_taken[get_box(x, y)][n]
-            || digits[y * 9 + x] != 0)
+            || digits[y * N + x] != 0)
         {
           continue;
         }
@@ -95,11 +95,11 @@ std::string Sudoku::solve(std::string grid) {
       if (xs.find(i) == xs.end()) {
         continue;
       }
-      solution[digit_positions[ys[i] * 9 + xs[i]]] = ns[i] + '1';
+      solution[digit_positions[ys[i] * N + xs[i]]] = ns[i] + '1';
     }
     return true;
   };
-  auto linked_matrix = LinkedMatrix::from_sparse_matrix(matrix, 0, 4 * 9 * 9);
+  auto linked_matrix = LinkedMatrix::from_sparse_matrix(4 * N * N, matrix);
   AlgorithmDLX dlx(std::move(linked_matrix), callback);
   dlx.search();
   return solution;
