@@ -135,7 +135,7 @@ std::string Sudoku::solve(std::string grid) const {
       if (xs.find(i) == xs.end()) {
         continue;
       }
-      solution[digit_positions[pack(ys[i], xs[i])]] = ds[i] + '1';
+      solution[digit_positions[pack(ys[i], xs[i])]] = alphabet_[ds[i]];
     }
     return true;
   };
