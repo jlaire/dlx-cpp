@@ -11,15 +11,13 @@ Sudoku::Sudoku()
 {
 }
 
-Sudoku::Sudoku(unsigned box_size)
-  : Sudoku(box_size, box_size)
+Sudoku::Sudoku(unsigned region_size)
+  : Sudoku(region_size, region_size)
 {
 }
 
 Sudoku::Sudoku(unsigned region_width, unsigned region_height)
-  : rw_(region_width),
-  rh_(region_height),
-  n_(rw_ * rh_)
+  : n_(region_width * region_height)
 {
   static const std::string chars(
     "123456789"
@@ -38,10 +36,10 @@ Sudoku::Sudoku(unsigned region_width, unsigned region_height)
   }
 
   region_.resize(size());
-  unsigned regions_per_row = n_ / rw_;
+  unsigned regions_per_row = n_ / region_width;
   for (unsigned y = 0; y < n_; ++y) {
     for (unsigned x = 0; x < n_; ++x) {
-      region_[pack(y, x)] = y / rh_ * regions_per_row + x / rw_;
+      region_[pack(y, x)] = y / region_height * regions_per_row + x / region_width;
     }
   }
 }

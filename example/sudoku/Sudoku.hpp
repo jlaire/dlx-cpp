@@ -13,8 +13,8 @@ public:
   Sudoku();
 
   // NxN sudoku.
-  // In normal sudoku, box_size is 3.
-  explicit Sudoku(unsigned box_size);
+  // In normal sudoku, region_size is 3.
+  explicit Sudoku(unsigned region_size);
 
   // Sudoku with rectangle-shaped regions.
   // In normal sudoku, the regions are 3 by 3.
@@ -27,8 +27,6 @@ public:
   unsigned size() const;
 
 private:
-  unsigned rw_;
-  unsigned rh_;
   unsigned n_;
   std::string empty_chars_;
   std::string alphabet_;
