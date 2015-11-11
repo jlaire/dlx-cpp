@@ -5,7 +5,8 @@ This is an efficient C++ implementation of Algorithm DLX from Knuth's *Dancing
 Links* paper for the exact cover problem.
 
 Knuth's paper gives a very readable explanation of the problem, the algorithm,
-and several applications. http://arxiv.org/pdf/cs/0011047v1.pdf
+and several applications. I think it's still the best place to start.
+http://arxiv.org/pdf/cs/0011047v1.pdf
 
 To make the code easy to follow, it matches the paper quite closely (to a
 fault).
@@ -44,9 +45,14 @@ uncover_column(c);
 Usage
 =====
 
-The executable `dlx` reads an exact cover problem from stdin and solves it. The
-first line should contain one integer, the number of columns, and the following
-lines contain the rows of the matrix.
+The implementation consists of two classes, `AlgorithmDLX` and `LinkedMatrix`,
+that can be used as a library.
+
+[example/dlx](example/dlx) is a command-line program that reads an exact cover
+problem from stdin and solves it.
+
+The first line should contain an integer, the number of columns, and the
+following lines contain the rows of the matrix.
 
 Output can be controlled by flags. By default, only the number of solutions is
 printed. If `-p` is given, every solution is printed on its own line by giving
@@ -81,9 +87,9 @@ Generalized exact cover
 
 `dlx` can also solve generalized exact cover problems. The columns of the
 matrix should be sorted so that all secondary columns are on the left, before
-primary columns. The number of secondary columns can be given on the first line
-of input, right after the width of the matrix. It defaults to zero, i.e., a
-regular exact cover problem.
+primary columns. [example/dlx](example/dlx) supports this, and the number of
+secondary columns can be given on the first line of input, right after the
+width of the matrix. It defaults to zero, i.e., a regular exact cover problem.
 
 A very trivial example:
 
@@ -99,29 +105,31 @@ Some interesting problems, such as Sudoku, are just exact cover in disguise.
 What makes this really interesting is that DLX is often more efficient than
 hand-written solutions!
 
-[example/sudoku](example/sudoku) is based on `dlx` and can solve even
-pathological 17-clue Sudokus in under a millisecond. There is a big
-downloadable collection at
+[example/sudoku](example/sudoku) can solve even pathological 17-clue Sudokus
+instantly. There is a big downloadable collection at
 http://staffhome.ecm.uwa.edu.au/~00013890/sudokumin.php, and you can feed it to
-the executable directly. There are also a few puzzles in
-[data/sudokus.txt](data/sudokus.txt).
+the executable directly. See
+[example/sudoku/README.md](example/sudoku/README.md) for more.
 
     $ make examples
-    $ ./build/sudoku < data/sudokus.txt
-    846937152319625847752184963285713694463859271971246385127598436638471529594362718
-    145327698839654127672918543496185372218473956753296481367542819984761235521839764
-    693784512487512936125963874932651487568247391741398625319475268856129743274836159
-    793684512486512937125973846932751684578246391641398725319465278857129463264837159
-    961845327458723169237169584796358412524691873813274956182436795379582641645917238
-    378564192921387456654291738489672315713458269265913847897135624146829573532746981
-    681739245497562813523841769172954386865317924349628571916283457234175698758496132
-    352718946914635872687492315763984521129567438845123769298341657471856293536279184
-
+    $ ./build/sudoku < data/sudoku.txt
+    +---+---+---+
+    |846|937|152|
+    |319|625|847|
+    |752|184|963|
+    +---+---+---+
+    |285|713|694|
+    |463|859|271|
+    |971|246|385|
+    +---+---+---+
+    |127|598|436|
+    |638|471|529|
+    |594|362|718|
+    +---+---+---+
 
 TODO
 ====
 
   - CMake, more unit tests, more examples.
-  - Build `clx` as a library.
   - Make `NodeId` a template parameter to save space when possible.
   - Optimize `LinkedMatrix` construction; it uses temporary nodes that are not freed.

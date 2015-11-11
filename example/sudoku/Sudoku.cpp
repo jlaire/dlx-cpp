@@ -2,7 +2,7 @@
 
 #include <dlx/AlgorithmDLX.hpp>
 
-#include <assert.h>
+#include <ctype.h>
 #include <unordered_map>
 #include <vector>
 
@@ -19,21 +19,31 @@
  */
 
 std::string Sudoku::solve(std::string grid) {
-  assert(grid.size() == 81);
-  for (char c : grid) {
-    if (c < '0' || c > '9') {
-      return "Invalid sudoku!";
+  std::vector<int> digits;
+  std::vector<int> digit_positions;
+  for (unsigned i = 0; i < grid.size(); ++i) {
+    if (::isdigit(grid[i]) || grid[i] == '.') {
+      digits.push_back(grid[i] == '.' ? 0 : grid[i] - '0');
+      digit_positions.push_back(i);
     }
   }
+
+  if (digits.size() < 9 * 9) {
+    return "Invalid sudoku! Not enough digits.";
+  }
+  if (digits.size() > 9 * 9) {
+    return "Invalid sudoku! Too many digits.";
+  }
+
   unsigned cell_taken[9][9]{{0}};
   unsigned col_taken[9][9]{{0}};
   unsigned row_taken[9][9]{{0}};
   unsigned box_taken[9][9]{{0}};
-  for (unsigned i = 0; i < 81; ++i) {
-    if (grid[i] != '0') {
+  for (unsigned i = 0; i < 9 * 9; ++i) {
+    if (digits[i] != 0) {
       unsigned x = i % 9;
       unsigned y = i / 9;
-      unsigned n = grid[i] - '1';
+      unsigned n = digits[i] - 1;
       if (++cell_taken[x][y] > 1) return "Unsolvable sudoku :(";
       if (++col_taken[x][n] > 1) return "Unsolvable sudoku :(";
       if (++row_taken[y][n] > 1) return "Unsolvable sudoku :(";
@@ -59,7 +69,7 @@ std::string Sudoku::solve(std::string grid) {
             || col_taken[x][n]
             || row_taken[y][n]
             || box_taken[get_box(x, y)][n]
-            || grid[y * 9 + x] != '0')
+            || digits[y * 9 + x] != 0)
         {
           continue;
         }
@@ -85,7 +95,7 @@ std::string Sudoku::solve(std::string grid) {
       if (xs.find(i) == xs.end()) {
         continue;
       }
-      solution[ys[i] * 9 + xs[i]] = ns[i] + '1';
+      solution[digit_positions[ys[i] * 9 + xs[i]]] = ns[i] + '1';
     }
     return true;
   };
