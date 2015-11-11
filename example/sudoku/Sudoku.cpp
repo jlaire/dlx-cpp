@@ -17,31 +17,21 @@ Sudoku::Sudoku(unsigned region_size)
 }
 
 Sudoku::Sudoku(unsigned region_width, unsigned region_height)
-  : n_(region_width * region_height)
+  : Sudoku(box_regions(region_width, region_height))
 {
-  static const std::string chars(
-    "123456789"
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    "abcdefghijklmnopqrstuvwxyz"
-  );
+}
 
-  if (n_ > chars.size()) {
-    throw SudokuTooBigException();
-  }
+Sudoku::Sudoku(std::vector<unsigned> regions)
+  : n_(isqrt(regions.size())),
+  empty_chars_{'.', '0'},
+  alphabet_(default_alphabet(isqrt(regions.size()))),
+  region_(std::move(regions))
+{
+}
 
-  empty_chars_ = {'.', '0'};
-
-  for (unsigned i = 0; i < n_; ++i) {
-    alphabet_.push_back(chars[i]);
-  }
-
-  region_.resize(size());
-  unsigned regions_per_row = n_ / region_width;
-  for (unsigned y = 0; y < n_; ++y) {
-    for (unsigned x = 0; x < n_; ++x) {
-      region_[pack(y, x)] = y / region_height * regions_per_row + x / region_width;
-    }
-  }
+void Sudoku::set_alphabet(std::string alphabet) {
+  assert(alphabet.size() == n_);
+  alphabet_ = std::move(alphabet);
 }
 
 /*
@@ -180,4 +170,39 @@ unsigned Sudoku::id_region(unsigned i, unsigned d) const {
 
 unsigned Sudoku::get_region(unsigned x, unsigned y) const {
   return region_[pack(y, x)];
+}
+
+std::vector<unsigned> Sudoku::box_regions(unsigned w, unsigned h) {
+  std::vector<unsigned> regions;
+  unsigned n = w * h;
+  for (unsigned y = 0; y < n; ++y) {
+    for (unsigned x = 0; x < n; ++x) {
+      regions.push_back(y / h * h + x / w);
+    }
+  }
+  return regions;
+}
+
+std::string Sudoku::default_alphabet(unsigned n) {
+  static const std::string chars(
+    "123456789"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+  );
+
+  if (n > chars.size()) {
+    throw SudokuTooBigException();
+  }
+
+  std::string alphabet;
+  for (unsigned i = 0; i < n; ++i) {
+    alphabet.push_back(chars[i]);
+  }
+  return alphabet;
+}
+
+unsigned Sudoku::isqrt(unsigned n) {
+  unsigned k = 0;
+  while ((k + 1) * (k + 1) <= n) ++k;
+  return k;
 }

@@ -20,6 +20,11 @@ public:
   // In normal sudoku, the regions are 3 by 3.
   Sudoku(unsigned region_width, unsigned region_height);
 
+  // Sudoku with arbitrarily shaped regions.
+  explicit Sudoku(std::vector<unsigned> regions);
+
+  void set_alphabet(std::string alphabet);
+
   std::string solve(std::string grid) const;
 
   bool is_cell(char) const;
@@ -38,4 +43,8 @@ private:
   unsigned id_row(unsigned y, unsigned d) const;
   unsigned id_region(unsigned i, unsigned d) const;
   unsigned get_region(unsigned x, unsigned y) const;
+
+  static std::vector<unsigned> box_regions(unsigned w, unsigned h);
+  static std::string default_alphabet(unsigned n);
+  static unsigned isqrt(unsigned size);
 };
