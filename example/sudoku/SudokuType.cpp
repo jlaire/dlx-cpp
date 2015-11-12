@@ -58,6 +58,11 @@ unsigned SudokuType::size() const {
   return n_ * n_;
 }
 
+unsigned SudokuType::region(unsigned pos) const {
+  assert(pos < size());
+  return region_[pos];
+}
+
 unsigned SudokuType::region(unsigned x, unsigned y) const {
   assert(x < n_ && y < n_);
   return region_[y * n_ + x];

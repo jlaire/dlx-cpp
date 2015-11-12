@@ -33,6 +33,7 @@ public:
 
   unsigned n() const;
   unsigned size() const;
+  unsigned region(unsigned pos) const;
   unsigned region(unsigned x, unsigned y) const;
 
 private:
