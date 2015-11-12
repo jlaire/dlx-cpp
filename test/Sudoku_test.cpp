@@ -1,5 +1,7 @@
 #include "../example/sudoku/SudokuSolver.hpp"
 #include "../example/sudoku/SudokuSolver.cpp"
+#include "../example/sudoku/SudokuType.hpp"
+#include "../example/sudoku/SudokuType.cpp"
 
 #include <gtest/gtest.h>
 
@@ -141,6 +143,8 @@ TEST(Sudoku_test, tenpai) {
     "+---+---+---+\n"
   );
 
+  SudokuSolver solver;
+
   auto copy = solved;
   unsigned count = 0;
   for (char& c : copy) {
@@ -148,9 +152,9 @@ TEST(Sudoku_test, tenpai) {
       ++count;
       char old = c;
       c = '0';
-      ASSERT_EQ(solved, SudokuSolver().solve(copy));
+      ASSERT_EQ(solved, solver.solve(copy));
       c = '.';
-      ASSERT_EQ(solved, SudokuSolver().solve(copy));
+      ASSERT_EQ(solved, solver.solve(copy));
       c = old;
     }
   }
@@ -333,13 +337,14 @@ TEST(Sudoku_test, custom_alphabet) {
     "ERI|PDK|BWA"
   );
 
-  SudokuSolver sudoku;
-  sudoku.set_alphabet("ABDEIKPRW");
-  EXPECT_EQ(solved, sudoku.solve(puzzle));
+  SudokuType type;
+  type.set_alphabet("ABDEIKPRW");
+  SudokuSolver solver(type);
+  EXPECT_EQ(solved, solver.solve(puzzle));
 }
 
 TEST(Sudoku_test, custom_regions) {
-  SudokuSolver sudoku({
+  SudokuSolver sudoku(std::vector<unsigned>{
     0, 0, 1, 1, 1, 1, 2,
     0, 0, 0, 1, 1, 1, 2,
     3, 0, 0, 4, 4, 2, 2,
