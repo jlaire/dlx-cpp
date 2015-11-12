@@ -13,9 +13,11 @@ examples:
 build_test:
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/*.cpp -lgtest -o build/test
+	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/sudoku/*.cpp -lgtest -o build/test_sudoku
 
 test: build_test
 	./build/test
+	./build/test_sudoku
 .PHONY: test
 
 clean:

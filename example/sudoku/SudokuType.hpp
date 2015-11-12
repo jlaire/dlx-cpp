@@ -1,13 +1,12 @@
 #pragma once
 
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 class SudokuType
 {
 public:
-  struct SudokuTooBigException {};
-
   // The usual 9x9 type with 3x3 regions.
   SudokuType();
 

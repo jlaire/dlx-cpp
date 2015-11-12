@@ -1,18 +1,16 @@
 #include "../example/sudoku/SudokuSolver.hpp"
-#include "../example/sudoku/SudokuSolver.cpp"
 #include "../example/sudoku/SudokuType.hpp"
-#include "../example/sudoku/SudokuType.cpp"
 
 #include <gtest/gtest.h>
 
 namespace {
 
-TEST(Sudoku_test, already_solved) {
+TEST(SudokuSolver_test, already_solved) {
   std::string solved("846937152319625847752184963285713694463859271971246385127598436638471529594362718");
   EXPECT_EQ(solved, SudokuSolver().solve(solved));
 }
 
-TEST(Sudoku_test, non_digits) {
+TEST(SudokuSolver_test, non_digits) {
   std::string solved(
     "+---+---+---+\n"
     "|145|327|698|\n"
@@ -31,7 +29,7 @@ TEST(Sudoku_test, non_digits) {
   EXPECT_EQ(solved, SudokuSolver().solve(solved));
 }
 
-TEST(Sudoku_test, invalid) {
+TEST(SudokuSolver_test, invalid) {
   EXPECT_EQ("Invalid sudoku! Not enough digits.", SudokuSolver().solve(std::string(80, '1')));
   EXPECT_EQ("Invalid sudoku! Too many digits.", SudokuSolver().solve(std::string(82, '1')));
 
@@ -39,7 +37,7 @@ TEST(Sudoku_test, invalid) {
   EXPECT_EQ(std::string::npos, str.find("Invalid sudoku!"));
 }
 
-TEST(Sudoku_test, contradictory) {
+TEST(SudokuSolver_test, contradictory) {
   EXPECT_EQ("Unsolvable sudoku :(", SudokuSolver().solve(
     "+---+---+---+\n"
     "|100|000|000|\n"
@@ -89,7 +87,7 @@ TEST(Sudoku_test, contradictory) {
   ));
 }
 
-TEST(Sudoku_test, almost_solved) {
+TEST(SudokuSolver_test, almost_solved) {
   std::string solved(
     "+---+---+---+\n"
     "|681|739|245|\n"
@@ -126,7 +124,7 @@ TEST(Sudoku_test, almost_solved) {
   ASSERT_EQ(8 * 9 * 9, count);
 }
 
-TEST(Sudoku_test, tenpai) {
+TEST(SudokuSolver_test, tenpai) {
   std::string solved(
     "+---+---+---+\n"
     "|681|739|245|\n"
@@ -162,7 +160,7 @@ TEST(Sudoku_test, tenpai) {
   ASSERT_EQ(9 * 9, count);
 }
 
-TEST(Sudoku_test, easy) {
+TEST(SudokuSolver_test, easy) {
   std::string easy(
     "+---+---+---+\n"
     "|14.|8..|97.|\n"
@@ -198,7 +196,7 @@ TEST(Sudoku_test, easy) {
   EXPECT_EQ(solved, SudokuSolver().solve(easy));
 }
 
-TEST(Sudoku_test, hard) {
+TEST(SudokuSolver_test, hard) {
   std::string hard(
     "050|002|000"
     "000|100|400"
@@ -230,7 +228,7 @@ TEST(Sudoku_test, hard) {
   EXPECT_EQ(solved, SudokuSolver().solve(hard));
 }
 
-TEST(Sudoku_test, region_2x2) {
+TEST(SudokuSolver_test, region_2x2) {
   std::string puzzle(
     "21|.."
     ".3|2."
@@ -248,7 +246,7 @@ TEST(Sudoku_test, region_2x2) {
   EXPECT_EQ(solved, SudokuSolver(2).solve(puzzle));
 }
 
-TEST(Sudoku_test, region_3x2) {
+TEST(SudokuSolver_test, region_3x2) {
   std::string puzzle(
     "5.6|..."
     "...|.2."
@@ -272,7 +270,7 @@ TEST(Sudoku_test, region_3x2) {
   EXPECT_EQ(solved, SudokuSolver(3, 2).solve(puzzle));
 }
 
-TEST(Sudoku_test, region_5x2) {
+TEST(SudokuSolver_test, region_5x2) {
   std::string puzzle(
     ".47..|..65."
     "9...5|7...2"
@@ -309,7 +307,7 @@ TEST(Sudoku_test, region_5x2) {
   EXPECT_EQ(solved, SudokuSolver(5, 2).solve(puzzle));
 }
 
-TEST(Sudoku_test, custom_labels) {
+TEST(SudokuSolver_test, custom_labels) {
   std::string puzzle(
     ".P.|K.R|I.D"
     "D..|B..|..R"
@@ -343,7 +341,7 @@ TEST(Sudoku_test, custom_labels) {
   EXPECT_EQ(solved, solver.solve(puzzle));
 }
 
-TEST(Sudoku_test, custom_regions) {
+TEST(SudokuSolver_test, custom_regions) {
   SudokuSolver sudoku(std::vector<unsigned>{
     0, 0, 1, 1, 1, 1, 2,
     0, 0, 0, 1, 1, 1, 2,

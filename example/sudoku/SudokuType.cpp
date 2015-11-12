@@ -1,6 +1,7 @@
 #include "SudokuType.hpp"
 
 #include <assert.h>
+#include <unordered_set>
 
 SudokuType::SudokuType()
   : SudokuType(3)
@@ -23,6 +24,9 @@ SudokuType::SudokuType(std::vector<unsigned> regions)
   labels_(default_labels(isqrt(regions.size()))),
   region_(std::move(regions))
 {
+  if (n_ == 0) {
+    throw std::invalid_argument("Sudoku must have non-zero size");
+  }
 }
 
 bool SudokuType::is_cell(char c) const {
@@ -54,7 +58,21 @@ unsigned SudokuType::region(unsigned x, unsigned y) const {
 }
 
 void SudokuType::set_labels(std::string labels) {
-  assert(labels.size() == n_);
+  if (labels.size() != n_) {
+    throw std::invalid_argument("Wrong number of labels");
+  }
+
+  std::unordered_set<char> used;
+  for (char c : labels) {
+    if (empty_chars_.find(c) != std::string::npos) {
+      throw std::invalid_argument("Cannot use empty char as label");
+    }
+    if (used.find(c) != used.end()) {
+      throw std::invalid_argument("Cannot use same label twice");
+    }
+    used.insert(c);
+  }
+
   labels_ = std::move(labels);
 }
 
@@ -77,7 +95,7 @@ std::string SudokuType::default_labels(unsigned n) {
   );
 
   if (n > chars.size()) {
-    throw SudokuTooBigException();
+    throw std::invalid_argument("Sudoku too large");
   }
 
   std::string labels;
