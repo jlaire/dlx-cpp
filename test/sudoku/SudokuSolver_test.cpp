@@ -243,7 +243,7 @@ TEST(SudokuSolver_test, region_2x2) {
     "32|14"
     "14|32"
   );
-  EXPECT_EQ(solved, SudokuSolver(2).solve(puzzle));
+  EXPECT_EQ(solved, SudokuSolver(4).solve(puzzle));
 }
 
 TEST(SudokuSolver_test, region_3x2) {

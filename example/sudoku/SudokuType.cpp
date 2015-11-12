@@ -4,12 +4,12 @@
 #include <unordered_set>
 
 SudokuType::SudokuType()
-  : SudokuType(3)
+  : SudokuType(9)
 {
 }
 
-SudokuType::SudokuType(unsigned region_size)
-  : SudokuType(region_size, region_size)
+SudokuType::SudokuType(unsigned size)
+  : SudokuType(isqrt(size), isqrt(size))
 {
 }
 
@@ -21,7 +21,7 @@ SudokuType::SudokuType(unsigned region_width, unsigned region_height)
 SudokuType::SudokuType(std::vector<unsigned> regions)
   : n_(isqrt(regions.size())),
   empty_chars_{'.', '0'},
-  labels_(default_labels(isqrt(regions.size()))),
+  labels_(default_labels(n_)),
   region_(std::move(regions))
 {
   if (n_ == 0) {
@@ -108,5 +108,8 @@ std::string SudokuType::default_labels(unsigned n) {
 unsigned SudokuType::isqrt(unsigned n) {
   unsigned k = 0;
   while ((k + 1) * (k + 1) <= n) ++k;
+  if (k * k != n) {
+    throw std::invalid_argument("Not a square");
+  }
   return k;
 }

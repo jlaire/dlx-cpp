@@ -13,15 +13,21 @@ TEST(SudokuType_test, ctor_default) {
 TEST(SudokuType_test, ctor_nxn_region) {
   EXPECT_EQ(1, SudokuType(1).n());
   EXPECT_EQ(1, SudokuType(1).size());
-  EXPECT_EQ(4, SudokuType(2).n());
-  EXPECT_EQ(16, SudokuType(2).size());
-  EXPECT_EQ(9, SudokuType(3).n());
-  EXPECT_EQ(81, SudokuType(3).size());
-  EXPECT_EQ(16, SudokuType(4).n());
-  EXPECT_EQ(256, SudokuType(4).size());
+  EXPECT_EQ(4, SudokuType(4).n());
+  EXPECT_EQ(16, SudokuType(4).size());
+  EXPECT_EQ(9, SudokuType(9).n());
+  EXPECT_EQ(81, SudokuType(9).size());
+  EXPECT_EQ(16, SudokuType(16).n());
+  EXPECT_EQ(256, SudokuType(16).size());
 
+  // Not squares
   EXPECT_THROW(SudokuType(0), std::invalid_argument);
+  EXPECT_THROW(SudokuType(3), std::invalid_argument);
+  EXPECT_THROW(SudokuType(5), std::invalid_argument);
   EXPECT_THROW(SudokuType(8), std::invalid_argument);
+
+  // Too big
+  EXPECT_THROW(SudokuType(100), std::invalid_argument);
 }
 
 TEST(SudokuType_test, ctor_nxm_region) {
@@ -40,7 +46,7 @@ TEST(SudokuType_test, ctor_nxm_region) {
 }
 
 TEST(SudokuType_test, default_labels) {
-  SudokuType type(4);
+  SudokuType type(16);
 
   EXPECT_EQ(true, type.is_cell('.'));
   EXPECT_EQ(true, type.is_cell('0'));
@@ -103,7 +109,7 @@ TEST(SudokuType_test, default_labels) {
 }
 
 TEST(SudokuType_test, custom_labels) {
-  SudokuType type(2);
+  SudokuType type(4);
 
   ASSERT_THROW(type.set_labels("xyz"), std::invalid_argument);
   ASSERT_THROW(type.set_labels("xyzwa"), std::invalid_argument);

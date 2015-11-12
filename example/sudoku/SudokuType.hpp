@@ -7,11 +7,12 @@
 class SudokuType
 {
 public:
-  // The usual 9x9 type with 3x3 regions.
+  // The standard 9x9 Sudoku.
   SudokuType();
 
-  // Sudoku with square regions of any size.
-  explicit SudokuType(unsigned region_size);
+  // NxN version of the 9x9.
+  // `region_size` must be a square.
+  explicit SudokuType(unsigned size);
 
   // Sudoku with rectangle-shaped regions.
   SudokuType(unsigned region_width, unsigned region_height);
