@@ -20,24 +20,24 @@ SudokuType::SudokuType(unsigned region_width, unsigned region_height)
 SudokuType::SudokuType(std::vector<unsigned> regions)
   : n_(isqrt(regions.size())),
   empty_chars_{'.', '0'},
-  alphabet_(default_alphabet(isqrt(regions.size()))),
+  labels_(default_labels(isqrt(regions.size()))),
   region_(std::move(regions))
 {
 }
 
 bool SudokuType::is_cell(char c) const {
   return empty_chars_.find(c) != std::string::npos
-    || alphabet_.find(c) != std::string::npos;
+    || labels_.find(c) != std::string::npos;
 }
 
 unsigned SudokuType::value(char c) const {
-  auto pos = alphabet_.find(c);
+  auto pos = labels_.find(c);
   return pos == std::string::npos ? 0 : pos + 1;
 }
 
 char SudokuType::label(unsigned i) const {
   assert(i < n_);
-  return alphabet_[i];
+  return labels_[i];
 }
 
 unsigned SudokuType::n() const {
@@ -53,9 +53,9 @@ unsigned SudokuType::region(unsigned x, unsigned y) const {
   return region_[y * n_ + x];
 }
 
-void SudokuType::set_alphabet(std::string alphabet) {
-  assert(alphabet.size() == n_);
-  alphabet_ = std::move(alphabet);
+void SudokuType::set_labels(std::string labels) {
+  assert(labels.size() == n_);
+  labels_ = std::move(labels);
 }
 
 std::vector<unsigned> SudokuType::box_regions(unsigned w, unsigned h) {
@@ -69,7 +69,7 @@ std::vector<unsigned> SudokuType::box_regions(unsigned w, unsigned h) {
   return regions;
 }
 
-std::string SudokuType::default_alphabet(unsigned n) {
+std::string SudokuType::default_labels(unsigned n) {
   static const std::string chars(
     "123456789"
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -80,11 +80,11 @@ std::string SudokuType::default_alphabet(unsigned n) {
     throw SudokuTooBigException();
   }
 
-  std::string alphabet;
+  std::string labels;
   for (unsigned i = 0; i < n; ++i) {
-    alphabet.push_back(chars[i]);
+    labels.push_back(chars[i]);
   }
-  return alphabet;
+  return labels;
 }
 
 unsigned SudokuType::isqrt(unsigned n) {

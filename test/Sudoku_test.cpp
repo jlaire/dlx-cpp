@@ -309,7 +309,7 @@ TEST(Sudoku_test, region_5x2) {
   EXPECT_EQ(solved, SudokuSolver(5, 2).solve(puzzle));
 }
 
-TEST(Sudoku_test, custom_alphabet) {
+TEST(Sudoku_test, custom_labels) {
   std::string puzzle(
     ".P.|K.R|I.D"
     "D..|B..|..R"
@@ -338,7 +338,7 @@ TEST(Sudoku_test, custom_alphabet) {
   );
 
   SudokuType type;
-  type.set_alphabet("ABDEIKPRW");
+  type.set_labels("ABDEIKPRW");
   SudokuSolver solver(type);
   EXPECT_EQ(solved, solver.solve(puzzle));
 }
