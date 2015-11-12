@@ -39,7 +39,7 @@ private:
   unsigned n_;
   std::string empty_chars_;
   std::string labels_;
-  std::vector<unsigned> region_;
+  std::vector<unsigned> region_; // todo: change to vector<uint8_t>?
 
   static std::vector<unsigned> box_regions(unsigned w, unsigned h);
   static std::vector<unsigned> normalize_regions(std::vector<unsigned> regions);
