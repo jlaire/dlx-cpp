@@ -2,6 +2,7 @@
 
 #include <dlx/AlgorithmDLX.hpp>
 
+#include <assert.h>
 #include <algorithm>
 #include <unordered_map>
 #include <vector>
