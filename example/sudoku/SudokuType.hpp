@@ -1,5 +1,6 @@
 #pragma once
 
+#include <initializer_list>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -18,6 +19,7 @@ public:
   SudokuType(unsigned region_width, unsigned region_height);
 
   // Sudoku with arbitrarily-shaped regions.
+  SudokuType(std::initializer_list<unsigned> regions);
   explicit SudokuType(std::vector<unsigned> regions);
 
   void set_labels(std::string labels);
@@ -40,6 +42,7 @@ private:
   std::vector<unsigned> region_;
 
   static std::vector<unsigned> box_regions(unsigned w, unsigned h);
+  static std::vector<unsigned> normalize_regions(std::vector<unsigned> regions);
   static std::string default_labels(unsigned n);
   static unsigned isqrt(unsigned n);
 };

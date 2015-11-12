@@ -45,6 +45,22 @@ TEST(SudokuType_test, ctor_nxm_region) {
   EXPECT_EQ(10, SudokuType(2, 5).n());
 }
 
+TEST(SudokuType_test, ctor_custom_region) {
+  // size is not a square
+  EXPECT_THROW(SudokuType(std::vector<unsigned>()), std::invalid_argument);
+  EXPECT_THROW((SudokuType{0, 1}), std::invalid_argument);
+
+  // invalid regions
+  EXPECT_THROW((SudokuType{0, 0, 0, 1}), std::invalid_argument);
+  EXPECT_THROW((SudokuType{0, 0, 1, 2}), std::invalid_argument);
+
+  EXPECT_NO_THROW(SudokuType{0});
+  EXPECT_NO_THROW(SudokuType{1});
+  EXPECT_NO_THROW(SudokuType{999});
+  EXPECT_NO_THROW((SudokuType{0, 0, 1, 1}));
+  EXPECT_NO_THROW((SudokuType{0, 1, 1, 0}));
+}
+
 TEST(SudokuType_test, default_labels) {
   SudokuType type(16);
 

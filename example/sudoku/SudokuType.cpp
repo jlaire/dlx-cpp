@@ -1,6 +1,7 @@
 #include "SudokuType.hpp"
 
 #include <assert.h>
+#include <unordered_map>
 #include <unordered_set>
 
 SudokuType::SudokuType()
@@ -18,11 +19,16 @@ SudokuType::SudokuType(unsigned region_width, unsigned region_height)
 {
 }
 
+SudokuType::SudokuType(std::initializer_list<unsigned> regions)
+  : SudokuType(std::vector<unsigned>(regions))
+{
+}
+
 SudokuType::SudokuType(std::vector<unsigned> regions)
   : n_(isqrt(regions.size())),
   empty_chars_{'.', '0'},
   labels_(default_labels(n_)),
-  region_(std::move(regions))
+  region_(normalize_regions(std::move(regions)))
 {
   if (n_ == 0) {
     throw std::invalid_argument("Sudoku must have non-zero size");
@@ -83,6 +89,28 @@ std::vector<unsigned> SudokuType::box_regions(unsigned w, unsigned h) {
     for (unsigned x = 0; x < n; ++x) {
       regions.push_back(y / h * h + x / w);
     }
+  }
+  return regions;
+}
+
+std::vector<unsigned> SudokuType::normalize_regions(std::vector<unsigned> regions) {
+  unsigned n = isqrt(regions.size());
+  std::unordered_map<unsigned, unsigned> ids;
+  std::unordered_map<unsigned, unsigned> areas;
+  for (unsigned id : regions) {
+    if (ids.find(id) == ids.end()) {
+      unsigned size = ids.size();
+      ids[id] = size;
+    }
+    if (++areas[id] > n) {
+      throw std::invalid_argument("Region has wrong size");
+    }
+  }
+  if (ids.size() != n) {
+    throw std::invalid_argument("Too many regions");
+  }
+  for (unsigned& id : regions) {
+    id = ids[id];
   }
   return regions;
 }
