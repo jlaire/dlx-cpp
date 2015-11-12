@@ -4,24 +4,24 @@
 #include <string>
 #include <vector>
 
-class Sudoku
+class SudokuSolver
 {
 public:
   struct SudokuTooBigException {};
 
   // Standard 9x9 sudoku.
-  Sudoku();
+  SudokuSolver();
 
   // NxN sudoku.
   // In normal sudoku, region_size is 3.
-  explicit Sudoku(unsigned region_size);
+  explicit SudokuSolver(unsigned region_size);
 
   // Sudoku with rectangle-shaped regions.
   // In normal sudoku, the regions are 3 by 3.
-  Sudoku(unsigned region_width, unsigned region_height);
+  SudokuSolver(unsigned region_width, unsigned region_height);
 
   // Sudoku with arbitrarily shaped regions.
-  explicit Sudoku(std::vector<unsigned> regions);
+  explicit SudokuSolver(std::vector<unsigned> regions);
 
   void set_alphabet(std::string alphabet);
 

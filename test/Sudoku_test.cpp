@@ -1,5 +1,5 @@
-#include "../example/sudoku/Sudoku.hpp"
-#include "../example/sudoku/Sudoku.cpp"
+#include "../example/sudoku/SudokuSolver.hpp"
+#include "../example/sudoku/SudokuSolver.cpp"
 
 #include <gtest/gtest.h>
 
@@ -7,7 +7,7 @@ namespace {
 
 TEST(Sudoku_test, already_solved) {
   std::string solved("846937152319625847752184963285713694463859271971246385127598436638471529594362718");
-  EXPECT_EQ(solved, Sudoku().solve(solved));
+  EXPECT_EQ(solved, SudokuSolver().solve(solved));
 }
 
 TEST(Sudoku_test, non_digits) {
@@ -26,19 +26,19 @@ TEST(Sudoku_test, non_digits) {
     "|521|839|764|\n"
     "+---+---+---+\n"
   );
-  EXPECT_EQ(solved, Sudoku().solve(solved));
+  EXPECT_EQ(solved, SudokuSolver().solve(solved));
 }
 
 TEST(Sudoku_test, invalid) {
-  EXPECT_EQ("Invalid sudoku! Not enough digits.", Sudoku().solve(std::string(80, '1')));
-  EXPECT_EQ("Invalid sudoku! Too many digits.", Sudoku().solve(std::string(82, '1')));
+  EXPECT_EQ("Invalid sudoku! Not enough digits.", SudokuSolver().solve(std::string(80, '1')));
+  EXPECT_EQ("Invalid sudoku! Too many digits.", SudokuSolver().solve(std::string(82, '1')));
 
-  auto str = Sudoku().solve(std::string(81, '1'));
+  auto str = SudokuSolver().solve(std::string(81, '1'));
   EXPECT_EQ(std::string::npos, str.find("Invalid sudoku!"));
 }
 
 TEST(Sudoku_test, contradictory) {
-  EXPECT_EQ("Unsolvable sudoku :(", Sudoku().solve(
+  EXPECT_EQ("Unsolvable sudoku :(", SudokuSolver().solve(
     "+---+---+---+\n"
     "|100|000|000|\n"
     "|010|000|000|\n"
@@ -54,7 +54,7 @@ TEST(Sudoku_test, contradictory) {
     "+---+---+---+\n"
   ));
 
-  EXPECT_EQ("Unsolvable sudoku :(", Sudoku().solve(
+  EXPECT_EQ("Unsolvable sudoku :(", SudokuSolver().solve(
     "+---+---+---+\n"
     "|100|010|000|\n"
     "|000|000|000|\n"
@@ -70,7 +70,7 @@ TEST(Sudoku_test, contradictory) {
     "+---+---+---+\n"
   ));
 
-  EXPECT_EQ("Unsolvable sudoku :(", Sudoku().solve(
+  EXPECT_EQ("Unsolvable sudoku :(", SudokuSolver().solve(
     "+---+---+---+\n"
     "|100|000|000|\n"
     "|000|000|000|\n"
@@ -115,7 +115,7 @@ TEST(Sudoku_test, almost_solved) {
 	++count;
 	char old = c;
 	c = digit;
-	ASSERT_EQ("Unsolvable sudoku :(", Sudoku().solve(copy));
+	ASSERT_EQ("Unsolvable sudoku :(", SudokuSolver().solve(copy));
 	c = old;
       }
     }
@@ -148,9 +148,9 @@ TEST(Sudoku_test, tenpai) {
       ++count;
       char old = c;
       c = '0';
-      ASSERT_EQ(solved, Sudoku().solve(copy));
+      ASSERT_EQ(solved, SudokuSolver().solve(copy));
       c = '.';
-      ASSERT_EQ(solved, Sudoku().solve(copy));
+      ASSERT_EQ(solved, SudokuSolver().solve(copy));
       c = old;
     }
   }
@@ -191,7 +191,7 @@ TEST(Sudoku_test, easy) {
     "+---+---+---+\n"
   );
 
-  EXPECT_EQ(solved, Sudoku().solve(easy));
+  EXPECT_EQ(solved, SudokuSolver().solve(easy));
 }
 
 TEST(Sudoku_test, hard) {
@@ -223,7 +223,7 @@ TEST(Sudoku_test, hard) {
     "621|354|897"
   );
 
-  EXPECT_EQ(solved, Sudoku().solve(hard));
+  EXPECT_EQ(solved, SudokuSolver().solve(hard));
 }
 
 TEST(Sudoku_test, region_2x2) {
@@ -241,7 +241,7 @@ TEST(Sudoku_test, region_2x2) {
     "32|14"
     "14|32"
   );
-  EXPECT_EQ(solved, Sudoku(2).solve(puzzle));
+  EXPECT_EQ(solved, SudokuSolver(2).solve(puzzle));
 }
 
 TEST(Sudoku_test, region_3x2) {
@@ -265,7 +265,7 @@ TEST(Sudoku_test, region_3x2) {
     "314|256"
     "652|143"
   );
-  EXPECT_EQ(solved, Sudoku(3, 2).solve(puzzle));
+  EXPECT_EQ(solved, SudokuSolver(3, 2).solve(puzzle));
 }
 
 TEST(Sudoku_test, region_5x2) {
@@ -302,7 +302,7 @@ TEST(Sudoku_test, region_5x2) {
     "21493|A7865"
   );
 
-  EXPECT_EQ(solved, Sudoku(5, 2).solve(puzzle));
+  EXPECT_EQ(solved, SudokuSolver(5, 2).solve(puzzle));
 }
 
 TEST(Sudoku_test, custom_alphabet) {
@@ -333,13 +333,13 @@ TEST(Sudoku_test, custom_alphabet) {
     "ERI|PDK|BWA"
   );
 
-  Sudoku sudoku;
+  SudokuSolver sudoku;
   sudoku.set_alphabet("ABDEIKPRW");
   EXPECT_EQ(solved, sudoku.solve(puzzle));
 }
 
 TEST(Sudoku_test, custom_regions) {
-  Sudoku sudoku({
+  SudokuSolver sudoku({
     0, 0, 1, 1, 1, 1, 2,
     0, 0, 0, 1, 1, 1, 2,
     3, 0, 0, 4, 4, 2, 2,

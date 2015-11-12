@@ -1,4 +1,4 @@
-#include "Sudoku.hpp"
+#include "SudokuSolver.hpp"
 
 #include <dlx/AlgorithmDLX.hpp>
 
@@ -6,22 +6,22 @@
 #include <unordered_map>
 #include <vector>
 
-Sudoku::Sudoku()
-  : Sudoku(3)
+SudokuSolver::SudokuSolver()
+  : SudokuSolver(3)
 {
 }
 
-Sudoku::Sudoku(unsigned region_size)
-  : Sudoku(region_size, region_size)
+SudokuSolver::SudokuSolver(unsigned region_size)
+  : SudokuSolver(region_size, region_size)
 {
 }
 
-Sudoku::Sudoku(unsigned region_width, unsigned region_height)
-  : Sudoku(box_regions(region_width, region_height))
+SudokuSolver::SudokuSolver(unsigned region_width, unsigned region_height)
+  : SudokuSolver(box_regions(region_width, region_height))
 {
 }
 
-Sudoku::Sudoku(std::vector<unsigned> regions)
+SudokuSolver::SudokuSolver(std::vector<unsigned> regions)
   : n_(isqrt(regions.size())),
   empty_chars_{'.', '0'},
   alphabet_(default_alphabet(isqrt(regions.size()))),
@@ -29,7 +29,7 @@ Sudoku::Sudoku(std::vector<unsigned> regions)
 {
 }
 
-void Sudoku::set_alphabet(std::string alphabet) {
+void SudokuSolver::set_alphabet(std::string alphabet) {
   assert(alphabet.size() == n_);
   alphabet_ = std::move(alphabet);
 }
@@ -47,7 +47,7 @@ void Sudoku::set_alphabet(std::string alphabet) {
  * have a proper exact cover.
  */
 
-std::string Sudoku::solve(std::string grid) const {
+std::string SudokuSolver::solve(std::string grid) const {
   std::vector<unsigned> digits;
   std::vector<unsigned> digit_positions;
   for (unsigned i = 0; i < grid.size(); ++i) {
@@ -133,46 +133,46 @@ std::string Sudoku::solve(std::string grid) const {
   return solution;
 }
 
-bool Sudoku::is_cell(char c) const {
+bool SudokuSolver::is_cell(char c) const {
   return empty_chars_.find(c) != std::string::npos
     || alphabet_.find(c) != std::string::npos;
 }
 
-unsigned Sudoku::value(char c) const {
+unsigned SudokuSolver::value(char c) const {
   auto pos = alphabet_.find(c);
   return pos == std::string::npos ? 0 : pos + 1;
 }
 
-unsigned Sudoku::size() const {
+unsigned SudokuSolver::size() const {
   return n_ * n_;
 }
 
-unsigned Sudoku::pack(unsigned a, unsigned b) const {
+unsigned SudokuSolver::pack(unsigned a, unsigned b) const {
   assert(a < n_ && b < n_);
   return a * n_ + b;
 }
 
-unsigned Sudoku::id_cell(unsigned x, unsigned y) const {
+unsigned SudokuSolver::id_cell(unsigned x, unsigned y) const {
   return pack(x, y);
 }
 
-unsigned Sudoku::id_col(unsigned x, unsigned d) const {
+unsigned SudokuSolver::id_col(unsigned x, unsigned d) const {
   return size() + pack(x, d);
 }
 
-unsigned Sudoku::id_row(unsigned y, unsigned d) const {
+unsigned SudokuSolver::id_row(unsigned y, unsigned d) const {
   return 2 * size() + pack(y, d);
 }
 
-unsigned Sudoku::id_region(unsigned i, unsigned d) const {
+unsigned SudokuSolver::id_region(unsigned i, unsigned d) const {
   return 3 * size() + pack(i, d);
 }
 
-unsigned Sudoku::get_region(unsigned x, unsigned y) const {
+unsigned SudokuSolver::get_region(unsigned x, unsigned y) const {
   return region_[pack(y, x)];
 }
 
-std::vector<unsigned> Sudoku::box_regions(unsigned w, unsigned h) {
+std::vector<unsigned> SudokuSolver::box_regions(unsigned w, unsigned h) {
   std::vector<unsigned> regions;
   unsigned n = w * h;
   for (unsigned y = 0; y < n; ++y) {
@@ -183,7 +183,7 @@ std::vector<unsigned> Sudoku::box_regions(unsigned w, unsigned h) {
   return regions;
 }
 
-std::string Sudoku::default_alphabet(unsigned n) {
+std::string SudokuSolver::default_alphabet(unsigned n) {
   static const std::string chars(
     "123456789"
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -201,7 +201,7 @@ std::string Sudoku::default_alphabet(unsigned n) {
   return alphabet;
 }
 
-unsigned Sudoku::isqrt(unsigned n) {
+unsigned SudokuSolver::isqrt(unsigned n) {
   unsigned k = 0;
   while ((k + 1) * (k + 1) <= n) ++k;
   return k;
