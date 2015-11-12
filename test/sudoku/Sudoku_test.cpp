@@ -1,0 +1,191 @@
+#include "../../example/sudoku/Sudoku.hpp"
+
+#include <gtest/gtest.h>
+
+namespace {
+
+TEST(Sudoku_test, default_template_rectangle_regions) {
+  EXPECT_EQ(
+    "+-+\n"
+    "|.|\n"
+    "+-+\n",
+    Sudoku(SudokuType(1)).default_template()
+  );
+
+  EXPECT_EQ(
+    "+--+--+\n"
+    "|..|..|\n"
+    "|..|..|\n"
+    "+--+--+\n"
+    "|..|..|\n"
+    "|..|..|\n"
+    "+--+--+\n",
+    Sudoku(SudokuType(4)).default_template()
+  );
+
+  EXPECT_EQ(
+    "+---+---+\n"
+    "|...|...|\n"
+    "|...|...|\n"
+    "+---+---+\n"
+    "|...|...|\n"
+    "|...|...|\n"
+    "+---+---+\n"
+    "|...|...|\n"
+    "|...|...|\n"
+    "+---+---+\n",
+    Sudoku(SudokuType(3, 2)).default_template()
+  );
+}
+
+TEST(Sudoku_test, default_template_arbitrary_regions) {
+  EXPECT_EQ(
+    "+-----+-+\n"
+    "|. . .|.|\n"
+    "| +---+ |\n"
+    "|.|. . .|\n"
+    "+-+-+---+\n"
+    "|. .|. .|\n"
+    "|. .|. .|\n"
+    "+---+---+\n",
+    Sudoku(SudokuType{
+      0, 0, 0, 1,
+      0, 1, 1, 1,
+      2, 2, 3, 3,
+      2, 2, 3, 3,
+    }).default_template()
+  );
+
+  // In black-and-white ASCII it's hard to do better than this.
+  EXPECT_EQ(
+    "+-+-+\n"
+    "|.|.|\n"
+    "+-+-+\n"
+    "|.|.|\n"
+    "+-+-+\n",
+    Sudoku(SudokuType{
+      0, 1,
+      1, 0,
+    }).default_template()
+  );
+}
+
+TEST(Sudoku_test, set_template) {
+  Sudoku sudoku(SudokuType(4));
+  EXPECT_THROW(sudoku.set_template("..."), std::invalid_argument);
+  EXPECT_THROW(sudoku.set_template("....."), std::invalid_argument);
+  ASSERT_NO_THROW(sudoku.set_template(".. .."));
+
+  EXPECT_EQ(".. ..", sudoku.to_string());
+  sudoku[0] = 1;
+  sudoku[1] = 2;
+  sudoku[2] = 2;
+  sudoku[3] = 1;
+  EXPECT_EQ("12 21", sudoku.to_string());
+}
+
+TEST(Sudoku_test, from_string) {
+  EXPECT_THROW(Sudoku(""), std::invalid_argument);
+  EXPECT_THROW(Sudoku("2"), std::invalid_argument);
+  EXPECT_THROW(Sudoku("A"), std::invalid_argument);
+  EXPECT_THROW(Sudoku("z"), std::invalid_argument);
+  EXPECT_NO_THROW(Sudoku("."));
+  EXPECT_NO_THROW(Sudoku("0"));
+  EXPECT_NO_THROW(Sudoku("1"));
+  EXPECT_NO_THROW(Sudoku("( 1 )"));
+
+  EXPECT_THROW(Sudoku("..."), std::invalid_argument);
+  EXPECT_NO_THROW(Sudoku("...."));
+
+  Sudoku sudoku(
+    "1.|.."
+    "..|.2"
+    "-----"
+    ".1|.."
+    "..|3."
+  );
+
+  EXPECT_EQ(1, sudoku[0]);
+  EXPECT_EQ(0, sudoku[1]);
+  EXPECT_EQ(0, sudoku[2]);
+  EXPECT_EQ(0, sudoku[3]);
+  EXPECT_EQ(0, sudoku[4]);
+  EXPECT_EQ(0, sudoku[5]);
+  EXPECT_EQ(0, sudoku[6]);
+  EXPECT_EQ(2, sudoku[7]);
+  EXPECT_EQ(0, sudoku[8]);
+  EXPECT_EQ(1, sudoku[9]);
+  EXPECT_EQ(0, sudoku[10]);
+  EXPECT_EQ(0, sudoku[11]);
+  EXPECT_EQ(0, sudoku[12]);
+  EXPECT_EQ(0, sudoku[13]);
+  EXPECT_EQ(3, sudoku[14]);
+  EXPECT_EQ(0, sudoku[15]);
+}
+
+TEST(Sudoku_test, is_valid) {
+  EXPECT_FALSE(
+    Sudoku(
+      "1.|1."
+      "..|.."
+      "-----"
+      "..|.."
+      "..|.."
+    ).is_valid()
+  );
+
+  EXPECT_FALSE(
+    Sudoku(
+      "1.|.."
+      "..|.."
+      "-----"
+      "1.|.."
+      "..|.."
+    ).is_valid()
+  );
+
+  EXPECT_FALSE(
+    Sudoku(
+      "1.|.."
+      ".1|.."
+      "-----"
+      "..|.."
+      "..|.."
+    ).is_valid()
+  );
+
+  EXPECT_TRUE(
+    Sudoku(
+      "1.|.."
+      "..|1."
+      "-----"
+      ".1|.."
+      "..|.1"
+    ).is_valid()
+  );
+}
+
+TEST(Sudoku_test, is_solved) {
+  EXPECT_FALSE(Sudoku(".").is_solved());
+  EXPECT_TRUE(Sudoku("1").is_solved());
+  EXPECT_FALSE(
+    Sudoku(
+      "12|3."
+      "34|12"
+      "-----"
+      "43|21"
+      "21|43"
+    ).is_solved()
+  );
+  EXPECT_TRUE(
+    Sudoku(
+      "12|34"
+      "34|12"
+      "-----"
+      "43|21"
+      "21|43"
+    ).is_solved()
+  );
+}
+
+}
