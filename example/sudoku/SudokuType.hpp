@@ -22,6 +22,8 @@ public:
   SudokuType(std::initializer_list<unsigned> regions);
   explicit SudokuType(std::vector<unsigned> regions);
 
+  static SudokuType fromSize(unsigned size);
+
   void set_labels(std::string labels);
 
   // Returns true iff c is a label or represents an empty cell.

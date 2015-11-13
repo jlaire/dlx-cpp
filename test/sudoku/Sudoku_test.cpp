@@ -72,16 +72,56 @@ TEST(Sudoku_test, default_template_arbitrary_regions) {
 
 TEST(Sudoku_test, set_template) {
   Sudoku sudoku(SudokuType(4));
-  EXPECT_THROW(sudoku.set_template("..."), std::invalid_argument);
-  EXPECT_THROW(sudoku.set_template("....."), std::invalid_argument);
-  ASSERT_NO_THROW(sudoku.set_template(".. .."));
+  EXPECT_THROW(
+    sudoku.set_template(
+      "...."
+      "...."
+      "...."
+      "... "
+    ),
+    std::invalid_argument
+  );
+  EXPECT_THROW(
+    sudoku.set_template(
+      "...."
+      "...."
+      "...."
+      "....."
+    ),
+    std::invalid_argument
+  );
+  ASSERT_NO_THROW(
+    sudoku.set_template(
+      "..|..\n"
+      "..|..\n"
+      "--|--\n"
+      "..|..\n"
+      "..|..\n"
+    )
+  );
 
-  EXPECT_EQ(".. ..", sudoku.to_string());
-  sudoku[0] = 1;
-  sudoku[1] = 2;
-  sudoku[2] = 2;
-  sudoku[3] = 1;
-  EXPECT_EQ("12 21", sudoku.to_string());
+  EXPECT_EQ(
+    "..|..\n"
+    "..|..\n"
+    "--|--\n"
+    "..|..\n"
+    "..|..\n",
+    sudoku.to_string()
+  );
+  sudoku[0] = 0;
+  sudoku[3] = 4;
+  sudoku[4] = 2;
+  sudoku[9] = 1;
+  sudoku[14] = 1;
+
+  EXPECT_EQ(
+    "..|.4\n"
+    "2.|..\n"
+    "--|--\n"
+    ".1|..\n"
+    "..|1.\n",
+    sudoku.to_string()
+  );
 }
 
 TEST(Sudoku_test, from_string) {
@@ -93,9 +133,6 @@ TEST(Sudoku_test, from_string) {
   EXPECT_NO_THROW(Sudoku("0"));
   EXPECT_NO_THROW(Sudoku("1"));
   EXPECT_NO_THROW(Sudoku("( 1 )"));
-
-  EXPECT_THROW(Sudoku("..."), std::invalid_argument);
-  EXPECT_NO_THROW(Sudoku("...."));
 
   Sudoku sudoku(
     "1.|.."

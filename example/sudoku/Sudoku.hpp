@@ -30,8 +30,7 @@ private:
   std::string template_;
   std::vector<unsigned> values_;
 
-  static auto guess_type(const std::string& str) -> SudokuType;
-  static auto parse_template(const std::string& str) -> std::string;
-  static auto get_values(const SudokuType& type, const std::string& str)
-    -> std::vector<unsigned>;
+  static auto count_cells(const std::string& str) -> unsigned;
+  static auto parse_template(const SudokuType& type, const std::string& str) -> std::string;
+  static auto get_values(const SudokuType& type, const std::string& str) -> std::vector<unsigned>;
 };

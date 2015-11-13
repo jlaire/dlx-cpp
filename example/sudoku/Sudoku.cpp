@@ -1,5 +1,6 @@
 #include "Sudoku.hpp"
 
+#include <ctype.h>
 #include <algorithm>
 
 Sudoku::Sudoku()
@@ -13,13 +14,13 @@ Sudoku::Sudoku(SudokuType type)
 }
 
 Sudoku::Sudoku(const std::string& str)
-  : Sudoku(guess_type(str), str)
+  : Sudoku(SudokuType::fromSize(count_cells(str)), str)
 {
 }
 
 Sudoku::Sudoku(SudokuType type, const std::string& str)
   : type_(std::move(type)),
-  template_(parse_template(str)),
+  template_(parse_template(type_, str)),
   values_(get_values(type_, str))
 {
 }
@@ -167,7 +168,7 @@ std::string Sudoku::default_template() const {
 }
 
 void Sudoku::set_template(const std::string& str) {
-  template_ = parse_template(str);
+  template_ = parse_template(type_, str);
 }
 
 bool Sudoku::is_valid() const {
@@ -206,17 +207,62 @@ unsigned Sudoku::operator[](unsigned pos) const {
 }
 
 std::string Sudoku::to_string() const {
-  return template_;
-}
-
-SudokuType Sudoku::guess_type(const std::string& str) {
-  return SudokuType();
-}
-
-std::string Sudoku::parse_template(const std::string& str) {
+  std::string str(template_);
+  unsigned j = 0;
+  for (unsigned i = 0; i < str.size(); ++i) {
+    if (type_.is_cell(str[i])) {
+      if (j >= values_.size()) {
+	throw std::logic_error("");
+      }
+      if (values_[j] > 0) {
+	str[i] = type_.label(values_[j] - 1);
+      }
+      ++j;
+    }
+  }
+  if (j != values_.size()) {
+    throw std::logic_error("");
+  }
   return str;
 }
 
+unsigned Sudoku::count_cells(const std::string& str) {
+  unsigned size = 0;
+  for (char c : str) {
+    // TODO: This is a hack.
+    if (c == '.' || ::isdigit(c) || ::isalpha(c)) {
+      ++size;
+    }
+  }
+  return size;
+}
+
+std::string Sudoku::parse_template(const SudokuType& type, const std::string& str) {
+  if (count_cells(str) != type.size()) {
+    throw std::invalid_argument("Wrong number of cells in template");
+  }
+
+  std::string t;
+  for (char c : str) {
+    if (type.is_cell(c)) {
+      t += '.';
+    }
+    else {
+      t += c;
+    }
+  }
+  return t;
+}
+
 std::vector<unsigned> Sudoku::get_values(const SudokuType& type, const std::string& str) {
-  return std::vector<unsigned>(type.size());
+  std::vector<unsigned> values;
+  for (char c : str) {
+    if (type.is_cell(c)) {
+      values.push_back(type.value(c));
+    }
+  }
+  if (values.size() != type.size()) {
+    throw std::invalid_argument("");
+  }
+  return values;
 }

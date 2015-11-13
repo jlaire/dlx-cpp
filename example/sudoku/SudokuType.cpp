@@ -35,6 +35,10 @@ SudokuType::SudokuType(std::vector<unsigned> regions)
   }
 }
 
+SudokuType SudokuType::fromSize(unsigned size) {
+  return SudokuType(isqrt(size));
+}
+
 bool SudokuType::is_cell(char c) const {
   return empty_chars_.find(c) != std::string::npos
     || labels_.find(c) != std::string::npos;
