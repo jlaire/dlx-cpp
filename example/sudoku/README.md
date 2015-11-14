@@ -17,6 +17,5 @@ Examples:
 
 TODO:
   - Use proper exception types and messages.
-  - Support jigsaw sudokus in `main.cpp`.
   - Generate sudokus.
   - Generate random jigsaw patterns.

@@ -2,6 +2,7 @@
 #include "SudokuFormat.hpp"
 
 #include <assert.h>
+#include <functional>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -39,7 +40,96 @@ std::shared_ptr<SudokuType> SudokuType::from_size(unsigned size) {
 }
 
 std::shared_ptr<SudokuType> SudokuType::guess(const std::string& str) {
-  return from_size(SudokuFormat::count_cells(str));
+  auto size = SudokuFormat::count_cells(str);
+  auto n = isqrt(size);
+  auto lines = std::vector<std::string>();
+  auto line = std::string();
+  auto cells = 0u;
+
+  for (char c : str) {
+    if (c == '\n') {
+      if (cells != 0 && cells != n) {
+	return SudokuType::from_size(size);
+      }
+      lines.push_back(std::move(line));
+      cells = 0;
+      line.clear();
+      continue;
+    }
+    if (SudokuFormat::is_valid_cell(c)) {
+      ++cells;
+    }
+    if (cells > n) {
+      lines.push_back(std::move(line));
+      line.clear();
+      cells %= n;
+    }
+    line += c;
+  }
+  lines.push_back(std::move(line));
+
+  auto region = std::vector<std::vector<unsigned>>();
+  std::function<unsigned(unsigned, int, int)> find_region;
+  find_region = [&](unsigned id, int x, int y) -> unsigned {
+    if (x < 0 || y < 0 || y >= int(lines.size()) || x >= int(lines[y].size())) {
+      return 0;
+    }
+    while (region.size() <= unsigned(y)) {
+      region.emplace_back();
+    }
+    while (region[y].size() <= unsigned(x)) {
+      region[y].push_back(0);
+    }
+    if (region[y][x] != 0) {
+      return 0;
+    }
+    char c = lines[y][x];
+    if (!SudokuFormat::is_valid_cell(c) && c != ' ') {
+      return 0;
+    }
+    region[y][x] = id;
+    auto region_size = 1u;
+    region_size += find_region(id, x, y - 1);
+    region_size += find_region(id, x, y + 1);
+    region_size += find_region(id, x - 1, y);
+    region_size += find_region(id, x + 1, y);
+    return region_size;
+  };
+
+  auto next_id = 1u;
+  for (auto y = 0u; y < lines.size(); ++y) {
+    for (auto x = 0u; x < lines[y].size(); ++x) {
+      if (!SudokuFormat::is_valid_cell(lines[y][x])) {
+	continue;
+      }
+      auto region_size = find_region(next_id, x, y);
+      if (region_size > 0) {
+	++next_id;
+      }
+    }
+  }
+
+  auto region_size = std::unordered_map<unsigned, unsigned>();
+  auto final_regions = std::vector<unsigned>();
+  auto total_size = 0u;
+  for (auto y = 0u; y < lines.size(); ++y) {
+    for (auto x = 0u; x < lines[y].size(); ++x) {
+      if (SudokuFormat::is_valid_cell(lines[y][x])) {
+        ++total_size;
+        ++region_size[region[y][x]];
+        final_regions.push_back(region[y][x]);
+      }
+    }
+  }
+
+  assert(total_size == size);
+  for (auto p : region_size) {
+    if (p.second != n) {
+      return SudokuType::from_size(size);
+    }
+  }
+
+  return SudokuType::make(final_regions);
 }
 
 bool SudokuType::operator==(const SudokuType& other) const {
@@ -85,8 +175,8 @@ std::vector<unsigned> SudokuType::normalize_regions(std::vector<unsigned> region
   std::unordered_map<unsigned, unsigned> areas;
   for (unsigned id : regions) {
     if (ids.find(id) == ids.end()) {
-      unsigned size = ids.size();
-      ids[id] = size;
+      unsigned next_id = ids.size();
+      ids[id] = next_id;
     }
     if (++areas[id] > n) {
       throw std::invalid_argument("Region has wrong size");

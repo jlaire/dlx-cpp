@@ -55,33 +55,200 @@ TEST(SudokuType_test, ctor_custom_region) {
   EXPECT_NO_THROW(SudokuType{999});
   EXPECT_NO_THROW((SudokuType{0, 0, 1, 1}));
   EXPECT_NO_THROW((SudokuType{0, 1, 1, 0}));
+
+  EXPECT_EQ((SudokuType{0, 0, 1, 1}), (SudokuType{6, 6, 2, 2}));
 }
 
-TEST(SudokuType_test, guess_type) {
+TEST(SudokuType_test, guess_type_nxn_regions) {
   EXPECT_ANY_THROW(SudokuType::guess(
     "...."
     "...."
     "...."
     "..."
   ));
+
   EXPECT_ANY_THROW(SudokuType::guess(
     "...."
     "...."
     "...."
     "....."
   ));
+
+  EXPECT_EQ(*SudokuType::make(1), *SudokuType::guess(
+    "+-+\n"
+    "|.|\n"
+    "+-+\n"
+  ));
+
   EXPECT_EQ(*SudokuType::make(4), *SudokuType::guess(
     "...."
     "...."
     "...."
     "...."
   ));
+
+  EXPECT_EQ(*SudokuType::make(4), *SudokuType::guess(
+    ". .|..\n"
+    ". .|..\n"
+    " +-+--\n"
+    ".|.|..\n"
+    "-+ |  \n"
+    ". .|..\n"
+  ));
+
+  EXPECT_EQ(*SudokuType::make(4), *SudokuType::guess(
+    "..|..\n"
+    "..|..\n"
+    "..|..\n"
+    "--+--\n"
+    "..|..\n"
+  ));
+
   EXPECT_EQ(*SudokuType::make(4), *SudokuType::guess(
     ".1|..\n"
     "..|2.\n"
     "-----\n"
     "z.|..\n"
     ".a|..\n"
+  ));
+}
+
+TEST(SudokuType_test, guess_type_nxm_regions) {
+  EXPECT_EQ(*SudokuType::make(4, 1), *SudokuType::guess(
+    "....\n"
+    "----\n"
+    "....\n"
+    "----\n"
+    "....\n"
+    "----\n"
+    "....\n"
+  ));
+
+  EXPECT_EQ(*SudokuType::make(1, 4), *SudokuType::guess(
+    ".|.|.|.\n"
+    ".|.|.|.\n"
+    ".|.|.|.\n"
+    ".|.|.|.\n"
+  ));
+
+  EXPECT_EQ(*SudokuType::make(3, 2), *SudokuType::guess(
+    "|...|...|\n"
+    "|...|...|\n"
+    "|-------|\n"
+    "|...|...|\n"
+    "|...|...|\n"
+    "|-------|\n"
+    "|...|...|\n"
+    "|...|...|\n"
+  ));
+
+  EXPECT_EQ(*SudokuType::make(3, 2), *SudokuType::guess(
+    "|...|...|\n"
+    "|...|...|\n"
+    "\n"
+    "|...|...|\n"
+    "|...|...|\n"
+    "\n"
+    "|...|...|\n"
+    "|...|...|\n"
+  ));
+
+  EXPECT_EQ(*SudokuType::make(3, 2), *SudokuType::guess(
+    "...|......|...\n\n"
+    "...|......|...\n\n"
+    "...|......|..."
+  ));
+
+  EXPECT_EQ(*SudokuType::make(3, 2), *SudokuType::guess(
+    "|. ..|...|\n"
+    "|. ..|...|\n"
+    "----------\n"
+    "|. ..|...|\n"
+    "|. ..|...|\n"
+    "----------\n"
+    "|. ..|...|\n"
+    "|    |   |\n"
+    "|. ..|...|\n"
+  ));
+}
+
+TEST(SudokuType_test, guess_arbitrary_regions) {
+  EXPECT_EQ(*SudokuType::make(std::vector<unsigned>{
+    0, 0, 1, 1, 1, 1, 2,
+    0, 0, 0, 1, 1, 1, 2,
+    3, 0, 0, 4, 4, 2, 2,
+    3, 3, 4, 4, 4, 2, 2,
+    3, 3, 4, 4, 5, 5, 2,
+    3, 6, 6, 6, 5, 5, 5,
+    3, 6, 6, 6, 6, 5, 5,
+  }), *SudokuType::guess(
+    "+---+-------+-+\n"
+    "|. .|. . . .|.|\n"
+    "|   +-+     | |\n"
+    "|. . .|. . .|.|\n"
+    "+-+   +---+-+ |\n"
+    "|.|. .|. .|. .|\n"
+    "| +-+-+   |   |\n"
+    "|. .|. . .|. .|\n"
+    "|   |   +-+-+ |\n"
+    "|. .|. .|. .|.|\n"
+    "| +-+---+   +-+\n"
+    "|.|. . .|. . .|\n"
+    "| |     +-+   |\n"
+    "|.|. . . .|. .|\n"
+    "+-+-------+---+\n"
+  ));
+
+  EXPECT_EQ(*SudokuType::make(std::vector<unsigned>{
+    0, 0, 0, 1,
+    0, 1, 1, 1,
+    2, 3, 3, 3,
+    2, 2, 2, 3,
+  }), *SudokuType::guess(
+    ". ..|.\n"
+    "  --  \n"
+    ".|.. .\n"
+    "------\n"
+    ".|.. .\n"
+    "  --  \n"
+    ". ..|.\n"
+  ));
+
+  EXPECT_EQ(*SudokuType::make(std::vector<unsigned>{
+    0, 0, 0, 1,
+    0, 1, 1, 1,
+    2, 3, 3, 3,
+    2, 2, 2, 3,
+  }), *SudokuType::guess(
+    "...|.\n"
+    "  /  \n"
+    ".|...\n"
+    "-----\n"
+    ".|...\n"
+    " --- \n"
+    "...|.\n"
+  ));
+
+  EXPECT_EQ(*SudokuType::make(std::vector<unsigned>{
+    0, 0, 0, 1,
+    0, 1, 1, 1,
+    2, 3, 3, 3,
+    2, 2, 2, 3,
+  }), *SudokuType::guess(
+    "...,."
+    ".!!...\n"
+    "\n"
+    ".@#..."
+    "..._."
+  ));
+
+  EXPECT_EQ(*SudokuType::make(std::vector<unsigned>{
+    0, 0, 0, 1,
+    0, 1, 1, 1,
+    2, 3, 3, 3,
+    2, 2, 2, 3,
+  }), *SudokuType::guess(
+    "...,..=]...\n\n.:)......_."
   ));
 }
 

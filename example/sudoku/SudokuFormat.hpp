@@ -17,6 +17,8 @@ public:
 
   SudokuFormat with_labels(std::string labels) const;
 
+  static auto is_valid_label(char c) -> bool;
+  static auto is_valid_cell(char c) -> bool;
   static auto count_cells(const std::string& str) -> unsigned;
   auto get_values(const std::string& str) const -> std::vector<unsigned>;
 
@@ -34,8 +36,7 @@ private:
   std::string labels_;
 
   static auto is_empty(char c) -> bool;
-  static auto is_valid_label(char c) -> bool; 
   static auto valid_labels() -> const std::string&;
-  static auto default_labels(unsigned n) -> std::string;
+  static auto default_labels(const std::string& str, unsigned n) -> std::string;
   static auto default_template(const SudokuType& type) -> std::string;
 };

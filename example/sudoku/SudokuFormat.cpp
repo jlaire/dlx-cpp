@@ -1,6 +1,7 @@
 #include "SudokuFormat.hpp"
 
 #include <assert.h>
+#include <set>
 #include <unordered_set>
 
 SudokuFormat::SudokuFormat(std::string format)
@@ -16,7 +17,7 @@ SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type)
 SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type, std::string format)
   : type_(type),
   template_(std::move(format)),
-  labels_(default_labels(type_->n()))
+  labels_(default_labels(template_, type_->n()))
 {
   unsigned cells = 0;
   for (char& c : template_) {
@@ -140,6 +141,10 @@ bool SudokuFormat::is_valid_label(char c) {
   return valid_labels().find(c) != std::string::npos;
 }
 
+bool SudokuFormat::is_valid_cell(char c) {
+  return is_valid_label(c) || is_empty(c);
+}
+
 const std::string& SudokuFormat::valid_labels() {
   static const std::string chars(
     "123456789"
@@ -149,12 +154,29 @@ const std::string& SudokuFormat::valid_labels() {
   return chars;
 }
 
-std::string SudokuFormat::default_labels(unsigned n) {
-  if (n > valid_labels().size()) {
-    throw std::invalid_argument("Sudoku too large");
+std::string SudokuFormat::default_labels(const std::string& str, unsigned n) {
+  std::set<char> used;
+  for (char c : str) {
+    if (is_valid_label(c)) {
+      used.insert(c);
+    }
   }
 
-  return valid_labels().substr(0, n);
+  for (unsigned i = 0; i < valid_labels().size() && used.size() < n; ++i) {
+    used.insert(valid_labels()[i]);
+  }
+
+  if (used.size() < n) {
+    throw std::invalid_argument("Sudoku too large, not enough labels");
+  }
+
+  std::string labels;
+  for (char c : used) {
+    if (labels.size() < n) {
+      labels += c;
+    }
+  }
+  return labels;
 }
 
 std::string SudokuFormat::default_template(const SudokuType& type) {
