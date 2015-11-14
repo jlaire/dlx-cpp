@@ -87,12 +87,12 @@ TEST(SudokuFormat_test, compact) {
 
 TEST(SudokuFormat_test, oneline) {
   EXPECT_EQ(
-    ".",
+    ".\n",
     SudokuFormat::oneline(SudokuType::make(1)).to_string()
   );
 
   EXPECT_EQ(
-    "................",
+    "................\n",
     SudokuFormat::oneline(SudokuType::make(4)).to_string()
   );
 }

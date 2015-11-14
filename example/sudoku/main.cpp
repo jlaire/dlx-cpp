@@ -1,10 +1,16 @@
 #include "SudokuSolver.hpp"
 #include "SudokuType.hpp"
 
+#include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
 #include <map>
 #include <string>
+
+static void show_usage_and_exit() {
+  std::cout << "Help message goes here\n";
+  ::exit(1);
+}
 
 int main(int argc, char **argv) {
   enum class Format { DEFAULT, ONELINE, COMPACT, PRESERVE };
@@ -17,18 +23,27 @@ int main(int argc, char **argv) {
 
   auto opt_format = Format::DEFAULT;
   auto opt_print_initial = false;
+  auto opt_one_sudoku_per_line = false;
 
-  for (int opt; (opt = ::getopt(argc, argv, "if:")) != -1;) {
+  for (int opt; (opt = ::getopt(argc, argv, "hilf:")) != -1;) {
     switch (opt) {
+      case 'h':
+	show_usage_and_exit();
+	break;
+
       case 'i':
 	opt_print_initial = true;
+	break;
+
+      case 'l':
+	opt_one_sudoku_per_line = true;
 	break;
 
       case 'f': {
 	auto it = format_names.find(::optarg);
 	if (it == format_names.end()) {
 	  std::cerr << "Invalid argument for -f '" << ::optarg << "'\n";
-	  return 1;
+	  show_usage_and_exit();
 	}
 	opt_format = it->second;
 	break;
@@ -40,11 +55,14 @@ int main(int argc, char **argv) {
   }
 
   std::string input;
-  for (std::string line; std::cin;) {
+  bool first = true;
+  for (std::string line; std::cin; first = false) {
     if (std::getline(std::cin, line) && !line.empty()) {
       input += line;
-      input += '\n';
-      continue;
+      if (!opt_one_sudoku_per_line) {
+	input += '\n';
+	continue;
+      }
     }
 
     if (input.empty()) {
@@ -59,13 +77,20 @@ int main(int argc, char **argv) {
       SudokuFormat(type)
     );
 
+    if (!first && opt_format != Format::ONELINE) {
+      std::cout << '\n';
+    }
+
     Sudoku sudoku(type, input);
     if (opt_print_initial) {
-      std::cout << sudoku.to_string(format) << '\n';
+      std::cout << sudoku.to_string(format);
+      if (opt_format != Format::ONELINE) {
+	std::cout << '\n';
+      }
     }
 
     auto solved = SudokuSolver().solve(sudoku);
-    std::cout << solved.to_string(format) << '\n';
+    std::cout << solved.to_string(format);
 
     input.clear();
   }

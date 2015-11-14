@@ -41,7 +41,7 @@ SudokuFormat SudokuFormat::compact(std::shared_ptr<SudokuType> type) {
 }
 
 SudokuFormat SudokuFormat::oneline(std::shared_ptr<SudokuType> type) {
-  return SudokuFormat(type, std::string(type->size(), '.'));
+  return SudokuFormat(type, std::string(type->size(), '.') + '\n');
 }
 
 SudokuFormat SudokuFormat::with_labels(std::string labels) const {
