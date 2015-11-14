@@ -3,72 +3,61 @@
 
 #include <unistd.h>
 #include <iostream>
+#include <map>
 #include <string>
 
 int main(int argc, char **argv) {
-  // TODO: Multiple format options:
-  //        - same as in input,
-  //        - pretty print (as now),
-  //        - compact (only digits, one row per line),
-  //        - super compact (like sudoku17).
+  enum class Format { DEFAULT, ONELINE, COMPACT, PRESERVE };
+  std::map<std::string, Format> format_names{
+    {"default", Format::DEFAULT},
+    {"oneline", Format::ONELINE},
+    {"compact", Format::COMPACT},
+    {"preserve", Format::PRESERVE},
+  };
 
-  enum Format { DEFAULT, ONELINE, COMPACT, PRESERVE };
-  Format opt_format = DEFAULT;
-  bool opt_print_initial = false;
-  unsigned opt_size = 9;
+  auto opt_format = Format::DEFAULT;
+  auto opt_print_initial = false;
 
-  for (int opt; (opt = ::getopt(argc, argv, "if:s:")) != -1;) {
+  for (int opt; (opt = ::getopt(argc, argv, "if:")) != -1;) {
     switch (opt) {
       case 'i':
 	opt_print_initial = true;
 	break;
-      case 'f':
-	if (::optarg == std::string("default")) {
-	  opt_format = DEFAULT;
-	}
-        else if (::optarg == std::string("oneline")) {
-	  opt_format = ONELINE;
-	}
-	else if (::optarg == std::string("compact")) {
-	  opt_format = COMPACT;
-	}
-	else if (::optarg == std::string("preserve")) {
-	  opt_format = PRESERVE;
-	}
-	else {
-	  std::cerr << "Invalid value for -f: '" << ::optarg << "'\n";
+
+      case 'f': {
+	auto it = format_names.find(::optarg);
+	if (it == format_names.end()) {
+	  std::cerr << "Invalid argument for -f '" << ::optarg << "'\n";
 	  return 1;
 	}
+	opt_format = it->second;
 	break;
-      case 's':
-	opt_size = std::stoi(::optarg);
-	break;
+      }
+
       default:
 	throw std::logic_error("unhandled case in getopt loop");
     }
   }
 
   std::string input;
-  unsigned digit_count = 0;
-  auto type = std::make_shared<SudokuType>(opt_size);
-
-  auto format = SudokuFormat(type);
-  switch (opt_format) {
-    case DEFAULT: break;
-    case ONELINE: format = SudokuFormat::oneline(type); break;
-    case COMPACT: format = SudokuFormat::compact(type); break;
-    case PRESERVE: std::cerr << "Todo!" << '\n'; break;
-  }
-
-  for (char c; std::cin.get(c);) {
-    input.push_back(c);
-    if (!format.is_cell(c)) {
+  for (std::string line; std::cin;) {
+    if (std::getline(std::cin, line) && !line.empty()) {
+      input += line;
+      input += '\n';
       continue;
     }
 
-    if (++digit_count < type->size()) {
+    if (input.empty()) {
       continue;
     }
+
+    auto type = SudokuType::guess(input);
+    auto format = (
+      opt_format == Format::PRESERVE ? SudokuFormat(type, input) :
+      opt_format == Format::COMPACT ? SudokuFormat::compact(type) :
+      opt_format == Format::ONELINE ? SudokuFormat::oneline(type) :
+      SudokuFormat(type)
+    );
 
     Sudoku sudoku(type, input);
     if (opt_print_initial) {
@@ -78,7 +67,6 @@ int main(int argc, char **argv) {
     auto solved = SudokuSolver().solve(sudoku);
     std::cout << solved.to_string(format) << '\n';
 
-    digit_count = 0;
     input.clear();
   }
 }
