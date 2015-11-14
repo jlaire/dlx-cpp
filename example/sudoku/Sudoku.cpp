@@ -73,6 +73,14 @@ unsigned Sudoku::operator[](unsigned pos) const {
   return values_[pos];
 }
 
+bool Sudoku::operator==(const Sudoku& other) const {
+  return *type_ == *other.type_ && values_ == other.values_;
+}
+
+bool Sudoku::operator!=(const Sudoku& other) const {
+  return !(*this == other);
+}
+
 std::string Sudoku::to_string() const {
   return to_string(SudokuFormat(type_));
 }

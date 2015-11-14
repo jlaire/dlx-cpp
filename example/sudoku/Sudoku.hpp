@@ -26,6 +26,9 @@ public:
   unsigned& operator[](unsigned pos);
   unsigned  operator[](unsigned pos) const;
 
+  bool operator==(const Sudoku& other) const;
+  bool operator!=(const Sudoku& other) const;
+
   std::string to_string() const;
   std::string to_string(const SudokuFormat& format) const;
 

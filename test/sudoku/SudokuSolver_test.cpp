@@ -10,7 +10,7 @@ namespace {
 TEST(SudokuSolver_test, already_solved) {
   Sudoku sudoku("846937152319625847752184963285713694463859271971246385127598436638471529594362718");
   ASSERT_TRUE(sudoku.is_solved());
-  EXPECT_EQ(sudoku.to_string(), SudokuSolver().solve(sudoku).to_string());
+  EXPECT_EQ(sudoku, SudokuSolver().solve(sudoku));
 }
 
 TEST(SudokuSolver_test, invalid) {
@@ -100,13 +100,13 @@ TEST(SudokuSolver_test, tenpai) {
     "+---+---+---+\n"
   );
 
-  auto solved_string = sudoku.to_string();
+  auto solved = sudoku;
   SudokuSolver solver;
 
   for (unsigned i = 0; i < sudoku.size(); ++i) {
     unsigned digit = sudoku[i];
     sudoku[i] = 0;
-    ASSERT_EQ(solved_string, solver.solve(sudoku).to_string());
+    ASSERT_EQ(solved, solver.solve(sudoku));
     sudoku[i] = digit;
   }
 }
@@ -144,8 +144,8 @@ TEST(SudokuSolver_test, easy) {
     "+---+---+---+\n"
   );
 
-  ASSERT_NE(solved.to_string(), easy.to_string());
-  EXPECT_EQ(solved.to_string(), SudokuSolver().solve(easy).to_string());
+  ASSERT_NE(solved, easy);
+  EXPECT_EQ(solved, SudokuSolver().solve(easy));
 }
 
 TEST(SudokuSolver_test, hard) {
@@ -177,8 +177,7 @@ TEST(SudokuSolver_test, hard) {
     "621|354|897"
   );
 
-  ASSERT_NE(solved.to_string(), hard.to_string());
-  EXPECT_EQ(solved.to_string(), SudokuSolver().solve(hard).to_string());
+  EXPECT_EQ(solved, SudokuSolver().solve(hard));
 }
 
 TEST(SudokuSolver_test, region_2x2) {
@@ -196,7 +195,7 @@ TEST(SudokuSolver_test, region_2x2) {
     "32|14"
     "14|32"
   );
-  EXPECT_EQ(solved.to_string(), SudokuSolver().solve(puzzle).to_string());
+  EXPECT_EQ(solved, SudokuSolver().solve(puzzle));
 }
 
 TEST(SudokuSolver_test, region_3x2) {
@@ -223,7 +222,7 @@ TEST(SudokuSolver_test, region_3x2) {
     "652|143"
   );
 
-  EXPECT_EQ(solved.to_string(), SudokuSolver().solve(puzzle).to_string());
+  EXPECT_EQ(solved, SudokuSolver().solve(puzzle));
 }
 
 TEST(SudokuSolver_test, region_5x2) {
@@ -262,7 +261,7 @@ TEST(SudokuSolver_test, region_5x2) {
     "21493|A7865"
   );
 
-  EXPECT_EQ(solved.to_string(), SudokuSolver().solve(puzzle).to_string());
+  EXPECT_EQ(solved, SudokuSolver().solve(puzzle));
 }
 
 TEST(SudokuSolver_test, custom_labels) {
@@ -296,7 +295,7 @@ TEST(SudokuSolver_test, custom_labels) {
     "ERI|PDK|BWA"
   ));
 
-  EXPECT_EQ(solved.to_string(), SudokuSolver().solve(puzzle).to_string());
+  EXPECT_EQ(solved, SudokuSolver().solve(puzzle));
 }
 
 TEST(SudokuSolver_test, custom_regions) {
@@ -368,7 +367,7 @@ TEST(SudokuSolver_test, custom_regions) {
   );
 
   EXPECT_ANY_THROW(SudokuSolver().solve(puzzle1));
-  EXPECT_EQ(solved2.to_string(), SudokuSolver().solve(puzzle2).to_string());
+  EXPECT_EQ(solved2, SudokuSolver().solve(puzzle2));
 }
 
 }
