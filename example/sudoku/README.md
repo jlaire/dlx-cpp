@@ -4,7 +4,7 @@ Sudoku
 To be documented.
 
 TODO:
-  - Use exceptions instead of ad-hoc strings.
+  - Use proper exception types and messages.
   - Support generalized sudokus in `main.cpp`.
-  - Generate puzzles.
-  - If there are multiple solutions, throw and return two of them.
+  - Generate sudokus.
+  - Generate random jigsaw patterns.

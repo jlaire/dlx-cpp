@@ -370,4 +370,32 @@ TEST(SudokuSolver_test, custom_regions) {
   EXPECT_EQ(solved2, SudokuSolver().solve(puzzle2));
 }
 
+TEST(SudokuSolver_test, no_solution) {
+  EXPECT_ANY_THROW(SudokuSolver().solve(Sudoku(
+    "12|3."
+    "..|.."
+    "-----"
+    "23|1."
+    "..|.."
+  )));
+}
+
+TEST(SudokuSolver_test, multiple_solutions) {
+  EXPECT_NO_THROW(SudokuSolver().solve(Sudoku(
+    "12|34"
+    ".3|21"
+    "-----"
+    "..|12"
+    "21|43"
+  )));
+
+  EXPECT_ANY_THROW(SudokuSolver().solve(Sudoku(
+    "12|34"
+    "..|21"
+    "-----"
+    "..|12"
+    "21|43"
+  )));
+}
+
 }
