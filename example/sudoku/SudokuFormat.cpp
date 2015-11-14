@@ -8,6 +8,11 @@ SudokuFormat::SudokuFormat(std::string format)
 {
 }
 
+SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type)
+  : SudokuFormat(type, default_template(*type))
+{
+}
+
 SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type, std::string format)
   : type_(type),
   template_(std::move(format)),
@@ -25,145 +30,7 @@ SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type, std::string format)
   }
 }
 
-SudokuFormat SudokuFormat::make_default(std::shared_ptr<SudokuType> type) {
-  /*
-   * The template is built in four steps.
-   *
-   * 1) empty
-   *
-   * +-------+
-   * |. . . .|
-   * |       |
-   * |. . . .|
-   * |       |
-   * |. . . .|
-   * |       |
-   * |. . . .|
-   * +-------+
-   *
-   * 2) add vertical lines
-   *
-   * +-----+-+
-   * |. . .|.|
-   * | |   | |
-   * |.|. . .|
-   * | | |   |
-   * |. .|. .|
-   * |   |   |
-   * |. .|. .|
-   * +---+---+
-   *
-   * 3) add horizontal lines
-   *
-   * +-----+-+
-   * |. . .|.|
-   * | +---+ |
-   * |.|. . .|
-   * +-+-+---+
-   * |. .|. .|
-   * |   |   |
-   * |. .|. .|
-   * +---+---+
-   *
-   * 4) collapse uninteresting rows and columns
-   *
-   * +-----+-+
-   * |. . .|.|
-   * | +---+ |
-   * |.|. . .|
-   * +-+-+---+
-   * |. .|. .|
-   * |. .|. .|
-   * +---+---+
-   *
-   */
-
-  // step 1: empty
-  std::vector<std::string> lines;
-  unsigned n = type->n();
-  std::string header(n * 2 + 1, '-');
-  std::string empty(n * 2 + 1, ' ');
-  *header.begin() = '+';
-  *header.rbegin() = '+';
-  *empty.begin() = '|';
-  *empty.rbegin() = '|';
-
-  lines.push_back(header);
-  for (unsigned i = 0; i < 2 * n - 1; ++i) {
-    lines.push_back(empty);
-  }
-  lines.push_back(header);
-
-  for (unsigned y = 0; y < n; ++y) {
-    for (unsigned x = 0; x < n; ++x) {
-      lines[2 * y + 1][2 * x + 1] = '.';
-    }
-  }
-
-  // step 2: add vertical lines
-  auto set = [&](unsigned x, unsigned y, char c) {
-    if (lines[y][x] == ' ') {
-      lines[y][x] = c;
-    }
-    else if (lines[y][x] != c) {
-      lines[y][x] = '+';
-    }
-  };
-
-  for (unsigned y = 0; y < n; ++y) {
-    for (unsigned x = 0; x + 1 < n; ++x) {
-      if (type->region(x, y) != type->region(x + 1, y)) {
-	set(2 * x + 2, 2 * y, '|');
-	set(2 * x + 2, 2 * y + 1, '|');
-	set(2 * x + 2, 2 * y + 2, '|');
-      }
-    }
-  }
-
-  // step 3: add horizontal lines
-  for (unsigned y = 0; y + 1 < n; ++y) {
-    for (unsigned x = 0; x < n; ++x) {
-      if (type->region(x, y) != type->region(x, y + 1)) {
-	set(2 * x, 2 * y + 2, '-');
-	set(2 * x + 1, 2 * y + 2, '-');
-	set(2 * x + 2, 2 * y + 2, '-');
-      }
-    }
-  }
-
-  // step 4: collapse uninteresting rows and columns
-  unsigned Y = lines.size();
-  unsigned X = lines[0].size();
-  std::vector<bool> keep_row(Y);
-  std::vector<bool> keep_col(X);
-  for (unsigned y = 0; y < Y; ++y) {
-    for (unsigned x = 0; x < X; ++x) {
-      char c = lines[y][x];
-      if (c != ' ' && c != '|') {
-	keep_row[y] = true;
-      }
-      if (c != ' ' && c != '-') {
-	keep_col[x] = true;
-      }
-    }
-  }
-
-  std::string result;
-  for (unsigned y = 0; y < Y; ++y) {
-    if (!keep_row[y]) {
-      continue;
-    }
-    for (unsigned x = 0; x < X; ++x) {
-      if (keep_col[x]) {
-	result += lines[y][x];
-      }
-    }
-    result += '\n';
-  }
-  return SudokuFormat(type, result);
-}
-
-SudokuFormat SudokuFormat::make_compact(std::shared_ptr<SudokuType> type) {
+SudokuFormat SudokuFormat::compact(std::shared_ptr<SudokuType> type) {
   std::string line(type->n(), '.');
   line += '\n';
   std::string result;
@@ -173,7 +40,7 @@ SudokuFormat SudokuFormat::make_compact(std::shared_ptr<SudokuType> type) {
   return SudokuFormat(type, result);
 }
 
-SudokuFormat SudokuFormat::make_oneline(std::shared_ptr<SudokuType> type) {
+SudokuFormat SudokuFormat::oneline(std::shared_ptr<SudokuType> type) {
   return SudokuFormat(type, std::string(type->size(), '.'));
 }
 
@@ -287,9 +154,143 @@ std::string SudokuFormat::default_labels(unsigned n) {
     throw std::invalid_argument("Sudoku too large");
   }
 
-  std::string labels;
-  for (unsigned i = 0; i < n; ++i) {
-    labels.push_back(valid_labels()[i]);
+  return valid_labels().substr(0, n);
+}
+
+std::string SudokuFormat::default_template(const SudokuType& type) {
+  /*
+   * The template is built in four steps.
+   *
+   * 1) empty
+   *
+   * +-------+
+   * |. . . .|
+   * |       |
+   * |. . . .|
+   * |       |
+   * |. . . .|
+   * |       |
+   * |. . . .|
+   * +-------+
+   *
+   * 2) add vertical lines
+   *
+   * +-----+-+
+   * |. . .|.|
+   * | |   | |
+   * |.|. . .|
+   * | | |   |
+   * |. .|. .|
+   * |   |   |
+   * |. .|. .|
+   * +---+---+
+   *
+   * 3) add horizontal lines
+   *
+   * +-----+-+
+   * |. . .|.|
+   * | +---+ |
+   * |.|. . .|
+   * +-+-+---+
+   * |. .|. .|
+   * |   |   |
+   * |. .|. .|
+   * +---+---+
+   *
+   * 4) collapse uninteresting rows and columns
+   *
+   * +-----+-+
+   * |. . .|.|
+   * | +---+ |
+   * |.|. . .|
+   * +-+-+---+
+   * |. .|. .|
+   * |. .|. .|
+   * +---+---+
+   *
+   */
+
+  // step 1: empty
+  std::vector<std::string> lines;
+  unsigned n = type.n();
+  std::string header(n * 2 + 1, '-');
+  std::string empty(n * 2 + 1, ' ');
+  *header.begin() = '+';
+  *header.rbegin() = '+';
+  *empty.begin() = '|';
+  *empty.rbegin() = '|';
+
+  lines.push_back(header);
+  for (unsigned i = 0; i < 2 * n - 1; ++i) {
+    lines.push_back(empty);
   }
-  return labels;
+  lines.push_back(header);
+
+  for (unsigned y = 0; y < n; ++y) {
+    for (unsigned x = 0; x < n; ++x) {
+      lines[2 * y + 1][2 * x + 1] = '.';
+    }
+  }
+
+  // step 2: add vertical lines
+  auto set = [&](unsigned x, unsigned y, char c) {
+    if (lines[y][x] == ' ') {
+      lines[y][x] = c;
+    }
+    else if (lines[y][x] != c) {
+      lines[y][x] = '+';
+    }
+  };
+
+  for (unsigned y = 0; y < n; ++y) {
+    for (unsigned x = 0; x + 1 < n; ++x) {
+      if (type.region(x, y) != type.region(x + 1, y)) {
+	set(2 * x + 2, 2 * y, '|');
+	set(2 * x + 2, 2 * y + 1, '|');
+	set(2 * x + 2, 2 * y + 2, '|');
+      }
+    }
+  }
+
+  // step 3: add horizontal lines
+  for (unsigned y = 0; y + 1 < n; ++y) {
+    for (unsigned x = 0; x < n; ++x) {
+      if (type.region(x, y) != type.region(x, y + 1)) {
+	set(2 * x, 2 * y + 2, '-');
+	set(2 * x + 1, 2 * y + 2, '-');
+	set(2 * x + 2, 2 * y + 2, '-');
+      }
+    }
+  }
+
+  // step 4: collapse uninteresting rows and columns
+  unsigned Y = lines.size();
+  unsigned X = lines[0].size();
+  std::vector<bool> keep_row(Y);
+  std::vector<bool> keep_col(X);
+  for (unsigned y = 0; y < Y; ++y) {
+    for (unsigned x = 0; x < X; ++x) {
+      char c = lines[y][x];
+      if (c != ' ' && c != '|') {
+	keep_row[y] = true;
+      }
+      if (c != ' ' && c != '-') {
+	keep_col[x] = true;
+      }
+    }
+  }
+
+  std::string result;
+  for (unsigned y = 0; y < Y; ++y) {
+    if (!keep_row[y]) {
+      continue;
+    }
+    for (unsigned x = 0; x < X; ++x) {
+      if (keep_col[x]) {
+	result += lines[y][x];
+      }
+    }
+    result += '\n';
+  }
+  return result;
 }

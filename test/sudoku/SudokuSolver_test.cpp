@@ -267,7 +267,7 @@ TEST(SudokuSolver_test, region_5x2) {
 
 TEST(SudokuSolver_test, custom_labels) {
   auto type = std::make_shared<SudokuType>(9);
-  auto format = SudokuFormat::make_default(type).with_labels("ABDEIKPRW");
+  auto format = SudokuFormat(type).with_labels("ABDEIKPRW");
 
   Sudoku puzzle(type, format.get_values(
     ".P.|K.R|I.D"

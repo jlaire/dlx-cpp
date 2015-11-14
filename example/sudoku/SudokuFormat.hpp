@@ -9,10 +9,11 @@ class SudokuFormat
 {
 public:
   explicit SudokuFormat(std::string format);
+  explicit SudokuFormat(std::shared_ptr<SudokuType> type);
   SudokuFormat(std::shared_ptr<SudokuType> type, std::string format);
-  static SudokuFormat make_default(std::shared_ptr<SudokuType> type);
-  static SudokuFormat make_compact(std::shared_ptr<SudokuType> type);
-  static SudokuFormat make_oneline(std::shared_ptr<SudokuType> type);
+
+  static SudokuFormat compact(std::shared_ptr<SudokuType> type);
+  static SudokuFormat oneline(std::shared_ptr<SudokuType> type);
 
   SudokuFormat with_labels(std::string labels) const;
 
@@ -36,4 +37,5 @@ private:
   static auto is_valid_label(char c) -> bool; 
   static auto valid_labels() -> const std::string&;
   static auto default_labels(unsigned n) -> std::string;
+  static auto default_template(const SudokuType& type) -> std::string;
 };

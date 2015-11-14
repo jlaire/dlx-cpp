@@ -52,11 +52,11 @@ int main(int argc, char **argv) {
   unsigned digit_count = 0;
   auto type = std::make_shared<SudokuType>(opt_size);
 
-  auto format = SudokuFormat::make_default(type);
+  auto format = SudokuFormat(type);
   switch (opt_format) {
-    case DEFAULT: format = SudokuFormat::make_default(type); break;
-    case ONELINE: format = SudokuFormat::make_oneline(type); break;
-    case COMPACT: format = SudokuFormat::make_compact(type); break;
+    case DEFAULT: break;
+    case ONELINE: format = SudokuFormat::oneline(type); break;
+    case COMPACT: format = SudokuFormat::compact(type); break;
     case PRESERVE: std::cerr << "Todo!" << '\n'; break;
   }
 

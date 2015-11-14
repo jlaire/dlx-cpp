@@ -4,12 +4,12 @@
 
 namespace {
 
-TEST(SudokuFormat_test, make_default) {
+TEST(SudokuFormat_test, default_template) {
   EXPECT_EQ(
     "+-+\n"
     "|.|\n"
     "+-+\n",
-    SudokuFormat::make_default(SudokuType::make(1)).to_string()
+    SudokuFormat(SudokuType::make(1)).to_string()
   );
 
   EXPECT_EQ(
@@ -20,7 +20,7 @@ TEST(SudokuFormat_test, make_default) {
     "|..|..|\n"
     "|..|..|\n"
     "+--+--+\n",
-    SudokuFormat::make_default(SudokuType::make(4)).to_string()
+    SudokuFormat(SudokuType::make(4)).to_string()
   );
 
   EXPECT_EQ(
@@ -34,7 +34,7 @@ TEST(SudokuFormat_test, make_default) {
     "|...|...|\n"
     "|...|...|\n"
     "+---+---+\n",
-    SudokuFormat::make_default(SudokuType::make(3, 2)).to_string()
+    SudokuFormat(SudokuType::make(3, 2)).to_string()
   );
 
   auto type = SudokuType::make(std::vector<unsigned>{
@@ -52,7 +52,7 @@ TEST(SudokuFormat_test, make_default) {
     "|. .|. .|\n"
     "|. .|. .|\n"
     "+---+---+\n",
-    SudokuFormat::make_default(type).to_string()
+    SudokuFormat(type).to_string()
   );
 
   // In black-and-white ASCII it's hard to do better than this.
@@ -66,14 +66,14 @@ TEST(SudokuFormat_test, make_default) {
     "+-+-+\n"
     "|.|.|\n"
     "+-+-+\n",
-    SudokuFormat::make_default(type2).to_string()
+    SudokuFormat(type2).to_string()
   );
 }
 
-TEST(SudokuFormat_test, make_compact) {
+TEST(SudokuFormat_test, compact) {
   EXPECT_EQ(
     ".\n",
-    SudokuFormat::make_compact(SudokuType::make(1)).to_string()
+    SudokuFormat::compact(SudokuType::make(1)).to_string()
   );
 
   EXPECT_EQ(
@@ -81,19 +81,19 @@ TEST(SudokuFormat_test, make_compact) {
     "....\n"
     "....\n"
     "....\n",
-    SudokuFormat::make_compact(SudokuType::make(4)).to_string()
+    SudokuFormat::compact(SudokuType::make(4)).to_string()
   );
 }
 
-TEST(SudokuFormat_test, make_oneline) {
+TEST(SudokuFormat_test, oneline) {
   EXPECT_EQ(
     ".",
-    SudokuFormat::make_oneline(SudokuType::make(1)).to_string()
+    SudokuFormat::oneline(SudokuType::make(1)).to_string()
   );
 
   EXPECT_EQ(
     "................",
-    SudokuFormat::make_oneline(SudokuType::make(4)).to_string()
+    SudokuFormat::oneline(SudokuType::make(4)).to_string()
   );
 }
 
@@ -121,7 +121,7 @@ TEST(SudokuFormat_test, parse) {
 
 TEST(SudokuFormat_test, get_values) {
   auto type = SudokuType::make(4);
-  auto format = SudokuFormat::make_default(type);
+  auto format = SudokuFormat(type);
 
   EXPECT_ANY_THROW(format.get_values(".... .... .... ..."));
   EXPECT_ANY_THROW(format.get_values(".... .... .... .... ."));
@@ -153,7 +153,7 @@ TEST(SudokuFormat_test, get_values) {
 }
 
 TEST(SudokuFormat_test, to_string) {
-  auto format = SudokuFormat::make_default(SudokuType::make(4));
+  auto format = SudokuFormat(SudokuType::make(4));
   EXPECT_EQ(
     "+--+--+\n"
     "|..|.4|\n"
@@ -189,7 +189,7 @@ TEST(SudokuFormat_test, to_string) {
 }
 
 TEST(SudokuFormat_test, default_labels) {
-  auto format = SudokuFormat::make_default(SudokuType::make(16));
+  auto format = SudokuFormat(SudokuType::make(16));
 
   EXPECT_EQ(true, format.is_cell('.'));
   EXPECT_EQ(true, format.is_cell('0'));
@@ -253,7 +253,7 @@ TEST(SudokuFormat_test, default_labels) {
 }
 
 TEST(SudokuFormat_test, with_labels) {
-  auto format = SudokuFormat::make_default(SudokuType::make(4));
+  auto format = SudokuFormat(SudokuType::make(4));
 
   ASSERT_THROW(format.with_labels("xyz"), std::invalid_argument);
   ASSERT_THROW(format.with_labels("xyzwa"), std::invalid_argument);
