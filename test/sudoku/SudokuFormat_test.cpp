@@ -191,26 +191,26 @@ TEST(SudokuFormat_test, to_string) {
 TEST(SudokuFormat_test, default_labels) {
   auto format = SudokuFormat(SudokuType::make(16));
 
-  EXPECT_EQ(true, format.is_cell('.'));
-  EXPECT_EQ(true, format.is_cell('0'));
-  EXPECT_EQ(false, format.is_cell(' '));
+  EXPECT_TRUE(format.is_cell('.'));
+  EXPECT_TRUE(format.is_cell('0'));
+  EXPECT_FALSE(format.is_cell(' '));
 
-  EXPECT_EQ(true, format.is_cell('1'));
-  EXPECT_EQ(true, format.is_cell('2'));
-  EXPECT_EQ(true, format.is_cell('3'));
-  EXPECT_EQ(true, format.is_cell('4'));
-  EXPECT_EQ(true, format.is_cell('5'));
-  EXPECT_EQ(true, format.is_cell('6'));
-  EXPECT_EQ(true, format.is_cell('7'));
-  EXPECT_EQ(true, format.is_cell('8'));
-  EXPECT_EQ(true, format.is_cell('9'));
-  EXPECT_EQ(true, format.is_cell('A'));
-  EXPECT_EQ(true, format.is_cell('B'));
-  EXPECT_EQ(true, format.is_cell('C'));
-  EXPECT_EQ(true, format.is_cell('D'));
-  EXPECT_EQ(true, format.is_cell('E'));
-  EXPECT_EQ(true, format.is_cell('F'));
-  EXPECT_EQ(true, format.is_cell('G'));
+  EXPECT_TRUE(format.is_cell('1'));
+  EXPECT_TRUE(format.is_cell('2'));
+  EXPECT_TRUE(format.is_cell('3'));
+  EXPECT_TRUE(format.is_cell('4'));
+  EXPECT_TRUE(format.is_cell('5'));
+  EXPECT_TRUE(format.is_cell('6'));
+  EXPECT_TRUE(format.is_cell('7'));
+  EXPECT_TRUE(format.is_cell('8'));
+  EXPECT_TRUE(format.is_cell('9'));
+  EXPECT_TRUE(format.is_cell('A'));
+  EXPECT_TRUE(format.is_cell('B'));
+  EXPECT_TRUE(format.is_cell('C'));
+  EXPECT_TRUE(format.is_cell('D'));
+  EXPECT_TRUE(format.is_cell('E'));
+  EXPECT_TRUE(format.is_cell('F'));
+  EXPECT_TRUE(format.is_cell('G'));
 
   EXPECT_EQ(0, format.value(' '));
   EXPECT_EQ(0, format.value('.'));
