@@ -8,7 +8,6 @@ SudokuFormat::SudokuFormat(std::string format)
 {
 }
 
-#include <iostream>
 SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type, std::string format)
   : type_(type),
   template_(std::move(format)),
@@ -22,7 +21,6 @@ SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type, std::string format)
     }
   }
   if (cells != type_->size()) {
-    std::cerr << cells << " != " << type_->size() << '\n';
     throw std::invalid_argument("");
   }
 }
