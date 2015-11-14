@@ -1,115 +1,21 @@
 #include "../../example/sudoku/Sudoku.hpp"
+#include "../../example/sudoku/SudokuFormat.hpp"
 
 #include <gtest/gtest.h>
 
 namespace {
 
-TEST(Sudoku_test, default_template_rectangle_regions) {
-  EXPECT_EQ(
-    "+-+\n"
-    "|.|\n"
-    "+-+\n",
-    Sudoku(std::make_shared<SudokuType>(1)).default_template()
-  );
-
-  EXPECT_EQ(
-    "+--+--+\n"
-    "|..|..|\n"
-    "|..|..|\n"
-    "+--+--+\n"
-    "|..|..|\n"
-    "|..|..|\n"
-    "+--+--+\n",
-    Sudoku(std::make_shared<SudokuType>(4)).default_template()
-  );
-
-  EXPECT_EQ(
-    "+---+---+\n"
-    "|...|...|\n"
-    "|...|...|\n"
-    "+---+---+\n"
-    "|...|...|\n"
-    "|...|...|\n"
-    "+---+---+\n"
-    "|...|...|\n"
-    "|...|...|\n"
-    "+---+---+\n",
-    Sudoku(std::make_shared<SudokuType>(3, 2)).default_template()
-  );
-}
-
-TEST(Sudoku_test, default_template_arbitrary_regions) {
-  auto type = std::make_shared<SudokuType>(std::vector<unsigned>{
-    0, 0, 0, 1,
-    0, 1, 1, 1,
-    2, 2, 3, 3,
-    2, 2, 3, 3,
-  });
-  EXPECT_EQ(
-    "+-----+-+\n"
-    "|. . .|.|\n"
-    "| +---+ |\n"
-    "|.|. . .|\n"
-    "+-+-+---+\n"
-    "|. .|. .|\n"
-    "|. .|. .|\n"
-    "+---+---+\n",
-    Sudoku(type).default_template()
-  );
-
-  // In black-and-white ASCII it's hard to do better than this.
-  auto type2 = std::make_shared<SudokuType>(std::vector<unsigned>{
-    0, 1,
-    1, 0,
-  });
-  EXPECT_EQ(
-    "+-+-+\n"
-    "|.|.|\n"
-    "+-+-+\n"
-    "|.|.|\n"
-    "+-+-+\n",
-    Sudoku(type2).default_template()
-  );
-}
-
-TEST(Sudoku_test, set_template) {
-  Sudoku sudoku(std::make_shared<SudokuType>(4));
-  EXPECT_THROW(
-    sudoku.set_template(
-      "...."
-      "...."
-      "...."
-      "... "
-    ),
-    std::invalid_argument
-  );
-  EXPECT_THROW(
-    sudoku.set_template(
-      "...."
-      "...."
-      "...."
-      "....."
-    ),
-    std::invalid_argument
-  );
-  ASSERT_NO_THROW(
-    sudoku.set_template(
-      "..|..\n"
-      "..|..\n"
-      "--|--\n"
-      "..|..\n"
-      "..|..\n"
-    )
-  );
-
-  EXPECT_EQ(
+TEST(Sudoku_test, to_string) {
+  auto type = SudokuType::make(4);
+  auto format = SudokuFormat(type,
     "..|..\n"
     "..|..\n"
     "--|--\n"
     "..|..\n"
-    "..|..\n",
-    sudoku.to_string()
+    "..|..\n"
   );
+
+  Sudoku sudoku(type);
   sudoku[0] = 0;
   sudoku[3] = 4;
   sudoku[4] = 2;
@@ -122,7 +28,7 @@ TEST(Sudoku_test, set_template) {
     "--|--\n"
     ".1|..\n"
     "..|1.\n",
-    sudoku.to_string()
+    sudoku.to_string(format)
   );
 }
 

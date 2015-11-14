@@ -1,5 +1,6 @@
 #include "../example/sudoku/SudokuSolver.hpp"
 #include "../example/sudoku/Sudoku.hpp"
+#include "../example/sudoku/SudokuFormat.hpp"
 #include "../example/sudoku/SudokuType.hpp"
 
 #include <gtest/gtest.h>
@@ -266,10 +267,9 @@ TEST(SudokuSolver_test, region_5x2) {
 
 TEST(SudokuSolver_test, custom_labels) {
   auto type = std::make_shared<SudokuType>(9);
-  type->set_labels("ABDEIKPRW");
+  auto format = SudokuFormat::make_default(type).with_labels("ABDEIKPRW");
 
-  Sudoku puzzle(
-    type,
+  Sudoku puzzle(type, format.get_values(
     ".P.|K.R|I.D"
     "D..|B..|..R"
     ".B.|E..|PA."
@@ -281,9 +281,8 @@ TEST(SudokuSolver_test, custom_labels) {
     "B..|.E.|..P"
     "A..|...|E.."
     "ER.|P.K|B.."
-  );
-  Sudoku solved(
-    type,
+  ));
+  Sudoku solved(type, format.get_values(
     "WPE|KAR|IBD"
     "DIA|BWP|KER"
     "RBK|EID|PAW"
@@ -295,7 +294,7 @@ TEST(SudokuSolver_test, custom_labels) {
     "BKW|AEI|DRP"
     "ADP|WRB|EIK"
     "ERI|PDK|BWA"
-  );
+  ));
 
   EXPECT_EQ(solved.to_string(), SudokuSolver().solve(puzzle).to_string());
 }

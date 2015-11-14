@@ -12,17 +12,33 @@ int main(int argc, char **argv) {
   //        - compact (only digits, one row per line),
   //        - super compact (like sudoku17).
 
-  bool opt_pretty_print = false;
+  enum Format { DEFAULT, ONELINE, COMPACT, PRESERVE };
+  Format opt_format = DEFAULT;
   bool opt_print_initial = false;
   unsigned opt_size = 9;
 
-  for (int opt; (opt = ::getopt(argc, argv, "ips:")) != -1;) {
+  for (int opt; (opt = ::getopt(argc, argv, "if:s:")) != -1;) {
     switch (opt) {
       case 'i':
 	opt_print_initial = true;
 	break;
-      case 'p':
-	opt_pretty_print = true;
+      case 'f':
+	if (::optarg == std::string("default")) {
+	  opt_format = DEFAULT;
+	}
+        else if (::optarg == std::string("oneline")) {
+	  opt_format = ONELINE;
+	}
+	else if (::optarg == std::string("compact")) {
+	  opt_format = COMPACT;
+	}
+	else if (::optarg == std::string("preserve")) {
+	  opt_format = PRESERVE;
+	}
+	else {
+	  std::cerr << "Invalid value for -f: '" << ::optarg << "'\n";
+	  return 1;
+	}
 	break;
       case 's':
 	opt_size = std::stoi(::optarg);
@@ -35,9 +51,18 @@ int main(int argc, char **argv) {
   std::string input;
   unsigned digit_count = 0;
   auto type = std::make_shared<SudokuType>(opt_size);
+
+  auto format = SudokuFormat::make_default(type);
+  switch (opt_format) {
+    case DEFAULT: format = SudokuFormat::make_default(type); break;
+    case ONELINE: format = SudokuFormat::make_oneline(type); break;
+    case COMPACT: format = SudokuFormat::make_compact(type); break;
+    case PRESERVE: std::cerr << "Todo!" << '\n'; break;
+  }
+
   for (char c; std::cin.get(c);) {
     input.push_back(c);
-    if (!type->is_cell(c)) {
+    if (!format.is_cell(c)) {
       continue;
     }
 
@@ -46,18 +71,12 @@ int main(int argc, char **argv) {
     }
 
     Sudoku sudoku(type, input);
-    if (opt_pretty_print) {
-      sudoku.set_template(sudoku.default_template());
-    }
     if (opt_print_initial) {
-      std::cout << sudoku.to_string() << '\n';
+      std::cout << sudoku.to_string(format) << '\n';
     }
 
     auto solved = SudokuSolver().solve(sudoku);
-    if (opt_pretty_print) {
-      solved.set_template(sudoku.default_template());
-    }
-    std::cout << solved.to_string() << '\n';
+    std::cout << solved.to_string(format) << '\n';
 
     digit_count = 0;
     input.clear();
