@@ -35,8 +35,8 @@ SudokuType::SudokuType(std::vector<unsigned> regions)
   }
 }
 
-SudokuType SudokuType::fromSize(unsigned size) {
-  return SudokuType(isqrt(size));
+std::shared_ptr<SudokuType> SudokuType::fromSize(unsigned size) {
+  return std::make_shared<SudokuType>(isqrt(size));
 }
 
 bool SudokuType::is_cell(char c) const {

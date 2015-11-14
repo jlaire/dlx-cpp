@@ -2,6 +2,7 @@
 
 #include "SudokuType.hpp"
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -9,13 +10,16 @@ class Sudoku
 {
 public:
   Sudoku();
-  explicit Sudoku(SudokuType type);
+  explicit Sudoku(std::shared_ptr<SudokuType> type);
   explicit Sudoku(const std::string& str);
-  Sudoku(SudokuType type, const std::string& str);
+  Sudoku(std::shared_ptr<SudokuType> type, const std::string& str);
 
   static std::string default_template(const SudokuType& type);
   std::string default_template() const;
   void set_template(const std::string& str);
+
+  const SudokuType& type() const;
+  unsigned size() const;
 
   bool is_valid() const;
   bool is_solved() const;
@@ -26,7 +30,7 @@ public:
   std::string to_string() const;
 
 private:
-  SudokuType type_;
+  std::shared_ptr<SudokuType> type_;
   std::string template_;
   std::vector<unsigned> values_;
 

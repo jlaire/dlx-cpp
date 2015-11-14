@@ -1,6 +1,7 @@
 #pragma once
 
 #include <initializer_list>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -22,7 +23,7 @@ public:
   SudokuType(std::initializer_list<unsigned> regions);
   explicit SudokuType(std::vector<unsigned> regions);
 
-  static SudokuType fromSize(unsigned size);
+  static std::shared_ptr<SudokuType> fromSize(unsigned size);
 
   void set_labels(std::string labels);
 

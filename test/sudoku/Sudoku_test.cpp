@@ -9,7 +9,7 @@ TEST(Sudoku_test, default_template_rectangle_regions) {
     "+-+\n"
     "|.|\n"
     "+-+\n",
-    Sudoku(SudokuType(1)).default_template()
+    Sudoku(std::make_shared<SudokuType>(1)).default_template()
   );
 
   EXPECT_EQ(
@@ -20,7 +20,7 @@ TEST(Sudoku_test, default_template_rectangle_regions) {
     "|..|..|\n"
     "|..|..|\n"
     "+--+--+\n",
-    Sudoku(SudokuType(4)).default_template()
+    Sudoku(std::make_shared<SudokuType>(4)).default_template()
   );
 
   EXPECT_EQ(
@@ -34,11 +34,17 @@ TEST(Sudoku_test, default_template_rectangle_regions) {
     "|...|...|\n"
     "|...|...|\n"
     "+---+---+\n",
-    Sudoku(SudokuType(3, 2)).default_template()
+    Sudoku(std::make_shared<SudokuType>(3, 2)).default_template()
   );
 }
 
 TEST(Sudoku_test, default_template_arbitrary_regions) {
+  auto type = std::make_shared<SudokuType>(std::vector<unsigned>{
+    0, 0, 0, 1,
+    0, 1, 1, 1,
+    2, 2, 3, 3,
+    2, 2, 3, 3,
+  });
   EXPECT_EQ(
     "+-----+-+\n"
     "|. . .|.|\n"
@@ -48,30 +54,26 @@ TEST(Sudoku_test, default_template_arbitrary_regions) {
     "|. .|. .|\n"
     "|. .|. .|\n"
     "+---+---+\n",
-    Sudoku(SudokuType{
-      0, 0, 0, 1,
-      0, 1, 1, 1,
-      2, 2, 3, 3,
-      2, 2, 3, 3,
-    }).default_template()
+    Sudoku(type).default_template()
   );
 
   // In black-and-white ASCII it's hard to do better than this.
+  auto type2 = std::make_shared<SudokuType>(std::vector<unsigned>{
+    0, 1,
+    1, 0,
+  });
   EXPECT_EQ(
     "+-+-+\n"
     "|.|.|\n"
     "+-+-+\n"
     "|.|.|\n"
     "+-+-+\n",
-    Sudoku(SudokuType{
-      0, 1,
-      1, 0,
-    }).default_template()
+    Sudoku(type2).default_template()
   );
 }
 
 TEST(Sudoku_test, set_template) {
-  Sudoku sudoku(SudokuType(4));
+  Sudoku sudoku(std::make_shared<SudokuType>(4));
   EXPECT_THROW(
     sudoku.set_template(
       "...."

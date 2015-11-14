@@ -4,12 +4,12 @@
 #include <algorithm>
 
 Sudoku::Sudoku()
-  : Sudoku(SudokuType())
+  : Sudoku(std::make_shared<SudokuType>())
 {
 }
 
-Sudoku::Sudoku(SudokuType type)
-  : Sudoku(type, default_template(type))
+Sudoku::Sudoku(std::shared_ptr<SudokuType> type)
+  : Sudoku(type, default_template(*type))
 {
 }
 
@@ -18,10 +18,10 @@ Sudoku::Sudoku(const std::string& str)
 {
 }
 
-Sudoku::Sudoku(SudokuType type, const std::string& str)
-  : type_(std::move(type)),
-  template_(parse_template(type_, str)),
-  values_(get_values(type_, str))
+Sudoku::Sudoku(std::shared_ptr<SudokuType> type, const std::string& str)
+  : type_(type),
+  template_(parse_template(*type_, str)),
+  values_(get_values(*type_, str))
 {
 }
 
@@ -164,17 +164,25 @@ std::string Sudoku::default_template(const SudokuType& type) {
 }
 
 std::string Sudoku::default_template() const {
-  return default_template(type_);
+  return default_template(*type_);
 }
 
 void Sudoku::set_template(const std::string& str) {
-  template_ = parse_template(type_, str);
+  template_ = parse_template(*type_, str);
+}
+
+const SudokuType& Sudoku::type() const {
+  return *type_;
+}
+
+unsigned Sudoku::size() const {
+  return type_->size();
 }
 
 bool Sudoku::is_valid() const {
-  unsigned n = type_.n();
-  for (unsigned i = 0; i < type_.size(); ++i) {
-    for (unsigned j = i + 1; j < type_.size(); ++j) {
+  unsigned n = type_->n();
+  for (unsigned i = 0; i < type_->size(); ++i) {
+    for (unsigned j = i + 1; j < type_->size(); ++j) {
       unsigned a = values_[i];
       unsigned b = values_[j];
       if (a == 0 || a != b) {
@@ -186,7 +194,7 @@ bool Sudoku::is_valid() const {
       if (i / n == j / n) {
 	return false;
       }
-      if (type_.region(i) == type_.region(j)) {
+      if (type_->region(i) == type_->region(j)) {
 	return false;
       }
     }
@@ -210,12 +218,12 @@ std::string Sudoku::to_string() const {
   std::string str(template_);
   unsigned j = 0;
   for (unsigned i = 0; i < str.size(); ++i) {
-    if (type_.is_cell(str[i])) {
+    if (type_->is_cell(str[i])) {
       if (j >= values_.size()) {
 	throw std::logic_error("");
       }
       if (values_[j] > 0) {
-	str[i] = type_.label(values_[j] - 1);
+	str[i] = type_->label(values_[j] - 1);
       }
       ++j;
     }

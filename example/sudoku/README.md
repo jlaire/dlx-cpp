@@ -9,3 +9,4 @@ TODO:
   - Support generalized sudokus in `main.cpp`.
   - Generate puzzles.
   - If there are multiple solutions, throw and return two of them.
+  - operator==(Sudoku, Sudoku);
