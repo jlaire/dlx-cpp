@@ -45,16 +45,16 @@ bool Sudoku::is_valid() const {
       unsigned a = values_[i];
       unsigned b = values_[j];
       if (a == 0 || a != b) {
-	continue;
+        continue;
       }
       if (i % n == j % n) {
-	return false;
+        return false;
       }
       if (i / n == j / n) {
-	return false;
+        return false;
       }
       if (type_->region(i) == type_->region(j)) {
-	return false;
+        return false;
       }
     }
   }

@@ -28,29 +28,29 @@ int main(int argc, char **argv) {
   for (int opt; (opt = ::getopt(argc, argv, "hilf:")) != -1;) {
     switch (opt) {
       case 'h':
-	show_usage_and_exit();
-	break;
+        show_usage_and_exit();
+        break;
 
       case 'i':
-	opt_print_initial = true;
-	break;
+        opt_print_initial = true;
+        break;
 
       case 'l':
-	opt_one_sudoku_per_line = true;
-	break;
+        opt_one_sudoku_per_line = true;
+        break;
 
       case 'f': {
-	auto it = format_names.find(::optarg);
-	if (it == format_names.end()) {
-	  std::cerr << "Invalid argument for -f '" << ::optarg << "'\n";
-	  show_usage_and_exit();
-	}
-	opt_format = it->second;
-	break;
+        auto it = format_names.find(::optarg);
+        if (it == format_names.end()) {
+          std::cerr << "Invalid argument for -f '" << ::optarg << "'\n";
+          show_usage_and_exit();
+        }
+        opt_format = it->second;
+        break;
       }
 
       default:
-	throw std::logic_error("unhandled case in getopt loop");
+        throw std::logic_error("unhandled case in getopt loop");
     }
   }
 
@@ -60,8 +60,8 @@ int main(int argc, char **argv) {
     if (std::getline(std::cin, line) && !line.empty()) {
       input += line;
       if (!opt_one_sudoku_per_line) {
-	input += '\n';
-	continue;
+        input += '\n';
+        continue;
       }
     }
 
@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
     if (opt_print_initial) {
       std::cout << sudoku.to_string(format);
       if (opt_format != Format::ONELINE) {
-	std::cout << '\n';
+        std::cout << '\n';
       }
     }
 

@@ -117,7 +117,7 @@ std::string SudokuFormat::to_string(const std::vector<unsigned>& values) const {
   for (unsigned i = 0; i < result.size(); ++i) {
     if (is_cell(result[i])) {
       if (j >= values.size()) {
-	throw std::logic_error("");
+        throw std::logic_error("");
       }
       result[i] = label(values[j]);
       ++j;
@@ -267,9 +267,9 @@ std::string SudokuFormat::default_template(const SudokuType& type) {
   for (unsigned y = 0; y < n; ++y) {
     for (unsigned x = 0; x + 1 < n; ++x) {
       if (type.region(x, y) != type.region(x + 1, y)) {
-	set(2 * x + 2, 2 * y, '|');
-	set(2 * x + 2, 2 * y + 1, '|');
-	set(2 * x + 2, 2 * y + 2, '|');
+        set(2 * x + 2, 2 * y, '|');
+        set(2 * x + 2, 2 * y + 1, '|');
+        set(2 * x + 2, 2 * y + 2, '|');
       }
     }
   }
@@ -278,9 +278,9 @@ std::string SudokuFormat::default_template(const SudokuType& type) {
   for (unsigned y = 0; y + 1 < n; ++y) {
     for (unsigned x = 0; x < n; ++x) {
       if (type.region(x, y) != type.region(x, y + 1)) {
-	set(2 * x, 2 * y + 2, '-');
-	set(2 * x + 1, 2 * y + 2, '-');
-	set(2 * x + 2, 2 * y + 2, '-');
+        set(2 * x, 2 * y + 2, '-');
+        set(2 * x + 1, 2 * y + 2, '-');
+        set(2 * x + 2, 2 * y + 2, '-');
       }
     }
   }
@@ -294,10 +294,10 @@ std::string SudokuFormat::default_template(const SudokuType& type) {
     for (unsigned x = 0; x < X; ++x) {
       char c = lines[y][x];
       if (c != ' ' && c != '|') {
-	keep_row[y] = true;
+        keep_row[y] = true;
       }
       if (c != ' ' && c != '-') {
-	keep_col[x] = true;
+        keep_col[x] = true;
       }
     }
   }
@@ -309,7 +309,7 @@ std::string SudokuFormat::default_template(const SudokuType& type) {
     }
     for (unsigned x = 0; x < X; ++x) {
       if (keep_col[x]) {
-	result += lines[y][x];
+        result += lines[y][x];
       }
     }
     result += '\n';

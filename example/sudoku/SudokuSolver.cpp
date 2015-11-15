@@ -90,7 +90,7 @@ Sudoku SudokuSolver::solve(const Sudoku& sudoku) const {
     for (unsigned i : rows) {
       auto pos = row_position.find(i);
       if (pos != row_position.end()) {
-	solved[pos->second] = row_digit[i] + 1;
+        solved[pos->second] = row_digit[i] + 1;
       }
     }
     solutions.push_back(std::move(solved));

@@ -18,9 +18,9 @@ int main(int argc, char **argv) {
       << langford.count_solutions() << '\n';
     if (opt_verbose) {
       for (const auto& solution : langford.find_solutions()) {
-	for (auto i = 0u; i < solution.size(); ++i) {
-	  std::cout << solution[i] << " \n"[i == solution.size() - 1];
-	}
+        for (auto i = 0u; i < solution.size(); ++i) {
+          std::cout << solution[i] << " \n"[i == solution.size() - 1];
+        }
       }
     }
   }

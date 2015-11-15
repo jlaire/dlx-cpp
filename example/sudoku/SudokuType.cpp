@@ -49,7 +49,7 @@ std::shared_ptr<SudokuType> SudokuType::guess(const std::string& str) {
   for (char c : str) {
     if (c == '\n') {
       if (cells != 0 && cells != n) {
-	return SudokuType::from_size(size);
+        return SudokuType::from_size(size);
       }
       lines.push_back(std::move(line));
       cells = 0;
@@ -100,11 +100,11 @@ std::shared_ptr<SudokuType> SudokuType::guess(const std::string& str) {
   for (auto y = 0u; y < lines.size(); ++y) {
     for (auto x = 0u; x < lines[y].size(); ++x) {
       if (!SudokuFormat::is_valid_cell(lines[y][x])) {
-	continue;
+        continue;
       }
       auto region_size = find_region(next_id, x, y);
       if (region_size > 0) {
-	++next_id;
+        ++next_id;
       }
     }
   }

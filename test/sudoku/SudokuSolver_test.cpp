@@ -71,7 +71,7 @@ TEST(SudokuSolver_test, almost_solved) {
   for (unsigned i = 0; i < sudoku.size(); ++i) {
     for (unsigned digit = 1; digit <= 9; ++digit) {
       if (digit == sudoku[i]) {
-	continue;
+        continue;
       }
       unsigned old = sudoku[i];
       sudoku[i] = digit;
