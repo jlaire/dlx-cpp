@@ -120,6 +120,11 @@ Example: Sudoku
 efficiently. See [example/sudoku/README.md](example/sudoku/README.md) for
 details.
 
+    $ make examples
+    $ ./build/sudoku < data/sudoku.txt
+
+[output](https://gist.github.com/jlaire/9195d1e5640440de5160)
+
 TODO
 ====
 

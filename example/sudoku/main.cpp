@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <algorithm>
 #include <iostream>
 #include <map>
 #include <string>
@@ -10,6 +11,45 @@
 static void show_usage_and_exit() {
   std::cout << "Help message goes here\n";
   ::exit(1);
+}
+
+static std::vector<std::string> lines(const std::string& str) {
+  auto result = std::vector<std::string>();
+  auto line = std::string();
+  for (char c : str) {
+    if (c == '\n') {
+      result.push_back(std::move(line));
+      line.clear();
+    }
+    else {
+      line += c;
+    }
+  }
+  if (!line.empty()) {
+    result.push_back(std::move(line));
+  }
+  return result;
+}
+
+static void print_side_by_side(const std::string& left, const std::string& right) {
+  auto ls = lines(left);
+  auto rs = lines(right);
+  auto max_left = 0u;
+  for (const auto& l : ls) {
+    max_left = std::max<unsigned>(max_left, l.size());
+  }
+  for (auto y = 0u; y < std::max(ls.size(), rs.size()); ++y) {
+    auto pos = 0u;
+    if (y < ls.size()) {
+      std::cout << ls[y];
+      pos = ls[y].size();
+    }
+    if (y < rs.size()) {
+      std::cout << std::string(4 + max_left - pos, ' ');
+      std::cout << rs[y];
+    }
+    std::cout << '\n';
+  }
 }
 
 int main(int argc, char **argv) {
@@ -21,22 +61,27 @@ int main(int argc, char **argv) {
     {"preserve", Format::PRESERVE},
   };
 
-  auto opt_format = Format::DEFAULT;
-  auto opt_print_initial = false;
+  auto opt_format = Format::PRESERVE;
   auto opt_one_sudoku_per_line = false;
+  auto opt_side_by_side = true;
+  auto opt_print_solved_only = false;
 
-  for (int opt; (opt = ::getopt(argc, argv, "hilf:")) != -1;) {
+  for (int opt; (opt = ::getopt(argc, argv, "f:hlsv")) != -1;) {
     switch (opt) {
       case 'h':
         show_usage_and_exit();
         break;
 
-      case 'i':
-        opt_print_initial = true;
-        break;
-
       case 'l':
         opt_one_sudoku_per_line = true;
+        break;
+
+      case 's':
+        opt_print_solved_only = true;
+        break;
+
+      case 'v': // vertically
+        opt_side_by_side = false;
         break;
 
       case 'f': {
@@ -81,17 +126,20 @@ int main(int argc, char **argv) {
       std::cout << '\n';
     }
 
-    Sudoku sudoku(type, input);
-    if (opt_print_initial) {
+    auto sudoku = Sudoku(type, input);
+    input.clear();
+    auto solved = SudokuSolver().solve(sudoku);
+    if (!opt_print_solved_only && opt_side_by_side) {
+      print_side_by_side(sudoku.to_string(format), solved.to_string(format));
+      continue;
+    }
+
+    if (!opt_print_solved_only) {
       std::cout << sudoku.to_string(format);
       if (opt_format != Format::ONELINE) {
         std::cout << '\n';
       }
     }
-
-    auto solved = SudokuSolver().solve(sudoku);
     std::cout << solved.to_string(format);
-
-    input.clear();
   }
 }
