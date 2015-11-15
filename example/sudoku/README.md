@@ -20,3 +20,5 @@ TODO:
   - Use proper exception types and messages.
   - Generate sudokus.
   - Generate random jigsaw patterns.
+  - Option to print initial and solved grids side-by-side.
+  - A format that uses / and \ when appropriate?
