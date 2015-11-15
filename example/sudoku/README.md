@@ -16,7 +16,6 @@ Examples:
 ```
 
 TODO:
-  - `SudokuFormat::get_values()` should be static and use labels from the input.
   - Use proper exception types and messages.
   - Generate sudokus.
   - Generate random jigsaw patterns.
