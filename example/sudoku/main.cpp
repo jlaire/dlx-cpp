@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
       }
 
       default:
-        throw std::logic_error("unhandled case in getopt loop");
+        show_usage_and_exit();
     }
   }
 

@@ -129,10 +129,10 @@ TEST(SudokuFormat_test, get_values) {
   EXPECT_NO_THROW(format.get_values(".... .... .... ...."));
   EXPECT_NO_THROW(format.get_values("1234 1342 00.. ...."));
 
-  EXPECT_ANY_THROW(format.get_values("5... .... .... ...."));
-  EXPECT_ANY_THROW(format.get_values("A... .... .... ...."));
+  EXPECT_NO_THROW(format.get_values("5... .... .... ...."));
+  EXPECT_NO_THROW(format.get_values("A... .... .... ...."));
   auto xyzw_format = format.with_labels("XYZW");
-  EXPECT_ANY_THROW(xyzw_format.get_values("1... .... .... ...."));
+  EXPECT_NO_THROW(xyzw_format.get_values("1... .... .... ...."));
   EXPECT_NO_THROW(xyzw_format.get_values("Z... .... .... ...."));
 
   EXPECT_EQ(
@@ -143,11 +143,11 @@ TEST(SudokuFormat_test, get_values) {
       0, 0, 0, 4,
     }),
     format.get_values(
-      "1.|.."
-      ".2|.."
+      "A.|.."
+      ".B|.."
       "-----"
-      "..|3."
-      "00|.4"
+      "..|X."
+      "00|.Y"
     )
   );
 }
@@ -250,6 +250,10 @@ TEST(SudokuFormat_test, default_labels) {
   EXPECT_EQ('F', format.label(15));
   EXPECT_EQ('G', format.label(16));
   ASSERT_DEATH(format.label(17), "Assertion");
+}
+
+TEST(SudokuFormat_test, labels_from_input) {
+  EXPECT_EQ(1, SudokuFormat("ABCD .... .... ....").value('A'));
 }
 
 TEST(SudokuFormat_test, with_labels) {

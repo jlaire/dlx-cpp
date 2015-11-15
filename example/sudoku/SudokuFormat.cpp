@@ -17,7 +17,7 @@ SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type)
 SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type, std::string format)
   : type_(type),
   template_(std::move(format)),
-  labels_(default_labels(template_, type_->n()))
+  labels_(choose_labels(template_))
 {
   unsigned cells = 0;
   for (char& c : template_) {
@@ -90,15 +90,17 @@ char SudokuFormat::label(unsigned i) const {
   return i == 0 ? '.' : labels_[i - 1];
 }
 
-std::vector<unsigned> SudokuFormat::get_values(const std::string& str) const {
-  std::vector<unsigned> values;
+std::vector<unsigned> SudokuFormat::get_values(const std::string& str) {
+  auto labels = choose_labels(str);
+  auto values = std::vector<unsigned>();
   for (char c : str) {
-    if (is_cell(c)) {
-      values.push_back(value(c));
+    auto pos = labels.find(c);
+    if (pos != std::string::npos) {
+      values.push_back(pos + 1);
     }
-  }
-  if (values.size() != type_->size()) {
-    throw std::invalid_argument("get_values(): wrong number of elements");
+    else if (is_empty(c)) {
+      values.push_back(0);
+    }
   }
   return values;
 }
@@ -154,16 +156,60 @@ const std::string& SudokuFormat::valid_labels() {
   return chars;
 }
 
-std::string SudokuFormat::default_labels(const std::string& str, unsigned n) {
-  std::set<char> used;
+std::string SudokuFormat::choose_labels(const std::string& str) {
+  auto used = std::set<char>();
+  auto size = 0u;
   for (char c : str) {
     if (is_valid_label(c)) {
       used.insert(c);
     }
+    if (is_valid_cell(c)) {
+      ++size;
+    }
   }
 
-  for (unsigned i = 0; i < valid_labels().size() && used.size() < n; ++i) {
-    used.insert(valid_labels()[i]);
+  auto n = 0u;
+  while ((n + 1) * (n + 1) <= size) {
+    ++n;
+  }
+  if (n * n != size) {
+    throw std::invalid_argument(":(");
+  }
+  if (used.size() > n) {
+    throw std::invalid_argument("Too many different labels");
+  }
+
+  auto has_digit = false;
+  auto has_upper = false;
+  auto has_lower = false;
+  for (char c : used) {
+    if (::isdigit(c)) {
+      has_digit = true;
+    }
+    else if (::isupper(c)) {
+      has_upper = true;
+    }
+    else if (::islower(c)) {
+      has_lower = true;
+    }
+  }
+
+  for (char c : valid_labels()) {
+    if (used.size() >= n) {
+      continue;
+    }
+    if ((::isdigit(c) && has_digit)
+	|| (::islower(c) && has_lower)
+	|| (::isupper(c) && has_upper))
+    {
+      used.insert(c);
+    }
+  }
+
+  for (char c : valid_labels()) {
+    if (used.size() < n) {
+      used.insert(c);
+    }
   }
 
   if (used.size() < n) {
@@ -172,9 +218,7 @@ std::string SudokuFormat::default_labels(const std::string& str, unsigned n) {
 
   std::string labels;
   for (char c : used) {
-    if (labels.size() < n) {
-      labels += c;
-    }
+    labels += c;
   }
   return labels;
 }

@@ -34,13 +34,17 @@ TEST(Sudoku_test, to_string) {
 
 TEST(Sudoku_test, from_string) {
   EXPECT_THROW(Sudoku(""), std::invalid_argument);
-  EXPECT_THROW(Sudoku("2"), std::invalid_argument);
-  EXPECT_THROW(Sudoku("A"), std::invalid_argument);
-  EXPECT_THROW(Sudoku("z"), std::invalid_argument);
   EXPECT_NO_THROW(Sudoku("."));
   EXPECT_NO_THROW(Sudoku("0"));
   EXPECT_NO_THROW(Sudoku("1"));
   EXPECT_NO_THROW(Sudoku("( 1 )"));
+
+  EXPECT_NO_THROW(Sudoku("2"));
+  EXPECT_NO_THROW(Sudoku("A"));
+  EXPECT_NO_THROW(Sudoku("z"));
+
+  EXPECT_ANY_THROW(Sudoku("ABCD .... .... ...E"));
+  EXPECT_NO_THROW(Sudoku("ABCD .... .... ...A"));
 
   Sudoku sudoku(
     "1.|.."
