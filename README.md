@@ -113,6 +113,13 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Langford_pairing).
     Langford pairs for n = 6: 0
     Langford pairs for n = 7: 26
     Langford pairs for n = 8: 150
+    $ ./build/langford -v <<< '1 2 3 4'
+    Number of unique Langford pairings for n = 1: 0
+    Number of unique Langford pairings for n = 2: 0
+    Number of unique Langford pairings for n = 3: 1
+    3 1 2 1 3 2
+    Number of unique Langford pairings for n = 4: 1
+    4 1 3 1 2 4 3 2
 
 Example: Sudoku
 ===============
