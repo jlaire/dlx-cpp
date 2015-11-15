@@ -199,8 +199,8 @@ std::string SudokuFormat::choose_labels(const std::string& str) {
       continue;
     }
     if ((::isdigit(c) && has_digit)
-	|| (::islower(c) && has_lower)
-	|| (::isupper(c) && has_upper))
+        || (::islower(c) && has_lower)
+        || (::isupper(c) && has_upper))
     {
       used.insert(c);
     }
