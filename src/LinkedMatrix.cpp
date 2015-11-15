@@ -65,15 +65,22 @@ void LinkedMatrix::initialize_from_sparse_matrix(
   }
 
   for (unsigned y = 0; y < rows.size(); ++y) {
-    auto& xs = rows[y];
-    NodeId row_id = create_node(~0, y);
-    for (unsigned x : xs) {
+    if (rows[y].empty()) {
+      continue;
+    }
+
+    NodeId first_id = 0;
+    for (auto x : rows[y]) {
       NodeId id = create_node(x, y);
       nodes_[col_ids_[x]].link_u(*this, nodes_[id]);
       ++sizes_[x];
-      nodes_[row_id].link_l(*this, nodes_[id]);
+      if (first_id == 0) {
+	first_id = id;
+      }
+      else {
+	nodes_[first_id].link_l(*this, nodes_[id]);
+      }
     }
-    nodes_[row_id].hide_lr(*this);
   }
 }
 

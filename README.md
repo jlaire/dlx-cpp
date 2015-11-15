@@ -131,4 +131,3 @@ TODO
   - AlgorithmDLX: Modify `search()` to call the callback on every level, so
     that it can be used to construct the shape of the search tree.
   - CMake, more unit tests, more examples.
-  - Optimize `LinkedMatrix` construction; it uses temporary nodes that are not freed.
