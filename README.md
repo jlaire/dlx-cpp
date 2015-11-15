@@ -116,9 +116,8 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Langford_pairing).
 Example: Sudoku
 ===============
 
-[example/sudoku](example/sudoku) can solve various types of Sudokus quite
-efficiently. See [example/sudoku/README.md](example/sudoku/README.md) for
-details.
+This program can solve various types of Sudokus given in plaintext. See
+[example/sudoku/README.md](example/sudoku/README.md) for details.
 
     $ make examples
     $ ./build/sudoku < data/sudoku.txt

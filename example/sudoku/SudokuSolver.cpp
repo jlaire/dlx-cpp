@@ -7,19 +7,6 @@
 #include <unordered_map>
 #include <vector>
 
-/*
- * One choice needs to be made when creating the exact cover problem.
- *
- * The column representing the constraint "there is a number in cell (x,y)" can
- * be either primary or secondary. All cells will be naturally filled if all
- * of the other conditions are met.
- *
- * I tried both options, and the performance on a large set of 17-clue Sudokus
- * was almost identical. So I arbitrarily decided to make all columns primary;
- * that's how most Sudoku exact cover articles seem to do it, and it means we
- * have a proper exact cover.
- */
-
 Sudoku SudokuSolver::solve(const Sudoku& sudoku) const {
   if (!sudoku.is_valid()) {
     throw std::runtime_error("solve(): Invalid sudoku");
