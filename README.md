@@ -104,47 +104,21 @@ Example: Langford pairings
 See [Wikipedia](https://en.wikipedia.org/wiki/Langford_pairing).
 
     $ make examples
-    $ ./build/langford <<< '1 2 3 4 5 6 7 8'
-    Langford pairs for n = 1: 0
-    Langford pairs for n = 2: 0
-    Langford pairs for n = 3: 1
-    Langford pairs for n = 4: 1
-    Langford pairs for n = 5: 0
-    Langford pairs for n = 6: 0
-    Langford pairs for n = 7: 26
-    Langford pairs for n = 8: 150
-    $ ./build/langford -v <<< '1 2 3 4'
+    $ ./build/langford -v <<< '1 2 3 4 5'
     Number of unique Langford pairings for n = 1: 0
     Number of unique Langford pairings for n = 2: 0
     Number of unique Langford pairings for n = 3: 1
     3 1 2 1 3 2
     Number of unique Langford pairings for n = 4: 1
     4 1 3 1 2 4 3 2
+    Number of unique Langford pairings for n = 5: 0
 
 Example: Sudoku
 ===============
 
-[example/sudoku](example/sudoku) can solve even pathological 17-clue Sudokus
-instantly. There is a big downloadable collection at
-http://staffhome.ecm.uwa.edu.au/~00013890/sudokumin.php, and you can feed it to
-the executable directly. See
-[example/sudoku/README.md](example/sudoku/README.md) for more.
-
-    $ make examples
-    $ ./build/sudoku < data/sudoku.txt
-    +---+---+---+
-    |846|937|152|
-    |319|625|847|
-    |752|184|963|
-    +---+---+---+
-    |285|713|694|
-    |463|859|271|
-    |971|246|385|
-    +---+---+---+
-    |127|598|436|
-    |638|471|529|
-    |594|362|718|
-    +---+---+---+
+[example/sudoku](example/sudoku) can solve various types of Sudokus quite
+efficiently. See [example/sudoku/README.md](example/sudoku/README.md) for
+details.
 
 TODO
 ====
