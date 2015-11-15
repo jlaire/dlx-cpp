@@ -15,7 +15,7 @@ public:
   static SudokuFormat compact(std::shared_ptr<SudokuType> type);
   static SudokuFormat oneline(std::shared_ptr<SudokuType> type);
 
-  SudokuFormat with_labels(std::string labels) const;
+  SudokuFormat with_labels(const std::string& labels) const;
 
   static auto is_valid_label(char c) -> bool;
   static auto is_valid_cell(char c) -> bool;
@@ -25,6 +25,7 @@ public:
   auto is_cell(char) const -> bool;
   auto value(char) const -> unsigned;
   auto label(unsigned) const -> char;
+  auto labels() const -> const std::string&;
 
   auto to_string() const -> std::string;
   auto to_string(const std::vector<unsigned>& values) const -> std::string;
@@ -38,5 +39,6 @@ private:
   static auto is_empty(char c) -> bool;
   static auto valid_labels() -> const std::string&;
   static auto choose_labels(const std::string& str) -> std::string;
+  static auto choose_labels(const std::string& str, unsigned n) -> std::string;
   static auto default_template(const SudokuType& type) -> std::string;
 };

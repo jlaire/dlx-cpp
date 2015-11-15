@@ -255,25 +255,17 @@ TEST(SudokuFormat_test, labels_from_input) {
 TEST(SudokuFormat_test, with_labels) {
   auto format = SudokuFormat(SudokuType::make(4));
 
-  ASSERT_THROW(format.with_labels("xyz"), std::invalid_argument);
-  ASSERT_THROW(format.with_labels("xyzwa"), std::invalid_argument);
-  ASSERT_THROW(format.with_labels("xyz0"), std::invalid_argument);
-  ASSERT_THROW(format.with_labels("xyz."), std::invalid_argument);
-  ASSERT_THROW(format.with_labels("xyzx"), std::invalid_argument);
+  ASSERT_NO_THROW(format.with_labels("xyz"));
+  ASSERT_ANY_THROW(format.with_labels("xyzwa"));
+  ASSERT_NO_THROW(format.with_labels("xyz0"));
+  ASSERT_NO_THROW(format.with_labels("xyz."));
+  ASSERT_NO_THROW(format.with_labels("xyzx"));
 
-  EXPECT_TRUE(format.is_cell('1'));
-  EXPECT_FALSE(format.is_cell('x'));
-  EXPECT_EQ(1, format.value('1'));
-
-  format = format.with_labels("wzyx");
-
-  EXPECT_FALSE(format.is_cell('1'));
-  EXPECT_EQ(0, format.value('1'));
-
-  EXPECT_TRUE(format.is_cell('y'));
-  EXPECT_EQ(1, format.value('w'));
-  EXPECT_EQ(4, format.value('x'));
-  EXPECT_EQ('z', format.label(2));
+  EXPECT_EQ("wxyz", format.with_labels("wzyx").labels());
+  EXPECT_EQ("ABCD", format.with_labels("A").labels());
+  EXPECT_EQ("ABCD", format.with_labels("D").labels());
+  EXPECT_EQ("abcx", format.with_labels("x").labels());
+  EXPECT_EQ("1235", format.with_labels("5").labels());
 }
 
 }

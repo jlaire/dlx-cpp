@@ -45,22 +45,8 @@ SudokuFormat SudokuFormat::oneline(std::shared_ptr<SudokuType> type) {
   return SudokuFormat(type, std::string(type->size(), '.') + '\n');
 }
 
-SudokuFormat SudokuFormat::with_labels(std::string labels) const {
-  if (labels.size() != type_->n()) {
-    throw std::invalid_argument("Wrong number of labels");
-  }
-
-  std::unordered_set<char> used;
-  for (char c : labels) {
-    if (!is_valid_label(c)) {
-      throw std::invalid_argument("Invalid label");
-    }
-    if (used.find(c) != used.end()) {
-      throw std::invalid_argument("Cannot use same label twice");
-    }
-    used.insert(c);
-  }
-
+SudokuFormat SudokuFormat::with_labels(const std::string& str) const {
+  auto labels = choose_labels(str, type_->n());
   auto format = *this;
   format.labels_ = std::move(labels);
   return format;
@@ -88,6 +74,10 @@ unsigned SudokuFormat::value(char c) const {
 char SudokuFormat::label(unsigned i) const {
   assert(i <= labels_.size());
   return i == 0 ? '.' : labels_[i - 1];
+}
+
+const std::string& SudokuFormat::labels() const {
+  return labels_;
 }
 
 std::vector<unsigned> SudokuFormat::get_values(const std::string& str) {
@@ -157,17 +147,12 @@ const std::string& SudokuFormat::valid_labels() {
 }
 
 std::string SudokuFormat::choose_labels(const std::string& str) {
-  auto used = std::set<char>();
   auto size = 0u;
   for (char c : str) {
-    if (is_valid_label(c)) {
-      used.insert(c);
-    }
     if (is_valid_cell(c)) {
       ++size;
     }
   }
-
   auto n = 0u;
   while ((n + 1) * (n + 1) <= size) {
     ++n;
@@ -175,6 +160,17 @@ std::string SudokuFormat::choose_labels(const std::string& str) {
   if (n * n != size) {
     throw std::invalid_argument(":(");
   }
+  return choose_labels(str, n);
+}
+
+std::string SudokuFormat::choose_labels(const std::string& str, unsigned n) {
+  auto used = std::set<char>();
+  for (char c : str) {
+    if (is_valid_label(c)) {
+      used.insert(c);
+    }
+  }
+
   if (used.size() > n) {
     throw std::invalid_argument("Too many different labels");
   }
