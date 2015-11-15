@@ -29,7 +29,7 @@ public:
 
 private:
   LinkedMatrix();
-  void initialize_from_sparse_matrix(const VectorVector& rows, unsigned secondary, unsigned width);
+  void initialize_from_sparse_matrix(unsigned width, const VectorVector& rows, unsigned secondary);
 
   struct Node;
   NodeId create_node(unsigned x, unsigned y);

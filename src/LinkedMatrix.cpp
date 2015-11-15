@@ -36,36 +36,38 @@ std::unique_ptr<LinkedMatrix> LinkedMatrix::from_sparse_matrix(
     unsigned width, const VectorVector& rows, unsigned secondary)
 {
   std::unique_ptr<LinkedMatrix> lm{new LinkedMatrix};
-  lm->initialize_from_sparse_matrix(rows, secondary, width);
+  lm->initialize_from_sparse_matrix(width, rows, secondary);
   return lm;
 }
 
 void LinkedMatrix::initialize_from_sparse_matrix(
-    const VectorVector& rows, unsigned secondary, unsigned width)
+    unsigned width, const VectorVector& rows, unsigned secondary)
 {
+  if (secondary > width) {
+    throw "";
+  }
   for (auto& row : rows) {
     for (unsigned x : row) {
-      width = std::max(width, x + 1);
+      if (x >= width) {
+	throw "";
+      }
     }
   }
 
-  col_ids_.resize(width);
-  sizes_.resize(width);
+  col_ids_ = std::vector<NodeId>(width);
+  sizes_ = std::vector<unsigned>(width);
   for (unsigned x = 0; x < width; ++x) {
-    sizes_[x] = 0;
     NodeId col_id = create_node(x, ~0);
     col_ids_[x] = col_id;
     if (x >= secondary) {
       nodes_[root_id()].link_l(*this, nodes_[col_id]);
     }
   }
+
   for (unsigned y = 0; y < rows.size(); ++y) {
     auto& xs = rows[y];
     NodeId row_id = create_node(~0, y);
     for (unsigned x : xs) {
-      if (x >= width) {
-        throw "";
-      }
       NodeId id = create_node(x, y);
       nodes_[col_ids_[x]].link_u(*this, nodes_[id]);
       ++sizes_[x];
