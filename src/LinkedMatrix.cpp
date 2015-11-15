@@ -43,10 +43,6 @@ std::unique_ptr<LinkedMatrix> LinkedMatrix::from_sparse_matrix(
 void LinkedMatrix::initialize_from_sparse_matrix(
     const VectorVector& rows, unsigned secondary, unsigned width)
 {
-  if (rows.empty()) {
-    return;
-  }
-
   for (auto& row : rows) {
     for (unsigned x : row) {
       width = std::max(width, x + 1);

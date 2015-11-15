@@ -12,6 +12,11 @@ TEST(LinkedMatrix_test, empty_matrix) {
   EXPECT_EQ(M->root_id(), M->D(M->root_id()));
 }
 
+TEST(LinkedMatrix_test, positive_width_without_rows) {
+  auto M = LinkedMatrix::from_sparse_matrix(1u, {});
+  EXPECT_NE(M->root_id(), M->L(M->root_id()));
+}
+
 TEST(LinkedMatrix_test, small_matrix_0) {
   //     v          v
   // > [root] <-> [col] <
