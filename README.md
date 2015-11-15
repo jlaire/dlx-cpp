@@ -98,12 +98,24 @@ A very trivial example:
 
     solutions: 1
 
+Example: Langford pairings
+==========================
+
+See [Wikipedia](https://en.wikipedia.org/wiki/Langford_pairing).
+
+    $ make examples
+    $ ./build/langford <<< '1 2 3 4 5 6 7 8'
+    Langford pairs for n = 1: 0
+    Langford pairs for n = 2: 0
+    Langford pairs for n = 3: 1
+    Langford pairs for n = 4: 1
+    Langford pairs for n = 5: 0
+    Langford pairs for n = 6: 0
+    Langford pairs for n = 7: 26
+    Langford pairs for n = 8: 150
+
 Example: Sudoku
 ===============
-
-Some interesting problems, such as Sudoku, are just exact cover in disguise.
-What makes this really interesting is that DLX is often more efficient than
-hand-written solutions!
 
 [example/sudoku](example/sudoku) can solve even pathological 17-clue Sudokus
 instantly. There is a big downloadable collection at

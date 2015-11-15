@@ -7,17 +7,20 @@ all: examples
 
 examples:
 	mkdir -p build
-	$(CXX) $(CXXFLAGS) -o build/sudoku $(LIB_SRC) example/sudoku/*.cpp
 	$(CXX) $(CXXFLAGS) -o build/dlx $(LIB_SRC) example/dlx/*.cpp
+	$(CXX) $(CXXFLAGS) -o build/sudoku $(LIB_SRC) example/sudoku/*.cpp
+	$(CXX) $(CXXFLAGS) -o build/langford $(LIB_SRC) example/langford/*.cpp
 
 build_test:
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/*.cpp -lgtest -o build/test
 	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/sudoku/*.cpp -lgtest -o build/test_sudoku
+	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/langford/*.cpp -lgtest -o build/test_langford
 
 test: build_test
 	./build/test
 	./build/test_sudoku
+	./build/test_langford
 .PHONY: test
 
 clean:
