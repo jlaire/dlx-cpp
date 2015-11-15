@@ -120,20 +120,16 @@ TEST(SudokuFormat_test, parse) {
 }
 
 TEST(SudokuFormat_test, get_values) {
-  auto type = SudokuType::make(4);
-  auto format = SudokuFormat(type);
+  EXPECT_ANY_THROW(SudokuFormat::get_values(".... .... .... ..."));
+  EXPECT_ANY_THROW(SudokuFormat::get_values(".... .... .... .... ."));
 
-  EXPECT_ANY_THROW(format.get_values(".... .... .... ..."));
-  EXPECT_ANY_THROW(format.get_values(".... .... .... .... ."));
+  EXPECT_NO_THROW(SudokuFormat::get_values(".... .... .... ...."));
+  EXPECT_NO_THROW(SudokuFormat::get_values("1234 1342 00.. ...."));
 
-  EXPECT_NO_THROW(format.get_values(".... .... .... ...."));
-  EXPECT_NO_THROW(format.get_values("1234 1342 00.. ...."));
-
-  EXPECT_NO_THROW(format.get_values("5... .... .... ...."));
-  EXPECT_NO_THROW(format.get_values("A... .... .... ...."));
-  auto xyzw_format = format.with_labels("XYZW");
-  EXPECT_NO_THROW(xyzw_format.get_values("1... .... .... ...."));
-  EXPECT_NO_THROW(xyzw_format.get_values("Z... .... .... ...."));
+  EXPECT_NO_THROW(SudokuFormat::get_values("5... .... .... ...."));
+  EXPECT_NO_THROW(SudokuFormat::get_values("A... .... .... ...."));
+  EXPECT_NO_THROW(SudokuFormat::get_values("1... .... .... ...."));
+  EXPECT_NO_THROW(SudokuFormat::get_values("Z... .... .... ...."));
 
   EXPECT_EQ(
     std::vector<unsigned>({
@@ -142,7 +138,7 @@ TEST(SudokuFormat_test, get_values) {
       0, 0, 3, 0,
       0, 0, 0, 4,
     }),
-    format.get_values(
+    SudokuFormat::get_values(
       "A.|.."
       ".B|.."
       "-----"

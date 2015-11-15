@@ -20,7 +20,7 @@ Sudoku::Sudoku(const std::string& str)
 }
 
 Sudoku::Sudoku(std::shared_ptr<SudokuType> type, const std::string& str)
-  : Sudoku(type, SudokuFormat(type).get_values(str))
+  : Sudoku(type, SudokuFormat::get_values(str))
 {
 }
 
