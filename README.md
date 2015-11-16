@@ -160,4 +160,9 @@ TODO
 
   - AlgorithmDLX: Modify `search()` to call the callback on every level, so
     that it can be used to construct the shape of the search tree.
+  - example/dlx: Option to use the feature above.
+  - example/dlx: Option to estimate the search tree with Monte Carlo.
+  - Other examples: Option to dump the generated LinkedMatrix into a file for
+    analysis. A hacky solution would be a macro that enables this within
+    LinkedMatrix itself.
   - CMake, more unit tests, more examples.
