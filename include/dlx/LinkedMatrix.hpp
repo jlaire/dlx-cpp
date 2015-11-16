@@ -60,5 +60,12 @@ private:
   };
 };
 
+inline auto LinkedMatrix::root_id() const -> NodeId { return 0; }
 inline auto LinkedMatrix::X(NodeId id) const -> unsigned { return nodes_[id].x; }
 inline auto LinkedMatrix::Y(NodeId id) const -> unsigned { return nodes_[id].y; }
+inline auto LinkedMatrix::S(NodeId id) const -> unsigned { return sizes_[X(id)]; }
+inline auto LinkedMatrix::C(NodeId id) const -> NodeId { return col_ids_[X(id)]; }
+inline auto LinkedMatrix::L(NodeId id) const -> NodeId { return nodes_[id].l; }
+inline auto LinkedMatrix::R(NodeId id) const -> NodeId { return nodes_[id].r; }
+inline auto LinkedMatrix::U(NodeId id) const -> NodeId { return nodes_[id].u; }
+inline auto LinkedMatrix::D(NodeId id) const -> NodeId { return nodes_[id].d; }

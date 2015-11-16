@@ -8,14 +8,6 @@ LinkedMatrix::LinkedMatrix() {
   assert(id == root_id());
 }
 
-unsigned LinkedMatrix::S(NodeId id) const { return sizes_[nodes_[id].x]; }
-auto LinkedMatrix::root_id() const -> NodeId { return 0; }
-auto LinkedMatrix::C(NodeId id) const -> NodeId { return col_ids_[nodes_[id].x]; }
-auto LinkedMatrix::L(NodeId id) const -> NodeId { return nodes_[id].l; }
-auto LinkedMatrix::R(NodeId id) const -> NodeId { return nodes_[id].r; }
-auto LinkedMatrix::U(NodeId id) const -> NodeId { return nodes_[id].u; }
-auto LinkedMatrix::D(NodeId id) const -> NodeId { return nodes_[id].d; }
-
 std::unique_ptr<LinkedMatrix> LinkedMatrix::from_dense_matrix(
     const VectorVector& rows, unsigned secondary)
 {
