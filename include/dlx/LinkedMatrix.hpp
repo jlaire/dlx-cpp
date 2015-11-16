@@ -17,14 +17,14 @@ public:
 
   NodeId root_id() const;
 
-  unsigned X(NodeId id) const;
-  unsigned Y(NodeId id) const;
-  unsigned S(NodeId id) const;
-  NodeId C(NodeId id) const;
-  NodeId L(NodeId id) const;
-  NodeId R(NodeId id) const;
-  NodeId U(NodeId id) const;
-  NodeId D(NodeId id) const;
+  auto X(NodeId id) const -> unsigned;
+  auto Y(NodeId id) const -> unsigned;
+  auto S(NodeId id) const -> unsigned;
+  auto C(NodeId id) const -> NodeId;
+  auto L(NodeId id) const -> NodeId;
+  auto R(NodeId id) const -> NodeId;
+  auto U(NodeId id) const -> NodeId;
+  auto D(NodeId id) const -> NodeId;
 
 private:
   LinkedMatrix();
