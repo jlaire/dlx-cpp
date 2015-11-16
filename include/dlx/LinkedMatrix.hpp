@@ -32,10 +32,9 @@ private:
   LinkedMatrix();
   void initialize_from_sparse_matrix(unsigned width, const VectorVector& rows, unsigned secondary);
 
-  struct Node;
   NodeId create_node(unsigned x, unsigned y);
-  Node& operator[](NodeId id) { return nodes_[id]; }
 
+  struct Node;
   std::vector<NodeId> col_ids_;
   std::vector<unsigned> sizes_;
   std::vector<Node> nodes_;
