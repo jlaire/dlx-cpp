@@ -8,7 +8,6 @@ LinkedMatrix::LinkedMatrix() {
   assert(id == root_id());
 }
 
-unsigned LinkedMatrix::row(NodeId id) const { return nodes_[id].y; }
 unsigned LinkedMatrix::S(NodeId id) const { return sizes_[nodes_[id].x]; }
 auto LinkedMatrix::root_id() const -> NodeId { return 0; }
 auto LinkedMatrix::C(NodeId id) const -> NodeId { return col_ids_[nodes_[id].x]; }
@@ -49,7 +48,7 @@ void LinkedMatrix::initialize_from_sparse_matrix(
   for (auto& row : rows) {
     for (unsigned x : row) {
       if (x >= width) {
-	throw "";
+        throw "";
       }
     }
   }
@@ -90,7 +89,7 @@ void LinkedMatrix::cover_column(NodeId c) {
   for (NodeId i = D(c); i != c; i = D(i)) {
     for (NodeId j = R(i); j != i; j = R(j)) {
       nodes_[j].hide_ud(*this);
-      --sizes_[nodes_[j].x];
+      --sizes_[X(j)];
     }
   }
 }
@@ -100,7 +99,7 @@ void LinkedMatrix::uncover_column(NodeId c) {
   for (NodeId i = U(c); i != c; i = U(i)) {
     for (NodeId j = L(i); j != i; j = L(j)) {
       nodes_[j].show_ud(*this);
-      ++sizes_[nodes_[j].x];
+      ++sizes_[X(j)];
     }
   }
   nodes_[c].show_lr(*this);

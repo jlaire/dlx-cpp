@@ -31,7 +31,7 @@ void AlgorithmDLX::search() {
 
   cover_column(c);
   for (auto r = D(c); r != c; r = D(r)) {
-    O.push_back(row(r));
+    O.push_back(Y(r));
     for (auto j = R(r); j != r; j = R(j))
       cover_column(j);
     search();

@@ -76,7 +76,7 @@ TEST(LinkedMatrix_test, small_matrix_1) {
   EXPECT_EQ(1, M->S(col));
   EXPECT_EQ(col, M->C(col));
   EXPECT_EQ(1, M->S(node));
-  EXPECT_EQ(0, M->row(node));
+  EXPECT_EQ(0, M->Y(node));
   EXPECT_EQ(col, M->C(node));
 }
 
@@ -103,8 +103,8 @@ TEST(LinkedMatrix_test, small_matrix_11) {
   EXPECT_EQ(1, M->S(col2));
   EXPECT_EQ(col1, M->C(node1));
   EXPECT_EQ(col2, M->C(node2));
-  EXPECT_EQ(0, M->row(node1));
-  EXPECT_EQ(0, M->row(node2));
+  EXPECT_EQ(0, M->Y(node1));
+  EXPECT_EQ(0, M->Y(node2));
 
   EXPECT_EQ(col2, M->L(root));
   EXPECT_EQ(col1, M->R(root));

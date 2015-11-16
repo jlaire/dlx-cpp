@@ -29,7 +29,7 @@ private:
   void cover_column(NodeId id) { A_->cover_column(id); }
   void uncover_column(NodeId id) { A_->uncover_column(id); }
 
-  unsigned row(NodeId id) { return A_->row(id); }
+  unsigned Y(NodeId id) { return A_->Y(id); }
   unsigned S(NodeId id) { return A_->S(id); }
   NodeId L(NodeId id) { return A_->L(id); }
   NodeId R(NodeId id) { return A_->R(id); }

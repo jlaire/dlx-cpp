@@ -19,7 +19,8 @@ public:
 
   NodeId root_id() const;
 
-  unsigned row(NodeId id) const;
+  unsigned X(NodeId id) const;
+  unsigned Y(NodeId id) const;
   unsigned S(NodeId id) const;
   NodeId C(NodeId id) const;
   NodeId L(NodeId id) const;
@@ -58,3 +59,6 @@ private:
     void link_u(LinkedMatrix& M, Node& b) { b.d = id, b.u = u; u = M[u].d = b.id; }
   };
 };
+
+inline auto LinkedMatrix::X(NodeId id) const -> unsigned { return nodes_[id].x; }
+inline auto LinkedMatrix::Y(NodeId id) const -> unsigned { return nodes_[id].y; }
