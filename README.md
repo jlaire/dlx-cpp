@@ -59,36 +59,41 @@ Example: dlx
 [example/dlx](example/dlx) is a simple command-line program that reads an exact
 cover problem from stdin and solves it.
 
-The first line should contain an integer, the number of columns, and the
-following lines contain the rows of the matrix.
+The first line should contain the number of columns, and the following lines
+contain the rows of the matrix.
 
 Output can be controlled by flags. By default, only the number of solutions is
 printed. If `-p` is given, every solution is printed on its own line by giving
-the indices of the selected rows. With `-v`, the full rows are printed and
-solutions are separated by two newlines.
+the indices of the selected rows. With `-v`, the full rows are printed.
 
-    $ make
-    $ ./build/dlx -pv < data/knuth_example.txt
-    1 0 0 1 0 0 0
-    0 0 1 0 1 1 0
-    0 1 0 0 0 0 1
+<big><pre>
+$ make
+$ ./build/dlx -pv < [data/knuth\_example.txt](data/knuth_example.txt)
+1 0 0 1 0 0 0
+0 0 1 0 1 1 0
+0 1 0 0 0 0 1
 
-    solutions: 1
+solutions: 1
+</pre></big>
 
-With `-s`, input can also be given as a sparse matrix.
+With `-s`, input can be given as a sparse matrix.
 
-    $ ./build/dlx -ps < data/knuth_example_sparse.txt 
-    3 0 4
-    solutions: 1
+<big><pre>
+$ ./build/dlx -ps < [data/knuth\_example\_sparse.txt](data/knuth_example_sparse.txt)
+3 0 4
+solutions: 1
+</pre></big>
 
 To solve a generalized exact cover problem, put the number of secondary columns
 on the first line, after the number of all columns. The default value is zero,
 in other words, a regular exact cover problem.
 
-    $ ./build/dlx -pv < data/generalized_example.txt
-    0 1 1
+<big><pre>
+$ ./build/dlx -pv < [data/generalized\_example.txt](data/generalized_example.txt)
+0 1 1
 
-    solutions: 1
+solutions: 1
+</pre></big>
 
 Example: Sudoku
 ===============
