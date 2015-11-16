@@ -3,14 +3,40 @@
 #include <assert.h>
 #include <algorithm>
 
-LinkedMatrix::LinkedMatrix() {
-  NodeId id = create_node(~0, ~0);
-  assert(id == root_id());
+LinkedMatrix::LinkedMatrix(unsigned width, const VVU& rows, unsigned secondary)
+  : col_ids_(width), sizes_(width)
+{
+  assert(secondary <= width);
+  for (const auto& row : rows) {
+    for (auto x : row) {
+      assert(x <= width);
+    }
+  }
+
+  NodeId root = create_node(~0, ~0);
+  assert(root == root_id());
+
+  for (auto x = 0u; x < width; ++x) {
+    NodeId id = create_node(x, ~0);
+    col_ids_[x] = id;
+    if (x >= secondary) {
+      nodes_[id].r = root;
+      nodes_[id].l = L(root);
+      nodes_[L(root)].r = id;
+      nodes_[root].l = id;
+    }
+  }
+
+  for (auto y = 0u; y < rows.size(); ++y) {
+    add_row(y, rows[y]);
+  }
 }
 
-auto LinkedMatrix::make_from_dense_matrix(const VVU& rows, unsigned secondary)
-  -> Ptr
-{
+auto LinkedMatrix::make(unsigned width, const VVU& rows, unsigned secondary) -> Ptr {
+  return std::unique_ptr<LinkedMatrix>(new LinkedMatrix(width, rows, secondary));
+}
+
+auto LinkedMatrix::make_from_dense_matrix(const VVU& rows, unsigned secondary) -> Ptr {
   unsigned width = rows.empty() ? 0 : rows[0].size();
   VVU sparse(rows.size());
   for (unsigned i = 0; i < rows.size(); ++i) {
@@ -26,47 +52,8 @@ auto LinkedMatrix::make_from_dense_matrix(const VVU& rows, unsigned secondary)
   return make(width, sparse, secondary);
 }
 
-auto LinkedMatrix::make(unsigned width, const VVU& rows, unsigned secondary)
-  -> Ptr
-{
-  auto lm = std::unique_ptr<LinkedMatrix>(new LinkedMatrix);
-  lm->initialize(width, rows, secondary);
-  return lm;
-}
-
-void LinkedMatrix::initialize(
-    unsigned width, const VVU& rows, unsigned secondary)
-{
-  if (secondary > width) {
-    throw "";
-  }
-  for (auto& row : rows) {
-    for (unsigned x : row) {
-      if (x >= width) {
-        throw "";
-      }
-    }
-  }
-
-  col_ids_ = std::vector<NodeId>(width);
-  sizes_ = std::vector<unsigned>(width);
-  for (unsigned x = 0; x < width; ++x) {
-    NodeId id = create_node(x, ~0);
-    col_ids_[x] = id;
-    if (x >= secondary) {
-      nodes_[id].r = root_id();
-      nodes_[id].l = L(root_id());
-      nodes_[L(root_id())].r = id;
-      nodes_[root_id()].l = id;
-    }
-  }
-
-  for (auto y = 0u; y < rows.size(); ++y) {
-    add_row(y, rows[y]);
-  }
-}
-
 void LinkedMatrix::add_row(unsigned y, const std::vector<unsigned>& xs) {
+  // TODO: What if xs isn't sorted?
   NodeId first_id = 0;
   for (auto x : xs) {
     NodeId id = create_node(x, y);

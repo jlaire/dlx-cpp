@@ -27,8 +27,7 @@ public:
   auto D(NodeId id) const -> NodeId;
 
 private:
-  LinkedMatrix();
-  void initialize(unsigned width, const VVU& rows, unsigned secondary);
+  LinkedMatrix(unsigned width, const VVU& rows, unsigned secondary);
   void add_row(unsigned y, const std::vector<unsigned>& xs);
 
   NodeId create_node(unsigned x, unsigned y);
@@ -37,18 +36,18 @@ private:
   std::vector<NodeId> col_ids_;
   std::vector<unsigned> sizes_;
   std::vector<Node> nodes_;
+};
 
-  struct Node
+struct LinkedMatrix::Node
+{
+  NodeId id;
+  unsigned x, y;
+  NodeId l, r, u, d;
+  explicit Node(NodeId id_, unsigned x_, unsigned y_)
+    : id(id_), x(x_), y(y_),
+    l(id), r(id), u(id), d(id)
   {
-    NodeId id;
-    unsigned x, y;
-    NodeId l, r, u, d;
-    explicit Node(NodeId id_, unsigned x_, unsigned y_)
-      : id(id_), x(x_), y(y_),
-      l(id), r(id), u(id), d(id)
-    {
-    }
-  };
+  }
 };
 
 inline auto LinkedMatrix::root_id() const -> NodeId { return 0; }
