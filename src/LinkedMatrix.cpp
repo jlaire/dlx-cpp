@@ -66,10 +66,6 @@ void LinkedMatrix::initialize(
   }
 
   for (unsigned y = 0; y < rows.size(); ++y) {
-    if (rows[y].empty()) {
-      continue;
-    }
-
     NodeId first_id = 0;
     for (auto x : rows[y]) {
       NodeId id = create_node(x, y);
