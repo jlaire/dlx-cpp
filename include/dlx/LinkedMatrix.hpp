@@ -15,7 +15,8 @@ public:
   void cover_column(NodeId id);
   void uncover_column(NodeId id);
 
-  NodeId root_id() const;
+  auto width() const -> unsigned;
+  auto root_id() const -> NodeId;
 
   auto X(NodeId id) const -> unsigned;
   auto Y(NodeId id) const -> unsigned;
@@ -50,6 +51,7 @@ struct LinkedMatrix::Node
   }
 };
 
+inline auto LinkedMatrix::width() const -> unsigned { return col_ids_.size(); }
 inline auto LinkedMatrix::root_id() const -> NodeId { return 0; }
 inline auto LinkedMatrix::X(NodeId id) const -> unsigned { return nodes_[id].x; }
 inline auto LinkedMatrix::Y(NodeId id) const -> unsigned { return nodes_[id].y; }

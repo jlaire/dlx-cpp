@@ -7,11 +7,6 @@ LinkedMatrix::LinkedMatrix(unsigned width, const VVU& rows, unsigned secondary)
   : col_ids_(width), sizes_(width)
 {
   assert(secondary <= width);
-  for (const auto& row : rows) {
-    for (auto x : row) {
-      assert(x <= width);
-    }
-  }
 
   NodeId root = create_node(~0, ~0);
   assert(root == root_id());
@@ -101,6 +96,7 @@ void LinkedMatrix::uncover_column(NodeId c) {
 }
 
 LinkedMatrix::NodeId LinkedMatrix::create_node(unsigned x, unsigned y) {
+  assert(x <= width() || x == ~0u);
   unsigned id = nodes_.size();
   nodes_.emplace_back(id, x, y);
   return id;
