@@ -5,14 +5,12 @@
 
 class LinkedMatrix {
 public:
-  using VectorVector = std::vector<std::vector<unsigned>>;
+  using VVU = std::vector<std::vector<unsigned>>;
+  using Ptr = std::unique_ptr<LinkedMatrix>;
   using NodeId = unsigned;
 
-  static std::unique_ptr<LinkedMatrix>
-  from_dense_matrix(const VectorVector& rows, unsigned secondary = 0);
-
-  static std::unique_ptr<LinkedMatrix>
-  from_sparse_matrix(unsigned width, const VectorVector& rows, unsigned secondary = 0);
+  static Ptr make(unsigned width, const VVU& rows, unsigned secondary = 0);
+  static Ptr make_from_dense_matrix(const VVU& rows, unsigned secondary = 0);
 
   void cover_column(NodeId id);
   void uncover_column(NodeId id);
@@ -30,7 +28,7 @@ public:
 
 private:
   LinkedMatrix();
-  void initialize_from_sparse_matrix(unsigned width, const VectorVector& rows, unsigned secondary);
+  void initialize(unsigned width, const VVU& rows, unsigned secondary);
 
   NodeId create_node(unsigned x, unsigned y);
 

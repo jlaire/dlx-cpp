@@ -8,31 +8,34 @@ LinkedMatrix::LinkedMatrix() {
   assert(id == root_id());
 }
 
-std::unique_ptr<LinkedMatrix> LinkedMatrix::from_dense_matrix(
-    const VectorVector& rows, unsigned secondary)
+auto LinkedMatrix::make_from_dense_matrix(const VVU& rows, unsigned secondary)
+  -> Ptr
 {
   unsigned width = rows.empty() ? 0 : rows[0].size();
-  VectorVector sparse(rows.size());
+  VVU sparse(rows.size());
   for (unsigned i = 0; i < rows.size(); ++i) {
+    if (rows[i].size() != width) {
+      throw "";
+    }
     for (unsigned j = 0; j < rows[i].size(); ++j) {
       if (rows[i][j]) {
         sparse[i].push_back(j);
       }
     }
   }
-  return from_sparse_matrix(width, sparse, secondary);
+  return make(width, sparse, secondary);
 }
 
-std::unique_ptr<LinkedMatrix> LinkedMatrix::from_sparse_matrix(
-    unsigned width, const VectorVector& rows, unsigned secondary)
+auto LinkedMatrix::make(unsigned width, const VVU& rows, unsigned secondary)
+  -> Ptr
 {
-  std::unique_ptr<LinkedMatrix> lm{new LinkedMatrix};
-  lm->initialize_from_sparse_matrix(width, rows, secondary);
+  auto lm = std::unique_ptr<LinkedMatrix>(new LinkedMatrix);
+  lm->initialize(width, rows, secondary);
   return lm;
 }
 
-void LinkedMatrix::initialize_from_sparse_matrix(
-    unsigned width, const VectorVector& rows, unsigned secondary)
+void LinkedMatrix::initialize(
+    unsigned width, const VVU& rows, unsigned secondary)
 {
   if (secondary > width) {
     throw "";

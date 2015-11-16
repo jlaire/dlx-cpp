@@ -84,7 +84,7 @@ Sudoku SudokuSolver::solve(const Sudoku& sudoku) const {
     return false;
   };
 
-  auto linked_matrix = LinkedMatrix::from_sparse_matrix(4 * type.size(), matrix);
+  auto linked_matrix = LinkedMatrix::make(4 * type.size(), matrix);
   AlgorithmDLX dlx(std::move(linked_matrix), callback);
   dlx.search();
 

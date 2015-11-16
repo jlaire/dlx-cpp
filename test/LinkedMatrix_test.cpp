@@ -5,7 +5,7 @@
 namespace {
 
 TEST(LinkedMatrix_test, empty_matrix) {
-  auto M = LinkedMatrix::from_dense_matrix({});
+  auto M = LinkedMatrix::make_from_dense_matrix({});
   EXPECT_EQ(M->root_id(), M->L(M->root_id()));
   EXPECT_EQ(M->root_id(), M->R(M->root_id()));
   EXPECT_EQ(M->root_id(), M->U(M->root_id()));
@@ -13,7 +13,7 @@ TEST(LinkedMatrix_test, empty_matrix) {
 }
 
 TEST(LinkedMatrix_test, positive_width_without_rows) {
-  auto M = LinkedMatrix::from_sparse_matrix(1u, {});
+  auto M = LinkedMatrix::make(1u, {});
   EXPECT_NE(M->root_id(), M->L(M->root_id()));
 }
 
@@ -22,7 +22,7 @@ TEST(LinkedMatrix_test, small_matrix_0) {
   // > [root] <-> [col] <
   //     ^          ^
 
-  auto M = LinkedMatrix::from_dense_matrix({{0}});
+  auto M = LinkedMatrix::make_from_dense_matrix({{0}});
   auto root = M->root_id();
   auto col = M->R(root);
   EXPECT_NE(root, col);
@@ -50,7 +50,7 @@ TEST(LinkedMatrix_test, small_matrix_1) {
   //            > [node] <
   //                ^
 
-  auto M = LinkedMatrix::from_dense_matrix({{1}});
+  auto M = LinkedMatrix::make_from_dense_matrix({{1}});
   auto root = M->root_id();
   auto col = M->R(root);
   auto node = M->D(col);
@@ -89,7 +89,7 @@ TEST(LinkedMatrix_test, small_matrix_11) {
   //            > [node1] <-> [node2] <
   //                ^           ^
 
-  auto M = LinkedMatrix::from_dense_matrix({{1, 1}});
+  auto M = LinkedMatrix::make_from_dense_matrix({{1, 1}});
   auto root = M->root_id();
   auto col1 = M->R(root);
   auto col2 = M->R(col1);

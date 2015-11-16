@@ -81,10 +81,10 @@ int main(int argc, char *argv[]) {
 
   std::unique_ptr<LinkedMatrix> lm;
   if (opt_sparse) {
-    lm = LinkedMatrix::from_sparse_matrix(width, input_rows, secondary_columns);
+    lm = LinkedMatrix::make(width, input_rows, secondary_columns);
   }
   else {
-    lm = LinkedMatrix::from_dense_matrix(input_rows, secondary_columns);
+    lm = LinkedMatrix::make_from_dense_matrix(input_rows, secondary_columns);
   }
 
   uint64_t solution_count = 0;

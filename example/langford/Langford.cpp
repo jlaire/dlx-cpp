@@ -19,7 +19,7 @@ Langford::Langford(unsigned n)
 
 unsigned Langford::count_solutions() const {
   auto solution_count = 0u;
-  auto lm = LinkedMatrix::from_sparse_matrix(3 * n_, rows_);
+  auto lm = LinkedMatrix::make(3 * n_, rows_);
   auto dlx = AlgorithmDLX(std::move(lm), [&](const std::vector<unsigned>& used_rows) -> bool {
     ++solution_count;
     return false;
@@ -31,7 +31,7 @@ unsigned Langford::count_solutions() const {
 
 std::vector<std::vector<unsigned>> Langford::find_solutions() const {
   auto solutions = std::vector<std::vector<unsigned>>();
-  auto lm = LinkedMatrix::from_sparse_matrix(3 * n_, rows_);
+  auto lm = LinkedMatrix::make(3 * n_, rows_);
   auto dlx = AlgorithmDLX(std::move(lm), [&](const std::vector<unsigned>& used_rows) -> bool {
     auto solution = std::vector<unsigned>(2 * n_);
     for (auto i : used_rows) {
