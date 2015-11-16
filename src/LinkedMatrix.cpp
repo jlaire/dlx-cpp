@@ -48,38 +48,41 @@ void LinkedMatrix::initialize(
     }
   }
 
-  auto link_l = [&](NodeId a, NodeId b) {
-    nodes_[b].r = a;
-    nodes_[b].l = L(a);
-    nodes_[L(a)].r = b;
-    nodes_[a].l = b;
-  };
-
   col_ids_ = std::vector<NodeId>(width);
   sizes_ = std::vector<unsigned>(width);
   for (unsigned x = 0; x < width; ++x) {
-    NodeId col_id = create_node(x, ~0);
-    col_ids_[x] = col_id;
+    NodeId id = create_node(x, ~0);
+    col_ids_[x] = id;
     if (x >= secondary) {
-      link_l(root_id(), col_id);
+      nodes_[id].r = root_id();
+      nodes_[id].l = L(root_id());
+      nodes_[L(root_id())].r = id;
+      nodes_[root_id()].l = id;
     }
   }
 
-  for (unsigned y = 0; y < rows.size(); ++y) {
-    NodeId first_id = 0;
-    for (auto x : rows[y]) {
-      NodeId id = create_node(x, y);
-      nodes_[id].d = C(id);
-      nodes_[id].u = U(C(id));
-      nodes_[U(C(id))].d = id;
-      nodes_[C(id)].u = id;
-      ++sizes_[x];
-      if (first_id == 0) {
-        first_id = id;
-      }
-      else {
-        link_l(first_id, id);
-      }
+  for (auto y = 0u; y < rows.size(); ++y) {
+    add_row(y, rows[y]);
+  }
+}
+
+void LinkedMatrix::add_row(unsigned y, const std::vector<unsigned>& xs) {
+  NodeId first_id = 0;
+  for (auto x : xs) {
+    NodeId id = create_node(x, y);
+    nodes_[id].d = C(id);
+    nodes_[id].u = U(C(id));
+    nodes_[U(C(id))].d = id;
+    nodes_[C(id)].u = id;
+    ++sizes_[x];
+    if (first_id == 0) {
+      first_id = id;
+    }
+    else {
+      nodes_[id].r = first_id;
+      nodes_[id].l = L(first_id);
+      nodes_[L(first_id)].r = id;
+      nodes_[first_id].l = id;
     }
   }
 }

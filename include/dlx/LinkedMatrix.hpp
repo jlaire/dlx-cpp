@@ -29,6 +29,7 @@ public:
 private:
   LinkedMatrix();
   void initialize(unsigned width, const VVU& rows, unsigned secondary);
+  void add_row(unsigned y, const std::vector<unsigned>& xs);
 
   NodeId create_node(unsigned x, unsigned y);
 
