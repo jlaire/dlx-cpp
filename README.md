@@ -26,7 +26,7 @@ For each r ← D[c], D[D[c]], ..., while r ≠ c,
 Uncover column c.
 ```
 
-looks like this in C++ ([AlgorithmDLX.cpp](src/AlgorithmDLX.cpp#L27)):
+... looks like this in C++ ([AlgorithmDLX.cpp](src/AlgorithmDLX.cpp)):
 
 ```
 cover_column(c);
