@@ -98,6 +98,18 @@ A very trivial example:
 
     solutions: 1
 
+Example: Sudoku
+===============
+
+This program can solve various types of Sudokus given in plaintext. See
+[example/sudoku/README.md](example/sudoku/README.md) for details.
+
+<big><pre>
+$ make examples
+$ ./build/sudoku < data/sudoku.txt
+[output](https://gist.github.com/jlaire/9195d1e5640440de5160)
+</pre></big>
+
 Example: Langford pairings
 ==========================
 
@@ -112,18 +124,6 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Langford_pairing).
     Number of unique Langford pairings for n = 4: 1
     4 1 3 1 2 4 3 2
     Number of unique Langford pairings for n = 5: 0
-
-Example: Sudoku
-===============
-
-This program can solve various types of Sudokus given in plaintext. See
-[example/sudoku/README.md](example/sudoku/README.md) for details.
-
-<big><pre>
-$ make examples
-$ ./build/sudoku < data/sudoku.txt
-[output](https://gist.github.com/jlaire/9195d1e5640440de5160)
-</pre></big>
 
 TODO
 ====
