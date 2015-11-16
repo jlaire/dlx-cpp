@@ -1,20 +1,20 @@
 #include "Langford.hpp"
 
-#include <unistd.h>
 #include <iostream>
+#include <string>
 
 int main(int argc, char **argv) {
   bool opt_verbose = false;
-  for (int opt; (opt = ::getopt(argc, argv, "v")) != -1;) {
-    if (opt == 'v') {
+  for (int i = 1; i < argc; ++i) {
+    if (argv[i] == std::string("-v")) {
       opt_verbose = true;
+      continue;
     }
-  }
 
-  for (unsigned n; std::cin >> n;) {
+    auto n = static_cast<unsigned>(std::stoi(argv[i]));
     auto langford = Langford(n);
     std::cout
-      << "Number of unique Langford pairings for n = " << n << ": "
+      << "Solutions for n=" << n << ": "
       << langford.count_solutions() << '\n';
     if (opt_verbose) {
       for (const auto& solution : langford.find_solutions()) {

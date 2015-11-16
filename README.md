@@ -147,14 +147,14 @@ Example: Langford pairings
 See [Wikipedia](https://en.wikipedia.org/wiki/Langford_pairing).
 
     $ make examples
-    $ ./build/langford -v <<< '1 2 3 4 5'
-    Number of unique Langford pairings for n = 1: 0
-    Number of unique Langford pairings for n = 2: 0
-    Number of unique Langford pairings for n = 3: 1
+    $ ./build/langford -v 1 2 3 4 5
+    Solutions for n = 1: 0
+    Solutions for n = 2: 0
+    Solutions for n = 3: 1
     3 1 2 1 3 2
-    Number of unique Langford pairings for n = 4: 1
+    Solutions for n = 4: 1
     4 1 3 1 2 4 3 2
-    Number of unique Langford pairings for n = 5: 0
+    Solutions for n = 5: 0
 
 TODO
 ====
