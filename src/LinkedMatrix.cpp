@@ -45,13 +45,20 @@ void LinkedMatrix::initialize_from_sparse_matrix(
     }
   }
 
+  auto link_l = [&](NodeId a, NodeId b) {
+    nodes_[b].r = a;
+    nodes_[b].l = L(a);
+    nodes_[L(a)].r = b;
+    nodes_[a].l = b;
+  };
+
   col_ids_ = std::vector<NodeId>(width);
   sizes_ = std::vector<unsigned>(width);
   for (unsigned x = 0; x < width; ++x) {
     NodeId col_id = create_node(x, ~0);
     col_ids_[x] = col_id;
     if (x >= secondary) {
-      nodes_[root_id()].link_l(*this, nodes_[col_id]);
+      link_l(root_id(), col_id);
     }
   }
 
@@ -63,13 +70,16 @@ void LinkedMatrix::initialize_from_sparse_matrix(
     NodeId first_id = 0;
     for (auto x : rows[y]) {
       NodeId id = create_node(x, y);
-      nodes_[col_ids_[x]].link_u(*this, nodes_[id]);
+      nodes_[id].d = C(id);
+      nodes_[id].u = U(C(id));
+      nodes_[U(C(id))].d = id;
+      nodes_[C(id)].u = id;
       ++sizes_[x];
       if (first_id == 0) {
-	first_id = id;
+        first_id = id;
       }
       else {
-	nodes_[first_id].link_l(*this, nodes_[id]);
+        link_l(first_id, id);
       }
     }
   }
@@ -77,10 +87,12 @@ void LinkedMatrix::initialize_from_sparse_matrix(
 
 void LinkedMatrix::cover_column(NodeId c) {
   c = C(c);
-  nodes_[c].hide_lr(*this);
+  nodes_[L(c)].r = R(c);
+  nodes_[R(c)].l = L(c);
   for (NodeId i = D(c); i != c; i = D(i)) {
     for (NodeId j = R(i); j != i; j = R(j)) {
-      nodes_[j].hide_ud(*this);
+      nodes_[U(j)].d = D(j);
+      nodes_[D(j)].u = U(j);
       --sizes_[X(j)];
     }
   }
@@ -90,11 +102,13 @@ void LinkedMatrix::uncover_column(NodeId c) {
   c = C(c);
   for (NodeId i = U(c); i != c; i = U(i)) {
     for (NodeId j = L(i); j != i; j = L(j)) {
-      nodes_[j].show_ud(*this);
+      nodes_[U(j)].d = j;
+      nodes_[D(j)].u = j;
       ++sizes_[X(j)];
     }
   }
-  nodes_[c].show_lr(*this);
+  nodes_[L(c)].r = c;
+  nodes_[R(c)].l = c;
 }
 
 LinkedMatrix::NodeId LinkedMatrix::create_node(unsigned x, unsigned y) {

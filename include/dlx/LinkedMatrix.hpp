@@ -50,13 +50,6 @@ private:
       l(id), r(id), u(id), d(id)
     {
     }
-
-    void hide_lr(LinkedMatrix& M) { M[l].r = r, M[r].l = l; }
-    void show_lr(LinkedMatrix& M) { M[l].r = M[r].l = id; }
-    void hide_ud(LinkedMatrix& M) { M[u].d = d, M[d].u = u; }
-    void show_ud(LinkedMatrix& M) { M[u].d = M[d].u = id; }
-    void link_l(LinkedMatrix& M, Node& b) { b.r = id, b.l = l; l = M[l].r = b.id; }
-    void link_u(LinkedMatrix& M, Node& b) { b.d = id, b.u = u; u = M[u].d = b.id; }
   };
 };
 
