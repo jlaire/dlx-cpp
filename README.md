@@ -31,7 +31,7 @@ Uncover column c.
 ```
 cover_column(c);
 for (auto r = D(c); r != c; r = D(r)) {
-  O.push_back(row(r));
+  O.push_back(Y(r));
   for (auto j = R(r); j != r; j = R(j))
     cover_column(j);
   search();
@@ -42,14 +42,22 @@ for (auto r = D(c); r != c; r = D(r)) {
 uncover_column(c);
 ```
 
-Usage
-=====
+Implementation
+==============
 
 The implementation consists of two classes, `AlgorithmDLX` and `LinkedMatrix`,
-that can be used as a library.
+that can be used as a library. There is no documentation at the moment, so take
+a look at the examples.
 
-[example/dlx](example/dlx) is a command-line program that reads an exact cover
-problem from stdin and solves it.
+`dlx` can also solve generalized exact cover problems (see Knuth's paper). The
+columns of the matrix should be sorted so that all secondary columns are on the
+left, before primary columns. N-queens is a good example of this.
+
+Example: dlx
+============
+
+[example/dlx](example/dlx) is a simple command-line program that reads an exact
+cover problem from stdin and solves it.
 
 The first line should contain an integer, the number of columns, and the
 following lines contain the rows of the matrix.
@@ -60,11 +68,6 @@ the indices of the selected rows. With `-v`, the full rows are printed and
 solutions are separated by two newlines.
 
     $ make
-    $ ./build/dlx < data/knuth_example.txt
-    solutions: 1
-    $ ./build/dlx -p < data/knuth_example.txt
-    3 0 4
-    solutions: 1
     $ ./build/dlx -pv < data/knuth_example.txt
     1 0 0 1 0 0 0
     0 0 1 0 1 1 0
@@ -72,26 +75,15 @@ solutions are separated by two newlines.
 
     solutions: 1
 
-With `-s`, input can also be given as a sparse matrix. The output of `-v` will
-also be sparse.
+With `-s`, input can also be given as a sparse matrix.
 
-    $ ./build/dlx -pvs < data/knuth_example_sparse.txt 
-    0 3
-    2 4 5
-    1 6
-
+    $ ./build/dlx -ps < data/knuth_example_sparse.txt 
+    3 0 4
     solutions: 1
 
-Generalized exact cover
-=======================
-
-`dlx` can also solve generalized exact cover problems. The columns of the
-matrix should be sorted so that all secondary columns are on the left, before
-primary columns. [example/dlx](example/dlx) supports this, and the number of
-secondary columns can be given on the first line of input, right after the
-width of the matrix. It defaults to zero, i.e., a regular exact cover problem.
-
-A very trivial example:
+To solve a generalized exact cover problem, put the number of secondary columns
+on the first line, after the number of all columns. The default value is zero,
+in other words, a regular exact cover problem.
 
     $ ./build/dlx -pv < data/generalized_example.txt
     0 1 1
@@ -113,7 +105,9 @@ $ ./build/sudoku < data/sudoku.txt
 Example: N-queens
 =================
 
-Place N queens on an NxN chessboard. This is 
+Place N queens on an NxN chessboard. This is a good example of a generalized
+exact cover problem; each diagonal must contain *at most* one queen, but zero
+is ok.
 
 ```
 $ make examples
