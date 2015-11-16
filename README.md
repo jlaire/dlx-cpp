@@ -110,6 +110,37 @@ $ ./build/sudoku < data/sudoku.txt
 [output](https://gist.github.com/jlaire/9195d1e5640440de5160)
 </pre></big>
 
+Example: N-queens
+=================
+
+Place N queens on an NxN chessboard. This is 
+
+```
+$ make examples
+$ ./build/nqueens 8 12
+Solutions for n=8: 92
+Solutions for n=12: 14200
+```
+
+```
+$ ./build/nqueens -v 1 2 3 4
+Solutions for n=1: 1
+Q
+
+Solutions for n=2: 0
+Solutions for n=3: 0
+Solutions for n=4: 2
+..Q.
+Q...
+...Q
+.Q..
+
+.Q..
+...Q
+Q...
+..Q.
+```
+
 Example: Langford pairings
 ==========================
 
