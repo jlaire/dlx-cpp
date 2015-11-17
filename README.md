@@ -31,13 +31,13 @@ Uncover column c.
 ```
 cover_column(c);
 for (auto r = D(c); r != c; r = D(r)) {
-  O.push_back(Y(r));
+  state.stack.push_back(Y(r));
   for (auto j = R(r); j != r; j = R(j))
     cover_column(j);
-  search();
+  search(state);
   for (auto j = L(r); j != r; j = L(j))
     uncover_column(j);
-  O.pop_back();
+  state.stack.pop_back();
 }
 uncover_column(c);
 ```
@@ -67,7 +67,7 @@ printed. If `-p` is given, every solution is printed on its own line by giving
 the indices of the selected rows. With `-v`, the full rows are printed.
 
 <big><pre>
-$ make
+$ make examples
 $ ./build/dlx -pv < [data/knuth\_example.txt](data/knuth_example.txt)
 1 0 0 1 0 0 0
 0 0 1 0 1 1 0

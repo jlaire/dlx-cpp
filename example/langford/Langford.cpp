@@ -18,21 +18,17 @@ Langford::Langford(unsigned n)
 }
 
 unsigned Langford::count_solutions() const {
-  auto solution_count = 0u;
   auto lm = LinkedMatrix::make(3 * n_, rows_);
-  auto dlx = AlgorithmDLX(std::move(lm), [&](const std::vector<unsigned>& used_rows) -> bool {
-    ++solution_count;
-    return false;
-  });
-  dlx.search();
-
-  return solution_count;
+  auto dlx = AlgorithmDLX(std::move(lm));
+  return dlx.count_solutions();
 }
 
 std::vector<std::vector<unsigned>> Langford::find_solutions() const {
   auto solutions = std::vector<std::vector<unsigned>>();
   auto lm = LinkedMatrix::make(3 * n_, rows_);
-  auto dlx = AlgorithmDLX(std::move(lm), [&](const std::vector<unsigned>& used_rows) -> bool {
+  auto dlx = AlgorithmDLX(std::move(lm));
+  auto solution_rows = dlx.find_solutions();
+  for (const auto& used_rows : solution_rows) {
     auto solution = std::vector<unsigned>(2 * n_);
     for (auto i : used_rows) {
       auto pos = row_data_[i].left_pos;
@@ -41,8 +37,6 @@ std::vector<std::vector<unsigned>> Langford::find_solutions() const {
       solution[pos + value + 1] = value;
     }
     solutions.emplace_back(std::move(solution));
-    return false;
-  });
-  dlx.search();
+  }
   return solutions;
 }

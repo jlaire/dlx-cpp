@@ -24,28 +24,21 @@ NQueens::NQueens(unsigned n)
 }
 
 unsigned NQueens::count_solutions() const {
-  auto solution_count = 0u;
   auto lm = LinkedMatrix::make(6 * n_ - 2, rows_, 4 * n_ - 2);
-  auto dlx = AlgorithmDLX(std::move(lm), [&](const std::vector<unsigned>& used_rows) -> bool {
-    ++solution_count;
-    return false;
-  });
-  dlx.search();
-
-  return solution_count;
+  auto dlx = AlgorithmDLX(std::move(lm));
+  return dlx.count_solutions();
 }
 
 std::vector<std::vector<unsigned>> NQueens::find_solutions() const {
   auto solutions = std::vector<std::vector<unsigned>>();
   auto lm = LinkedMatrix::make(6 * n_ - 2, rows_, 4 * n_ - 2);
-  auto dlx = AlgorithmDLX(std::move(lm), [&](const std::vector<unsigned> used_rows) -> bool {
+  auto dlx = AlgorithmDLX(std::move(lm));
+  for (const auto& used_rows : dlx.find_solutions()) {
     auto solution = std::vector<unsigned>(n_);
     for (auto i : used_rows) {
       solution[row_data_[i].y] = row_data_[i].x;
     }
     solutions.emplace_back(std::move(solution));
-    return false;
-  });
-  dlx.search();
+  }
   return solutions;
 }

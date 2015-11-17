@@ -85,8 +85,8 @@ Sudoku SudokuSolver::solve(const Sudoku& sudoku) const {
   };
 
   auto linked_matrix = LinkedMatrix::make(4 * type.size(), matrix);
-  AlgorithmDLX dlx(std::move(linked_matrix), callback);
-  dlx.search();
+  AlgorithmDLX dlx(std::move(linked_matrix));
+  dlx.search(callback);
 
   if (solutions.empty()) {
     throw std::runtime_error("No solution");

@@ -8,17 +8,19 @@
 class AlgorithmDLX {
 public:
   using Solution = std::vector<unsigned>;
-  using SolutionHandler = std::function<bool(const Solution&)>;
+  using Callback = std::function<bool(const Solution&)>;
 
-  AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A, SolutionHandler callback);
+  explicit AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A);
 
-  void search();
+  void search(Callback);
+  auto count_solutions() -> unsigned;
+  auto find_solutions() -> std::vector<Solution>;
 
 private:
   std::unique_ptr<LinkedMatrix> A_;
-  SolutionHandler callback_;
-  std::vector<unsigned> O;
-  bool stop_ = false;
+
+  struct SearchState;
+  void search(SearchState& state);
 
   using NodeId = LinkedMatrix::NodeId;
   void cover_column(NodeId id) { A_->cover_column(id); }
@@ -29,4 +31,16 @@ private:
   auto R(NodeId id) -> NodeId { return A_->R(id); }
   auto U(NodeId id) -> NodeId { return A_->U(id); }
   auto D(NodeId id) -> NodeId { return A_->D(id); }
+};
+
+struct AlgorithmDLX::SearchState
+{
+  explicit SearchState(Callback callback)
+    : callback(std::move(callback))
+  {
+  }
+
+  Callback callback;
+  std::vector<unsigned> stack;
+  bool stopped = false;
 };

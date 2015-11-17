@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
     return false;
   };
 
-  AlgorithmDLX dlx(std::move(lm), callback);
-  dlx.search();
+  AlgorithmDLX dlx(std::move(lm));
+  dlx.search(callback);
   std::cout << "solutions: " << solution_count << '\n';
 }
