@@ -71,22 +71,17 @@ Sudoku SudokuSolver::solve(const Sudoku& sudoku) const {
   }
 
   std::vector<Sudoku> solutions;
-  std::function<bool(const std::vector<unsigned>& rows)> callback;
-  callback = [&](const std::vector<unsigned>& rows) -> bool {
+  AlgorithmDLX dlx(LinkedMatrix::make(4 * type.size(), matrix));
+  for (const auto& rows : dlx.find_solutions()) {
     Sudoku solved(sudoku);
-    for (unsigned i : rows) {
+    for (auto i : rows) {
       auto pos = row_position.find(i);
       if (pos != row_position.end()) {
         solved[pos->second] = row_digit[i] + 1;
       }
     }
     solutions.push_back(std::move(solved));
-    return false;
-  };
-
-  auto linked_matrix = LinkedMatrix::make(4 * type.size(), matrix);
-  AlgorithmDLX dlx(std::move(linked_matrix));
-  dlx.search(callback);
+  }
 
   if (solutions.empty()) {
     throw std::runtime_error("No solution");
