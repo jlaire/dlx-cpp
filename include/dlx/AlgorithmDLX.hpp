@@ -8,13 +8,15 @@
 class AlgorithmDLX {
 public:
   using Solution = std::vector<unsigned>;
-  using Callback = std::function<bool(const Solution&)>;
+  using SolutionCallback = std::function<bool(const Solution&)>;
+  using NodeCallback = std::function<void(bool, const Solution&)>;
 
   explicit AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A);
 
-  void search(Callback);
+  void search(SolutionCallback);
   auto count_solutions() -> unsigned;
   auto find_solutions() -> std::vector<Solution>;
+  auto get_nodes_per_depth() -> std::vector<unsigned>;
 
 private:
   std::unique_ptr<LinkedMatrix> A_;
@@ -35,12 +37,19 @@ private:
 
 struct AlgorithmDLX::SearchState
 {
-  explicit SearchState(Callback callback)
-    : callback(std::move(callback))
+  explicit SearchState(SolutionCallback sc)
+    : SearchState(std::move(sc), NodeCallback())
   {
   }
 
-  Callback callback;
+  SearchState(SolutionCallback sc, NodeCallback nc)
+    : solution_callback(std::move(sc)),
+    node_callback(std::move(nc))
+  {
+  }
+
+  SolutionCallback solution_callback;
+  NodeCallback node_callback;
   std::vector<unsigned> stack;
   bool stopped = false;
 };

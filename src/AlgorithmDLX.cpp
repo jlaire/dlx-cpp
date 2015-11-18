@@ -23,8 +23,23 @@ auto AlgorithmDLX::find_solutions() -> std::vector<Solution> {
   return solutions;
 }
 
-void AlgorithmDLX::search(Callback callback) {
-  auto state = SearchState(std::move(callback));
+auto AlgorithmDLX::get_nodes_per_depth() -> std::vector<unsigned> {
+  auto widths = std::vector<unsigned>();
+  auto state = SearchState(
+    [](const Solution&) { return false; },
+    [&](bool, const Solution& solution) {
+      while (widths.size() <= solution.size()) {
+        widths.push_back(0);
+      }
+      ++widths[solution.size()];
+    }
+  );
+  search(state);
+  return widths;
+}
+
+void AlgorithmDLX::search(SolutionCallback solution_callback) {
+  auto state = SearchState(std::move(solution_callback));
   search(state);
 }
 
@@ -33,8 +48,12 @@ void AlgorithmDLX::search(SearchState& state) {
     return;
   }
   auto h = A_->root_id();
-  if (R(h) == h) {
-    if (state.callback(state.stack)) {
+  auto is_solved = R(h) == h;
+  if (state.node_callback) {
+    state.node_callback(is_solved, state.stack);
+  }
+  if (is_solved) {
+    if (state.solution_callback(state.stack)) {
       state.stopped = true;
     }
     return;
