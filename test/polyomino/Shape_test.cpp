@@ -7,7 +7,7 @@ std::ostream& operator<<(std::ostream& os, const Shape& shape) {
   os << '<';
   for (auto i = 0u; i < shape.bits.size(); ++i) {
     if (i > 0) {
-      os << ",";
+      os << ',';
     }
     for (auto x : shape.bits[i]) {
       os << x;
