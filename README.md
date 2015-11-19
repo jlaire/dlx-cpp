@@ -163,7 +163,7 @@ Quite slow, unfortunately.
 
     $ make examples
     $ ./build/npieces 8 8 5 5
-    Solutions for (8x8), N=5, Q=5: 16
+    Solutions for 8x8, N=5, Q=5: 16
     NN......
     ....Q...
     ......Q.
@@ -172,7 +172,7 @@ Quite slow, unfortunately.
     .......Q
     .....Q..
     ..Q.....
-    <rest snipped>
+    <snip>
 
 TODO
 ====
