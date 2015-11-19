@@ -20,6 +20,7 @@ build_test:
 	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/langford/*.cpp -lgtest -o build/test_langford
 	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/nqueens/*.cpp -lgtest -o build/test_nqueens
 	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/npieces/*.cpp -lgtest -o build/test_npieces
+	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/polyomino/*.cpp -lgtest -o build/test_polyomino
 
 test: build_test
 	./build/test
@@ -27,6 +28,7 @@ test: build_test
 	./build/test_langford
 	./build/test_nqueens
 	./build/test_npieces
+	./build/test_polyomino
 .PHONY: test
 
 clean:
