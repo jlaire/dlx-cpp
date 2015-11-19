@@ -10,7 +10,7 @@ Sudoku::Sudoku()
 }
 
 Sudoku::Sudoku(std::shared_ptr<SudokuType> type)
-  : Sudoku(type, std::vector<unsigned>(type->size(), 0))
+  : Sudoku(std::move(type), std::vector<unsigned>(type->size(), 0))
 {
 }
 
@@ -20,12 +20,12 @@ Sudoku::Sudoku(const std::string& str)
 }
 
 Sudoku::Sudoku(std::shared_ptr<SudokuType> type, const std::string& str)
-  : Sudoku(type, SudokuFormat::get_values(str))
+  : Sudoku(std::move(type), SudokuFormat::get_values(str))
 {
 }
 
 Sudoku::Sudoku(std::shared_ptr<SudokuType> type, std::vector<unsigned> values)
-  : type_(type),
+  : type_(std::move(type)),
   values_(std::move(values))
 {
 }
