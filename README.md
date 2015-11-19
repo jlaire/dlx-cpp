@@ -155,10 +155,29 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Langford_pairing).
     4 1 3 1 2 4 3 2
     Solutions for n = 5: 0
 
+Example: N-pieces
+=================
+
+Generalized version of N-queens: place N knights and Q queens on an AxB board.
+Quite slow, unfortunately.
+
+    $ make examples
+    $ ./build/npieces 8 8 5 5
+    Solutions for (8x8), N=5, Q=5: 16
+    NN......
+    ....Q...
+    ......Q.
+    NN......
+    N.......
+    .......Q
+    .....Q..
+    ..Q.....
+    <rest snipped>
+
 TODO
 ====
 
-  - example/dlx: Option to show the result of get_nodes_per_depth().
+  - example/dlx: Option to show the result of `get_nodes_per_depth()`.
   - example/dlx: Option to estimate the search tree with Monte Carlo.
   - Other examples: Option to dump the generated LinkedMatrix into a file for
     analysis. A hacky solution would be a macro that enables this within
