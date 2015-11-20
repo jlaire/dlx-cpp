@@ -1,6 +1,7 @@
 #include "SudokuGenerator.hpp"
 #include "SudokuSolver.hpp"
 
+#include <algorithm>
 #include <string>
 
 SudokuGenerator::SudokuGenerator()
@@ -41,7 +42,12 @@ Sudoku SudokuGenerator::operator()(std::shared_ptr<SudokuType> type) {
       continue;
     }
 
-    for (auto yx = 0u; yx < type->size(); ++yx) {
+    auto yxs = std::vector<unsigned>();
+    for (auto i = 0u; i < type->size(); ++i) {
+      yxs.push_back(i);
+    }
+    std::shuffle(yxs.begin(), yxs.end(), engine_);
+    for (auto yx : yxs) {
       auto d = sudoku[yx];
       if (d != 0) {
         sudoku[yx] = 0;
