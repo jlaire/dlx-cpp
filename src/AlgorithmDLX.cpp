@@ -14,11 +14,11 @@ unsigned AlgorithmDLX::count_solutions() {
   return count;
 }
 
-auto AlgorithmDLX::find_solutions() -> std::vector<Solution> {
+auto AlgorithmDLX::find_solutions(unsigned max) -> std::vector<Solution> {
   auto solutions = std::vector<Solution>();
   search([&](const Solution& solution) -> bool {
     solutions.push_back(solution);
-    return false;
+    return solutions.size() >= max;
   });
   return solutions;
 }

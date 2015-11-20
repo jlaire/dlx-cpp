@@ -15,7 +15,7 @@ public:
 
   void search(SolutionCallback);
   auto count_solutions() -> unsigned;
-  auto find_solutions() -> std::vector<Solution>;
+  auto find_solutions(unsigned max = ~0u) -> std::vector<Solution>;
   auto get_nodes_per_depth() -> std::vector<unsigned>;
 
 private:
