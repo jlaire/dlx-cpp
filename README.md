@@ -104,7 +104,7 @@ This program can solve various types of Sudokus given in plaintext. See
 <big><pre>
 $ make examples
 $ ./build/sudoku < [data/sudoku.txt](data/sudoku.txt)
-[output](https://gist.github.com/jlaire/9195d1e5640440de5160)
+[output](https://gist.github.com/jlaire/4429d93d016b73ef6511)
 </pre></big>
 
 Example: N-queens

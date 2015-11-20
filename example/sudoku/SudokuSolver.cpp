@@ -72,7 +72,7 @@ Sudoku SudokuSolver::solve(const Sudoku& sudoku) const {
 
   std::vector<Sudoku> solutions;
   AlgorithmDLX dlx(LinkedMatrix::make(4 * type.size(), matrix));
-  for (const auto& rows : dlx.find_solutions()) {
+  for (const auto& rows : dlx.find_solutions(2)) {
     Sudoku solved(sudoku);
     for (auto i : rows) {
       auto pos = row_position.find(i);

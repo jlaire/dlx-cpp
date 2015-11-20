@@ -114,32 +114,41 @@ int main(int argc, char **argv) {
       continue;
     }
 
-    auto type = SudokuType::guess(input);
-    auto format = (
-      opt_format == Format::PRESERVE ? SudokuFormat(type, input) :
-      opt_format == Format::COMPACT ? SudokuFormat::compact(type) :
-      opt_format == Format::ONELINE ? SudokuFormat::oneline(type) :
-      SudokuFormat(type)
-    );
+    try {
+      auto type = SudokuType::guess(input);
+      auto format = (
+        opt_format == Format::PRESERVE ? SudokuFormat(type, input) :
+        opt_format == Format::COMPACT ? SudokuFormat::compact(type) :
+        opt_format == Format::ONELINE ? SudokuFormat::oneline(type) :
+        SudokuFormat(type)
+      );
 
-    if (!first && opt_format != Format::ONELINE) {
-      std::cout << '\n';
-    }
-
-    auto sudoku = Sudoku(type, input);
-    input.clear();
-    auto solved = SudokuSolver().solve(sudoku);
-    if (!opt_print_solved_only && opt_side_by_side) {
-      print_side_by_side(sudoku.to_string(format), solved.to_string(format));
-      continue;
-    }
-
-    if (!opt_print_solved_only) {
-      std::cout << sudoku.to_string(format);
-      if (opt_format != Format::ONELINE) {
+      if (!first && opt_format != Format::ONELINE) {
         std::cout << '\n';
       }
+
+      auto sudoku = Sudoku(type, input);
+      auto solved = SudokuSolver().solve(sudoku);
+      if (!opt_print_solved_only && opt_side_by_side) {
+        print_side_by_side(sudoku.to_string(format), solved.to_string(format));
+        input.clear();
+        continue;
+      }
+
+      if (!opt_print_solved_only) {
+        std::cout << sudoku.to_string(format);
+        if (opt_format != Format::ONELINE) {
+          std::cout << '\n';
+        }
+      }
+      std::cout << solved.to_string(format);
     }
-    std::cout << solved.to_string(format);
+    catch (const std::exception& ex) {
+      std::cout << '\n';
+      std::cout << "ERROR! " << ex.what() << '\n';
+      std::cout << input;
+    }
+
+    input.clear();
   }
 }

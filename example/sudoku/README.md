@@ -40,7 +40,6 @@ TODO
 ====
 
   - Use proper exception types and messages.
-  - `main.cpp` should skip invalid sudokus, not crash.
   - Generate sudokus.
   - Generate random jigsaw patterns.
   - A format that uses / and \ when appropriate?
