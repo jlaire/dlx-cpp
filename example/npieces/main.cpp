@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
   for (const auto& solution : solutions) {
     for (const auto& row : solution) {
       for (auto piece : row) {
-	std::cout << chr[piece];
+        std::cout << chr[piece];
       }
       std::cout << '\n';
     }
