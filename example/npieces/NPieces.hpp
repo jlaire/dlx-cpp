@@ -38,6 +38,6 @@ private:
     unsigned y;
   };
 
-  std::vector<std::vector<unsigned>> rows_;
+  std::vector<std::vector<int>> rows_;
   std::vector<Data> row_data_;
 };
