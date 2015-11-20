@@ -20,6 +20,7 @@ public:
   const SudokuType& type() const;
   unsigned size() const;
 
+  bool is_empty() const;
   bool is_valid() const;
   bool is_solved() const;
 

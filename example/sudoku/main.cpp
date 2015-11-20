@@ -1,3 +1,4 @@
+#include "SudokuGenerator.hpp"
 #include "SudokuSolver.hpp"
 #include "SudokuType.hpp"
 
@@ -99,6 +100,7 @@ int main(int argc, char **argv) {
     }
   }
 
+  auto generator = SudokuGenerator();
   std::string input;
   bool first = true;
   for (std::string line; std::cin; first = false) {
@@ -128,6 +130,10 @@ int main(int argc, char **argv) {
       }
 
       auto sudoku = Sudoku(type, input);
+      if (sudoku.is_empty()) {
+        sudoku = generator(type);
+      }
+
       auto solved = SudokuSolver().solve(sudoku);
       if (!opt_print_solved_only && opt_side_by_side) {
         print_side_by_side(sudoku.to_string(format), solved.to_string(format));

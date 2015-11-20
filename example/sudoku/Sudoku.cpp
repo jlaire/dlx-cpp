@@ -38,6 +38,15 @@ unsigned Sudoku::size() const {
   return type_->size();
 }
 
+bool Sudoku::is_empty() const {
+  for (auto v : values_) {
+    if (v > 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool Sudoku::is_valid() const {
   unsigned n = type_->n();
   for (unsigned i = 0; i < type_->size(); ++i) {

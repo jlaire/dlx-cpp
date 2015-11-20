@@ -40,6 +40,5 @@ TODO
 ====
 
   - Use proper exception types and messages.
-  - Generate sudokus.
   - Generate random jigsaw patterns.
   - A format that uses / and \ when appropriate?
