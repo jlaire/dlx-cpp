@@ -59,7 +59,7 @@ Example: dlx
 [example/dlx](example/dlx) is a simple command-line program that reads an exact
 cover problem from stdin and solves it.
 
-The first line should contain the number of columns, and the following lines
+The first line of stdin contains the number of columns, and the following lines
 contain the rows of the matrix.
 
 Output can be controlled by flags. By default, only the number of solutions is
@@ -110,9 +110,9 @@ $ ./build/sudoku < [data/sudoku.txt](data/sudoku.txt)
 Example: N-queens
 =================
 
-Place N queens on an NxN chessboard. This is a good example of a generalized
-exact cover problem; each diagonal must contain *at most* one queen, but zero
-is ok.
+Place N queens on an NxN chessboard so that they don't attack each other. This
+is a good example of a generalized exact cover problem: each diagonal must
+contain *at most* one queen, but zero is ok.
 
 ```
 $ make examples
@@ -182,4 +182,7 @@ TODO
   - Other examples: Option to dump the generated LinkedMatrix into a file for
     analysis. A hacky solution would be a macro that enables this within
     LinkedMatrix itself.
-  - CMake, more unit tests, more examples.
+  - CMake
+  - More examples:
+    * Polyominoes
+    * Latin squares (Knuth, volume 4a)
