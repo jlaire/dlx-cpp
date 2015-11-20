@@ -98,7 +98,7 @@ solutions: 1
 Example: Sudoku
 ===============
 
-This program can solve various types of Sudokus given in plaintext. See
+This program can solve and generate various types of Sudokus. See
 [example/sudoku/README.md](example/sudoku/README.md) for details.
 
 <big><pre>
