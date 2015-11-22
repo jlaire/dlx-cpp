@@ -8,46 +8,12 @@ Knuth's paper gives a very readable explanation of the problem, the algorithm,
 and several applications. I think it's still the best place to start.
 http://arxiv.org/pdf/cs/0011047v1.pdf
 
-To make the code easy to follow, it matches the paper quite closely (to a
-fault).
-
-The core loop of the algorithm (page 5):
-
-```
-Cover column c.
-For each r ← D[c], D[D[c]], ..., while r ≠ c,
-  set O[k] ← r;
-  for each j ← R[r], R[R[r]], ..., while j ≠ r,
-    cover column j;
-  search(k + 1);
-  set r ← O[k] and c ← C[r];
-  for each j ← L[r], L[L[r]], ..., while j ≠ r,
-    uncover column j.
-Uncover column c.
-```
-
-... looks like this in C++ ([AlgorithmDLX.cpp](src/AlgorithmDLX.cpp)):
-
-```
-cover_column(c);
-for (auto r = D(c); r != c; r = D(r)) {
-  state.stack.push_back(Y(r));
-  for (auto j = R(r); j != r; j = R(j))
-    cover_column(j);
-  search(state);
-  for (auto j = L(r); j != r; j = L(j))
-    uncover_column(j);
-  state.stack.pop_back();
-}
-uncover_column(c);
-```
-
 Implementation
 ==============
 
 The implementation consists of two classes, `AlgorithmDLX` and `LinkedMatrix`,
-that can be used as a library. There is no documentation at the moment, so take
-a look at the examples.
+defined under [include/dlx/](include/dlx/) and [src/](src/). There is no
+documentation at the moment, so take a look at the examples.
 
 `dlx` can also solve generalized exact cover problems (see Knuth's paper). The
 columns of the matrix should be sorted so that all secondary columns are on the
@@ -177,11 +143,11 @@ Quite slow, unfortunately.
 TODO
 ====
 
-  - example/dlx: Option to show the result of `get_nodes_per_depth()`.
+  - example/dlx: Option to print `result.nodes_at_depth`.
   - example/dlx: Option to estimate the search tree with Monte Carlo.
   - Other examples: Option to dump the generated LinkedMatrix into a file for
-    analysis. A hacky solution would be a macro that enables this within
-    LinkedMatrix itself.
+    analysis. A hacky solution would be an environment variable that enables
+    this within LinkedMatrix itself.
   - CMake
   - More examples:
     * Polyominoes
