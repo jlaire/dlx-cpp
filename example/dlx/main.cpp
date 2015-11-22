@@ -25,8 +25,9 @@ int main(int argc, char *argv[]) {
   bool opt_print_solutions = false;
   bool opt_verbose = false;
   bool opt_sparse = false;
+  bool opt_print_tree = false;
 
-  for (int opt; (opt = getopt(argc, argv, "pvs")) != -1;) {
+  for (int opt; (opt = getopt(argc, argv, "pvst")) != -1;) {
     switch (opt) {
     case 'p':
       opt_print_solutions = true;
@@ -38,8 +39,11 @@ int main(int argc, char *argv[]) {
     case 's':
       opt_sparse = true;
       break;
+    case 't':
+      opt_print_tree = true;
+      break;
     default:
-      std::cerr << "Bug in getopt loop! Unexpected char: " << opt << '\n';
+      std::cerr << "Unexpected option: '" << opt << "'\n";
       return 1;
     }
   }
@@ -99,4 +103,11 @@ int main(int argc, char *argv[]) {
     }
   }
   std::cout << "solutions: " << result.number_of_solutions << '\n';
+
+  if (opt_print_tree) {
+    std::cout << '\n';
+    for (auto i = 0u; i < result.nodes_at_depth.size(); ++i) {
+      std::cout << "Nodes at depth " << i << ": " << result.nodes_at_depth[i] << '\n';
+    }
+  }
 }

@@ -139,8 +139,7 @@ Quite slow, unfortunately.
 TODO
 ====
 
-  - example/dlx: Option to print `result.nodes_at_depth`.
-  - example/dlx: Option to estimate the search tree with Monte Carlo.
+  - AlgorithmDLX: Option to estimate the search tree with Monte Carlo.
   - Other examples: Option to dump the generated LinkedMatrix into a file for
     analysis. A hacky solution would be an environment variable that enables
     this within LinkedMatrix itself.
