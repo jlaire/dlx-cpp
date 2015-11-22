@@ -1,5 +1,7 @@
 #include <dlx/AlgorithmDLX.hpp>
 
+#include <stdlib.h>
+
 AlgorithmDLX::AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A)
   : A_(std::move(A))
 {
@@ -21,6 +23,22 @@ auto AlgorithmDLX::find_solutions(unsigned max) -> std::vector<Solution> {
     return solutions.size() >= max;
   });
   return solutions;
+}
+
+auto AlgorithmDLX::find_random_solution() -> Solution {
+  auto solutions = std::vector<Solution>();
+  auto state = SearchState(
+    [&](const Solution& solution) -> bool {
+      solutions.push_back(solution);
+      return true;
+    }
+  );
+  state.random_column = true;
+  search(state);
+  if (solutions.empty()) {
+    throw std::runtime_error("");
+  }
+  return solutions[0];
 }
 
 auto AlgorithmDLX::get_nodes_per_depth() -> std::vector<unsigned> {
@@ -59,16 +77,24 @@ void AlgorithmDLX::search(SearchState& state) {
     return;
   }
 
-  unsigned min_size = ~0;
-  auto c = h;
+  auto cs = std::vector<NodeId>();
   for (auto j = R(h); j != h; j = R(j)) {
-    if (S(j) < min_size) {
-      min_size = S(j);
-      c = j;
+    if (!cs.empty() && S(j) < S(cs[0])) {
+      cs.clear();
+    }
+    if (cs.empty() || S(j) == S(cs[0])) {
+      cs.push_back(j);
     }
   }
-  if (min_size < 1) {
+  if (S(cs[0]) < 1) {
     return;
+  }
+
+  auto c = cs[0];
+  if (state.random_column) {
+    static bool init = (::srand(::time(0)), true);
+    (void)init;
+    c = cs[::rand() % cs.size()];
   }
 
   cover_column(c);

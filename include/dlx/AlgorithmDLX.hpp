@@ -17,6 +17,7 @@ public:
   auto count_solutions() -> unsigned;
   auto find_solutions(unsigned max = ~0u) -> std::vector<Solution>;
   auto get_nodes_per_depth() -> std::vector<unsigned>;
+  auto find_random_solution() -> Solution;
 
 private:
   std::unique_ptr<LinkedMatrix> A_;
@@ -52,4 +53,5 @@ struct AlgorithmDLX::SearchState
   NodeCallback node_callback;
   std::vector<unsigned> stack;
   bool stopped = false;
+  bool random_column = false;
 };
