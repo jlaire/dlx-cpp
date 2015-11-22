@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
   auto generator = SudokuGenerator();
   std::string input;
   bool first = true;
-  for (std::string line; std::cin; first = false) {
+  for (std::string line; std::cin;) {
     if (std::getline(std::cin, line) && !line.empty()) {
       input += line;
       if (!opt_one_sudoku_per_line) {
@@ -128,6 +128,7 @@ int main(int argc, char **argv) {
       if (!first && opt_format != Format::ONELINE) {
         std::cout << '\n';
       }
+      first = false;
 
       auto sudoku = Sudoku(type, input);
       if (sudoku.is_empty()) {
