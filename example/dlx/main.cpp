@@ -25,9 +25,8 @@ int main(int argc, char *argv[]) {
   bool opt_print_solutions = false;
   bool opt_verbose = false;
   bool opt_sparse = false;
-  bool opt_running_count = false;
 
-  for (int opt; (opt = getopt(argc, argv, "pvsr")) != -1;) {
+  for (int opt; (opt = getopt(argc, argv, "pvs")) != -1;) {
     switch (opt) {
     case 'p':
       opt_print_solutions = true;
@@ -38,9 +37,6 @@ int main(int argc, char *argv[]) {
       break;
     case 's':
       opt_sparse = true;
-      break;
-    case 'r':
-      opt_running_count = true;
       break;
     default:
       std::cerr << "Bug in getopt loop! Unexpected char: " << opt << '\n';
@@ -87,8 +83,9 @@ int main(int argc, char *argv[]) {
     lm = LinkedMatrix::make_from_dense_matrix(input_rows, secondary_columns);
   }
 
-  uint64_t solution_count = 0;
-  auto callback = [&](const std::vector<unsigned>& row_indices) -> bool {
+  AlgorithmDLX dlx(std::move(lm));
+  auto result = dlx.search({});
+  for (const auto& row_indices : result.solutions) {
     if (opt_print_solutions) {
       if (opt_verbose) {
         for (unsigned i : row_indices) {
@@ -100,16 +97,6 @@ int main(int argc, char *argv[]) {
         print_range(row_indices);
       }
     }
-
-    ++solution_count;
-    if (opt_running_count && (solution_count & (solution_count - 1)) == 0) {
-      std::cerr << "... solutions found: " << solution_count << '\n';
-    }
-
-    return false;
-  };
-
-  AlgorithmDLX dlx(std::move(lm));
-  dlx.search(callback);
-  std::cout << "solutions: " << solution_count << '\n';
+  }
+  std::cout << "solutions: " << result.number_of_solutions << '\n';
 }
