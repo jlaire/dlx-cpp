@@ -10,7 +10,7 @@ SudokuFormat::SudokuFormat(std::string format)
 }
 
 SudokuFormat::SudokuFormat(std::shared_ptr<SudokuType> type)
-  : SudokuFormat(std::move(type), default_template(*type))
+  : SudokuFormat(type, default_template(*type))
 {
 }
 
@@ -42,7 +42,7 @@ SudokuFormat SudokuFormat::compact(std::shared_ptr<SudokuType> type) {
 }
 
 SudokuFormat SudokuFormat::oneline(std::shared_ptr<SudokuType> type) {
-  return SudokuFormat(std::move(type), std::string(type->size(), '.') + '\n');
+  return SudokuFormat(type, std::string(type->size(), '.') + '\n');
 }
 
 SudokuFormat SudokuFormat::with_labels(const std::string& str) const {
