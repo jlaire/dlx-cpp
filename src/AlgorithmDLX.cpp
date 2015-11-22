@@ -34,6 +34,12 @@ void AlgorithmDLX::search(Result& result, const Options& options, SearchState& s
   if (state.stopped) {
     return;
   }
+
+  while (result.nodes_at_depth.size() <= state.stack.size()) {
+    result.nodes_at_depth.push_back(0);
+  }
+  ++result.nodes_at_depth[state.stack.size()];
+
   auto h = A_->root_id();
   if (R(h) == h) {
     ++result.number_of_solutions;
