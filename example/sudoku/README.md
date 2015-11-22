@@ -42,9 +42,8 @@ Examples
 
 <big><pre>
 ./build/sudoku < [data/sudoku.txt](/data/sudoku.txt)
-./build/sudoku -s -f compact < [data/sudoku.txt](/data/sudoku.txt)
-./build/sudoku -v -f oneline < [data/sudoku.txt](/data/sudoku.txt)
 ./build/sudoku -s -l -f oneline < [sudoku17](http://staffhome.ecm.uwa.edu.au/~00013890/sudoku17) > sudoku17\_solutions
+yes . | head -n81 | ./build/sudoku -f default
 </pre><big>
 
 TODO
