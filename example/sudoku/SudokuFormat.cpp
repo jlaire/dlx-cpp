@@ -101,7 +101,8 @@ std::string SudokuFormat::to_string() const {
 
 std::string SudokuFormat::to_string(const std::vector<unsigned>& values) const {
   if (values.size() != type_->size()) {
-    throw std::invalid_argument("to_string(): wrong number of values");
+    throw std::invalid_argument("to_string(): wrong number of values ("
+      + std::to_string(values.size()) + " vs. " + std::to_string(type_->size()) + ')');
   }
 
   std::string result = template_;
