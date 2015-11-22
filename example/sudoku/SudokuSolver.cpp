@@ -8,6 +8,14 @@
 #include <vector>
 
 Sudoku SudokuSolver::solve(const Sudoku& sudoku) const {
+  return solve_impl(sudoku, false);
+}
+
+Sudoku SudokuSolver::random_solution(const Sudoku& sudoku) const {
+  return solve_impl(sudoku, true);
+}
+
+Sudoku SudokuSolver::solve_impl(const Sudoku& sudoku, bool randomized) const {
   if (!sudoku.is_valid()) {
     throw std::runtime_error("solve(): Invalid sudoku");
   }
@@ -70,9 +78,18 @@ Sudoku SudokuSolver::solve(const Sudoku& sudoku) const {
     }
   }
 
-  std::vector<Sudoku> solutions;
   AlgorithmDLX dlx(LinkedMatrix::make(4 * type.size(), matrix));
-  for (const auto& rows : dlx.find_solutions(2)) {
+  auto options = AlgorithmDLX::Options();
+  if (randomized) {
+    static std::random_device rd;
+    static auto engine = std::mt19937(rd());
+    options.choose_random_column = randomized;
+    options.random_engine = &engine;
+  }
+  options.max_solutions = randomized ? 1 : 2;
+  auto result = dlx.search(options);
+  auto solutions = std::vector<Sudoku>();
+  for (const auto& rows : result.solutions) {
     Sudoku solved(sudoku);
     for (auto i : rows) {
       auto pos = row_position.find(i);

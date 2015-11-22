@@ -12,41 +12,16 @@ SudokuGenerator::SudokuGenerator()
 }
 
 Sudoku SudokuGenerator::operator()(std::shared_ptr<SudokuType> type) {
-  // It might be faster to start with solved Sudoku and remove digits, instead
-  // of starting with an empty grid and adding them.
-  //
-  // But for that we need a way to generate solved Sudokus of any type.
+  auto sudoku = SudokuSolver().random_solution(Sudoku(type));
 
-  auto randint = std::uniform_int_distribution<unsigned>(0, type->n() - 1);
-  auto sudoku = Sudoku(type);
+  auto yxs = std::vector<unsigned>();
+  for (auto i = 0u; i < type->size(); ++i) {
+    yxs.push_back(i);
+  }
 
   for (;;) {
-    auto y = randint(engine_);
-    auto x = randint(engine_);
-    auto d = 1 + randint(engine_);
-    auto yx = y * type->n() + x;
-    auto prev = sudoku[yx];
-    sudoku[yx] = d;
-    if (!sudoku.is_valid()) {
-      sudoku[yx] = prev;
-      continue;
-    }
-
-    auto count = count_solutions(sudoku);
-    if (count == 0) {
-      sudoku[yx] = prev;
-      continue;
-    }
-
-    if (count != 1) {
-      continue;
-    }
-
-    auto yxs = std::vector<unsigned>();
-    for (auto i = 0u; i < type->size(); ++i) {
-      yxs.push_back(i);
-    }
     std::shuffle(yxs.begin(), yxs.end(), engine_);
+    auto deletions = 0u;
     for (auto yx : yxs) {
       auto d = sudoku[yx];
       if (d != 0) {
@@ -54,9 +29,14 @@ Sudoku SudokuGenerator::operator()(std::shared_ptr<SudokuType> type) {
         if (count_solutions(sudoku) != 1) {
           sudoku[yx] = d;
         }
+        else {
+          ++deletions;
+        }
       }
     }
-    return sudoku;
+    if (deletions == 0) {
+      return sudoku;
+    }
   }
 }
 
