@@ -10,7 +10,7 @@ Sudoku::Sudoku()
 }
 
 Sudoku::Sudoku(std::shared_ptr<SudokuType> type)
-  : Sudoku(std::move(type), std::vector<unsigned>(type->size(), 0))
+  : Sudoku(type, std::vector<unsigned>(type->size(), 0))
 {
 }
 
