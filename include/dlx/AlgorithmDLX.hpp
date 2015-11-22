@@ -4,26 +4,39 @@
 
 #include <stdint.h>
 #include <functional>
+#include <limits>
+#include <random>
 
 class AlgorithmDLX {
 public:
   using Solution = std::vector<unsigned>;
-  using SolutionCallback = std::function<bool(const Solution&)>;
-  using NodeCallback = std::function<void(bool, const Solution&)>;
+
+  struct Options
+  {
+    bool choose_random_column = false;
+    bool get_solutions = true;
+    unsigned max_solutions = std::numeric_limits<unsigned>::max();
+    std::mt19937 *random_engine = nullptr;
+  };
+
+  struct Result
+  {
+    unsigned number_of_solutions = 0;
+    std::vector<Solution> solutions;
+    std::vector<unsigned> nodes_at_depth;
+  };
 
   explicit AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A);
 
-  void search(SolutionCallback);
+  auto search(const Options&) -> Result;
   auto count_solutions() -> unsigned;
   auto find_solutions(unsigned max = ~0u) -> std::vector<Solution>;
-  auto get_nodes_per_depth() -> std::vector<unsigned>;
-  auto find_random_solution() -> Solution;
 
 private:
   std::unique_ptr<LinkedMatrix> A_;
 
   struct SearchState;
-  void search(SearchState& state);
+  void search(Result& result, const Options& options, SearchState& state);
 
   using NodeId = LinkedMatrix::NodeId;
   void cover_column(NodeId id) { A_->cover_column(id); }
@@ -38,20 +51,6 @@ private:
 
 struct AlgorithmDLX::SearchState
 {
-  explicit SearchState(SolutionCallback sc)
-    : SearchState(std::move(sc), NodeCallback())
-  {
-  }
-
-  SearchState(SolutionCallback sc, NodeCallback nc)
-    : solution_callback(std::move(sc)),
-    node_callback(std::move(nc))
-  {
-  }
-
-  SolutionCallback solution_callback;
-  NodeCallback node_callback;
   std::vector<unsigned> stack;
   bool stopped = false;
-  bool random_column = false;
 };
