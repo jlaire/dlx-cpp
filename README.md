@@ -37,9 +37,7 @@ $ make examples
 $ ./build/dlx -pv < [data/knuth\_example.txt](data/knuth_example.txt)
 1 0 0 1 0 0 0
 0 0 1 0 1 1 0
-0 1 0 0 0 0 1
-
-solutions: 1
+0 1 0 0 0 0 1<br><br>solutions: 1
 </pre></big>
 
 With `-s`, input can be given as a sparse matrix.
@@ -56,9 +54,7 @@ in other words, a regular exact cover problem.
 
 <big><pre>
 $ ./build/dlx -pv < [data/generalized\_example.txt](data/generalized_example.txt)
-0 1 1
-
-solutions: 1
+0 1 1<br><br>solutions: 1
 </pre></big>
 
 Example: Sudoku
