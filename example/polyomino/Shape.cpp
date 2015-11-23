@@ -14,32 +14,32 @@ Shape::Shape(std::initializer_list<std::vector<unsigned>> bits)
 }
 
 Shape::Shape(char name, std::vector<std::vector<unsigned>> bs)
-  : name(name),
-  bits(std::move(bs)),
-  width(bits.empty() ? 0 : bits[0].size()),
-  height(bits.size())
+  : name_(name),
+  bits_(std::move(bs)),
+  width_(bits_.empty() ? 0 : bits_[0].size()),
+  height_(bits_.size())
 {
-  for (const auto& row : bits) {
-    assert(row.size() == width);
+  for (const auto& row : bits_) {
+    assert(row.size() == width_);
   }
 }
 
 Shape Shape::rotate() const {
-  auto rows = std::vector<std::vector<unsigned>>(width, std::vector<unsigned>(height));
-  for (auto y = 0u; y < height; ++y) {
-    for (auto x = 0u; x < width; ++x) {
-      rows[x][height - y - 1] = bits[y][x];
+  auto rows = std::vector<std::vector<unsigned>>(width_, std::vector<unsigned>(height_));
+  for (auto y = 0u; y < height_; ++y) {
+    for (auto x = 0u; x < width_; ++x) {
+      rows[x][height_ - y - 1] = bits_[y][x];
     }
   }
-  return Shape(name, rows);
+  return Shape(name_, rows);
 }
 
 Shape Shape::reflect() const {
-  auto rows = bits;
+  auto rows = bits_;
   for (auto& row : rows) {
     std::reverse(row.begin(), row.end());
   }
-  return Shape(name, rows);
+  return Shape(name_, rows);
 }
 
 std::vector<Shape> Shape::rotations() const {
@@ -70,14 +70,34 @@ std::vector<Shape> Shape::variations() const {
   return vars;
 }
 
-bool operator==(const Shape& a, const Shape& b) {
-  return a.bits == b.bits;
+char Shape::name() const {
+  return name_;
 }
 
-bool operator!=(const Shape& a, const Shape& b) {
-  return !(a == b);
+unsigned Shape::width() const {
+  return width_;
 }
 
-bool operator<(const Shape& a, const Shape& b) {
-  return a.bits < b.bits;
+unsigned Shape::height() const {
+  return height_;
+}
+
+unsigned Shape::size() const {
+  return width_ * height_;
+}
+
+bool Shape::operator[](unsigned yx) const {
+  return bits_[yx / width_][yx % width_];
+}
+
+bool Shape::operator==(const Shape& rhs) const {
+  return bits_ == rhs.bits_;
+}
+
+bool Shape::operator!=(const Shape& rhs) const {
+  return !(*this == rhs);
+}
+
+bool Shape::operator<(const Shape& rhs) const {
+  return bits_ < rhs.bits_;
 }

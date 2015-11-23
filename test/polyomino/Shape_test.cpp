@@ -5,13 +5,11 @@
 
 std::ostream& operator<<(std::ostream& os, const Shape& shape) {
   os << '<';
-  for (auto i = 0u; i < shape.bits.size(); ++i) {
-    if (i > 0) {
-      os << ',';
+  for (auto y = 0u; y < shape.height(); ++y) {
+    for (auto x = 0u; x < shape.width(); ++x) {
+      os << ".x"[shape[y * shape.width() + x]];
     }
-    for (auto x : shape.bits[i]) {
-      os << x;
-    }
+    os << ',';
   }
   os << '>';
   return os;

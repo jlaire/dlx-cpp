@@ -2,8 +2,9 @@
 
 #include <vector>
 
-struct Shape
+class Shape
 {
+public:
   Shape();
   Shape(std::initializer_list<std::vector<unsigned>> bits);
   Shape(char name, std::vector<std::vector<unsigned>> bits);
@@ -14,12 +15,19 @@ struct Shape
   auto reflections() const -> std::vector<Shape>;
   auto variations() const -> std::vector<Shape>;
 
-  char name;
-  std::vector<std::vector<unsigned>> bits;
-  unsigned width;
-  unsigned height;
-};
+  auto name() const -> char;
+  auto width() const -> unsigned;
+  auto height() const -> unsigned;
+  auto size() const -> unsigned;
 
-bool operator==(const Shape&, const Shape&);
-bool operator!=(const Shape&, const Shape&);
-bool operator<(const Shape&, const Shape&);
+  bool operator[](unsigned yx) const;
+  bool operator==(const Shape&) const;
+  bool operator!=(const Shape&) const;
+  bool operator<(const Shape&) const;
+
+private:
+  char name_;
+  std::vector<std::vector<unsigned>> bits_;
+  unsigned width_;
+  unsigned height_;
+};
