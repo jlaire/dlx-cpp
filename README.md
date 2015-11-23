@@ -136,6 +136,12 @@ Quite slow, unfortunately.
     ..Q.....
     <snip>
 
+Example: Polyominoes
+====================
+
+`./build/polyomino` prints all tilings of a 6x10 rectangle with the 12
+pentomino pieces.
+
 TODO
 ====
 
@@ -146,5 +152,4 @@ TODO
     this within the dlx library itself.
   - CMake
   - More examples:
-    * Polyominoes
     * Latin squares (Knuth, volume 4a)
