@@ -12,6 +12,7 @@ examples:
 	$(CXX) $(CXXFLAGS) -o build/langford $(LIB_SRC) example/langford/*.cpp
 	$(CXX) $(CXXFLAGS) -o build/nqueens $(LIB_SRC) example/nqueens/*.cpp
 	$(CXX) $(CXXFLAGS) -o build/npieces $(LIB_SRC) example/npieces/*.cpp
+	$(CXX) $(CXXFLAGS) -o build/polyomino $(LIB_SRC) example/polyomino/*.cpp
 
 build_test:
 	mkdir -p build
