@@ -1,5 +1,6 @@
 #pragma once
 
+#include <dlx/ExactCoverProblem.hpp>
 #include <vector>
 
 class NPieces
@@ -38,6 +39,6 @@ private:
     unsigned y;
   };
 
-  std::vector<std::vector<unsigned>> rows_;
+  ExactCoverProblem problem_;
   std::vector<Data> row_data_;
 };

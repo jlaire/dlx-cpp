@@ -3,8 +3,8 @@
 #include <assert.h>
 #include <stdexcept>
 
-AlgorithmDLX::AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A)
-  : A_(std::move(A))
+AlgorithmDLX::AlgorithmDLX(const ExactCoverProblem& problem)
+  : A_(problem)
 {
 }
 
@@ -18,6 +18,10 @@ auto AlgorithmDLX::find_solutions(unsigned max) -> std::vector<Solution> {
   auto options = Options();
   options.max_solutions = max;
   return search(options).solutions;
+}
+
+auto AlgorithmDLX::search() -> Result {
+  return search({});
 }
 
 auto AlgorithmDLX::search(const Options& options) -> Result {
@@ -40,7 +44,7 @@ void AlgorithmDLX::search(Result& result, const Options& options, SearchState& s
   }
   ++result.nodes_at_depth[state.stack.size()];
 
-  auto h = A_->root_id();
+  auto h = A_.root_id();
   if (R(h) == h) {
     ++result.number_of_solutions;
     if (options.get_solutions) {

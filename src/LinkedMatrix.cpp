@@ -3,18 +3,16 @@
 #include <assert.h>
 #include <algorithm>
 
-LinkedMatrix::LinkedMatrix(unsigned width, const VVU& rows, unsigned secondary)
-  : col_ids_(width), sizes_(width)
+LinkedMatrix::LinkedMatrix(const ExactCoverProblem& problem)
+  : col_ids_(problem.width()), sizes_(problem.width())
 {
-  assert(secondary <= width);
-
   NodeId root = create_node(~0, ~0);
   assert(root == root_id());
 
-  for (auto x = 0u; x < width; ++x) {
+  for (auto x = 0u; x < col_ids_.size(); ++x) {
     NodeId id = create_node(x, ~0);
     col_ids_[x] = id;
-    if (x >= secondary) {
+    if (x >= problem.secondary_columns()) {
       nodes_[id].r = root;
       nodes_[id].l = L(root);
       nodes_[L(root)].r = id;
@@ -22,33 +20,12 @@ LinkedMatrix::LinkedMatrix(unsigned width, const VVU& rows, unsigned secondary)
     }
   }
 
-  for (auto y = 0u; y < rows.size(); ++y) {
-    add_row(y, rows[y]);
+  for (auto y = 0u; y < problem.rows().size(); ++y) {
+    add_row(y, problem.rows()[y]);
   }
-}
-
-auto LinkedMatrix::make(unsigned width, const VVU& rows, unsigned secondary) -> Ptr {
-  return std::unique_ptr<LinkedMatrix>(new LinkedMatrix(width, rows, secondary));
-}
-
-auto LinkedMatrix::make_from_dense_matrix(const VVU& rows, unsigned secondary) -> Ptr {
-  unsigned width = rows.empty() ? 0 : rows[0].size();
-  VVU sparse(rows.size());
-  for (unsigned i = 0; i < rows.size(); ++i) {
-    if (rows[i].size() != width) {
-      throw "";
-    }
-    for (unsigned j = 0; j < rows[i].size(); ++j) {
-      if (rows[i][j]) {
-        sparse[i].push_back(j);
-      }
-    }
-  }
-  return make(width, sparse, secondary);
 }
 
 void LinkedMatrix::add_row(unsigned y, const std::vector<unsigned>& xs) {
-  // TODO: What if xs isn't sorted?
   NodeId first_id = 0;
   for (auto x : xs) {
     NodeId id = create_node(x, y);

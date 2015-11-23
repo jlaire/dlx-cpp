@@ -6,8 +6,7 @@ namespace {
 
 TEST(AlgorithmDLX_test, no_rows) {
   auto rows = std::vector<std::vector<unsigned>>();
-  auto lm = LinkedMatrix::make(1u, rows);
-  auto dlx = AlgorithmDLX(std::move(lm));
+  auto dlx = AlgorithmDLX(ExactCoverProblem(1, rows));
   EXPECT_EQ(0u, dlx.count_solutions());
 }
 

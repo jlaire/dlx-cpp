@@ -79,16 +79,11 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  std::unique_ptr<LinkedMatrix> lm;
-  if (opt_sparse) {
-    lm = LinkedMatrix::make(width, input_rows, secondary_columns);
-  }
-  else {
-    lm = LinkedMatrix::make_from_dense_matrix(input_rows, secondary_columns);
-  }
+  auto problem = opt_sparse ? ExactCoverProblem(width, input_rows, secondary_columns)
+    : ExactCoverProblem::dense(input_rows, secondary_columns);
 
-  AlgorithmDLX dlx(std::move(lm));
-  auto result = dlx.search({});
+  AlgorithmDLX dlx(problem);
+  auto result = dlx.search();
   for (const auto& row_indices : result.solutions) {
     if (opt_print_solutions) {
       if (opt_verbose) {

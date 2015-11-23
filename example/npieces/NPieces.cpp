@@ -37,6 +37,8 @@ NPieces::NPieces(unsigned width, unsigned height, unsigned knights, unsigned que
   auto A = width_ * height_;
   auto P = knights_ + queens_;
 
+  problem_ = ExactCoverProblem((2 * A + 1) * P, 2 * A * P);
+
   auto piece_type = [&](unsigned p) -> Piece {
     return p < knights_ ? Piece::Knight : Piece::Queen;
   };
@@ -73,24 +75,18 @@ NPieces::NPieces(unsigned width, unsigned height, unsigned knights, unsigned que
         }
       }
       std::sort(columns.begin(), columns.end());
-      rows_.push_back(std::move(columns));
+      problem_.add_row(std::move(columns));
     }
   }
 }
 
 unsigned NPieces::count_solutions() const {
-  auto A = width_ * height_;
-  auto P = knights_ + queens_;
-  auto lm = LinkedMatrix::make((2 * A + 1) * P, rows_, 2 * A * P);
-  auto dlx = AlgorithmDLX(std::move(lm));
+  auto dlx = AlgorithmDLX(problem_);
   return dlx.count_solutions();
 }
 
 auto NPieces::find_solutions() const -> std::vector<Solution> {
-  auto A = width_ * height_;
-  auto P = knights_ + queens_;
-  auto lm = LinkedMatrix::make((2 * A + 1) * P, rows_, 2 * A * P);
-  auto dlx = AlgorithmDLX(std::move(lm));
+  auto dlx = AlgorithmDLX(problem_);
   auto solutions = std::vector<Solution>();
   for (const auto& used_rows : dlx.find_solutions()) {
     auto solution = Solution(height_, std::vector<Piece>(width_, Piece::None));

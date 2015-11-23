@@ -1,16 +1,13 @@
 #pragma once
 
-#include <memory>
+#include <dlx/ExactCoverProblem.hpp>
 #include <vector>
 
 class LinkedMatrix {
 public:
-  using VVU = std::vector<std::vector<unsigned>>;
-  using Ptr = std::unique_ptr<LinkedMatrix>;
   using NodeId = unsigned;
 
-  static Ptr make(unsigned width, const VVU& rows, unsigned secondary = 0);
-  static Ptr make_from_dense_matrix(const VVU& rows, unsigned secondary = 0);
+  explicit LinkedMatrix(const ExactCoverProblem& problem);
 
   void cover_column(NodeId id);
   void uncover_column(NodeId id);
@@ -28,7 +25,6 @@ public:
   auto D(NodeId id) const -> NodeId;
 
 private:
-  LinkedMatrix(unsigned width, const VVU& rows, unsigned secondary);
   void add_row(unsigned y, const std::vector<unsigned>& xs);
 
   NodeId create_node(unsigned x, unsigned y);

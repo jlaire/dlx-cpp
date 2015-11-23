@@ -139,10 +139,11 @@ Quite slow, unfortunately.
 TODO
 ====
 
+  - ExactCoverProblem: Export in Knuth's format for benchmarking.
   - AlgorithmDLX: Option to estimate the search tree with Monte Carlo.
-  - Other examples: Option to dump the generated LinkedMatrix into a file for
+  - Other examples: Option to dump the exact cover proble into a file for
     analysis. A hacky solution would be an environment variable that enables
-    this within LinkedMatrix itself.
+    this within the dlx library itself.
   - CMake
   - More examples:
     * Polyominoes

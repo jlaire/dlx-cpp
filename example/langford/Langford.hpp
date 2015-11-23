@@ -1,5 +1,6 @@
 #pragma once
 
+#include <dlx/ExactCoverProblem.hpp>
 #include <vector>
 
 class Langford
@@ -7,8 +8,8 @@ class Langford
 public:
   explicit Langford(unsigned n);
 
-  auto count_solutions() const -> unsigned;
-  auto find_solutions() const -> std::vector<std::vector<unsigned>>;
+  auto problem() const -> const ExactCoverProblem&;
+  auto make_solution(const std::vector<unsigned>& used_rows) const -> std::vector<unsigned>;
 
 private:
   struct Placement {
@@ -17,6 +18,6 @@ private:
   };
 
   unsigned n_;
-  std::vector<std::vector<unsigned>> rows_;
   std::vector<Placement> row_data_;
+  ExactCoverProblem problem_;
 };

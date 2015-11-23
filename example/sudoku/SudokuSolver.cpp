@@ -78,7 +78,7 @@ Sudoku SudokuSolver::solve_impl(const Sudoku& sudoku, bool randomized) const {
     }
   }
 
-  AlgorithmDLX dlx(LinkedMatrix::make(4 * type.size(), matrix));
+  AlgorithmDLX dlx(ExactCoverProblem(4 * type.size(), matrix));
   auto options = AlgorithmDLX::Options();
   if (randomized) {
     static std::random_device rd;

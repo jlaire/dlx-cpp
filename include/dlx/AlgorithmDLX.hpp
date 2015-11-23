@@ -26,27 +26,28 @@ public:
     std::vector<unsigned> nodes_at_depth;
   };
 
-  explicit AlgorithmDLX(std::unique_ptr<LinkedMatrix>&& A);
+  explicit AlgorithmDLX(const ExactCoverProblem& problem);
 
+  auto search() -> Result;
   auto search(const Options&) -> Result;
   auto count_solutions() -> unsigned;
   auto find_solutions(unsigned max = ~0u) -> std::vector<Solution>;
 
 private:
-  std::unique_ptr<LinkedMatrix> A_;
+  LinkedMatrix A_;
 
   struct SearchState;
   void search(Result& result, const Options& options, SearchState& state);
 
   using NodeId = LinkedMatrix::NodeId;
-  void cover_column(NodeId id) { A_->cover_column(id); }
-  void uncover_column(NodeId id) { A_->uncover_column(id); }
-  auto Y(NodeId id) -> unsigned { return A_->Y(id); }
-  auto S(NodeId id) -> unsigned { return A_->S(id); }
-  auto L(NodeId id) -> NodeId { return A_->L(id); }
-  auto R(NodeId id) -> NodeId { return A_->R(id); }
-  auto U(NodeId id) -> NodeId { return A_->U(id); }
-  auto D(NodeId id) -> NodeId { return A_->D(id); }
+  void cover_column(NodeId id) { A_.cover_column(id); }
+  void uncover_column(NodeId id) { A_.uncover_column(id); }
+  auto Y(NodeId id) -> unsigned { return A_.Y(id); }
+  auto S(NodeId id) -> unsigned { return A_.S(id); }
+  auto L(NodeId id) -> NodeId { return A_.L(id); }
+  auto R(NodeId id) -> NodeId { return A_.R(id); }
+  auto U(NodeId id) -> NodeId { return A_.U(id); }
+  auto D(NodeId id) -> NodeId { return A_.D(id); }
 };
 
 struct AlgorithmDLX::SearchState
