@@ -11,9 +11,9 @@ http://arxiv.org/pdf/cs/0011047v1.pdf
 Implementation
 ==============
 
-The implementation consists of two classes, `AlgorithmDLX` and `LinkedMatrix`,
-defined under [include/dlx/](include/dlx/) and [src/](src/). There is no
-documentation at the moment, so take a look at the examples.
+The implementation consists of a few classes defined under
+[include/dlx/](include/dlx/) and [src/](src/). There is no documentation at the
+moment, so take a look at the examples.
 
 `dlx` can also solve generalized exact cover problems (see Knuth's paper). The
 columns of the matrix should be sorted so that all secondary columns are on the
@@ -141,7 +141,7 @@ TODO
 
   - ExactCoverProblem: Export in Knuth's format for benchmarking.
   - AlgorithmDLX: Option to estimate the search tree with Monte Carlo.
-  - Other examples: Option to dump the exact cover proble into a file for
+  - Other examples: Option to export the exact cover problem into a file for
     analysis. A hacky solution would be an environment variable that enables
     this within the dlx library itself.
   - CMake
