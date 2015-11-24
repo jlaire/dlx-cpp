@@ -39,10 +39,10 @@ void AlgorithmDLX::search(Result& result, const Options& options, SearchState& s
     return;
   }
 
-  while (result.nodes_at_depth.size() <= state.stack.size()) {
-    result.nodes_at_depth.push_back(0);
+  while (result.profile.size() <= state.stack.size()) {
+    result.profile.push_back(0);
   }
-  ++result.nodes_at_depth[state.stack.size()];
+  ++result.profile[state.stack.size()];
 
   auto h = A_.root_id();
   if (R(h) == h) {

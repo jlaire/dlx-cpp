@@ -101,8 +101,8 @@ int main(int argc, char *argv[]) {
 
   if (opt_print_tree) {
     std::cout << '\n';
-    for (auto i = 0u; i < result.nodes_at_depth.size(); ++i) {
-      std::cout << "Nodes at depth " << i << ": " << result.nodes_at_depth[i] << '\n';
+    for (auto i = 0u; i < result.profile.size(); ++i) {
+      std::cout << "Nodes at depth " << i << ": " << result.profile[i] << '\n';
     }
   }
 }

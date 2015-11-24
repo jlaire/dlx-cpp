@@ -158,9 +158,9 @@ TODO
 
   - ExactCoverProblem: Export in Knuth's format for benchmarking.
   - AlgorithmDLX: Option to estimate the search tree with Monte Carlo.
-  - All examples: Option to export the exact cover problem into a file for
-    analysis. A hacky solution would be an environment variable that enables
-    this within the dlx library itself.
+  - All examples: Option to export the exact cover problem. A hacky solution
+    would be an environment variable that enables this within the dlx library
+    itself.
   - CMake
   - More examples:
     * Latin squares (Knuth, volume 4a)

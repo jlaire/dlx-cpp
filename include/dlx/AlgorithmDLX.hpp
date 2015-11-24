@@ -23,7 +23,7 @@ public:
   {
     unsigned number_of_solutions = 0;
     std::vector<Solution> solutions;
-    std::vector<unsigned> nodes_at_depth;
+    std::vector<unsigned> profile;
   };
 
   explicit AlgorithmDLX(const ExactCoverProblem& problem);
