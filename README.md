@@ -139,7 +139,19 @@ Quite slow, unfortunately.
 Example: Polyominoes
 ====================
 
-`./build/polyomino` prints all solutions to Scott's pentomino problem.
+The code can solve any polyomino puzzle, but for now the executable simply
+prints all solutions to Scott's pentomino problem:
+
+    $ make examples
+    $ ./build/polyomino | head -n8
+    LLXCCVVV
+    LXXXCVZZ
+    LNXCCVZY
+    LNT  ZZY
+    NNT  WYY
+    NTTTWWFY
+    PPPWWFFF
+    PPIIIIIF
 
 TODO
 ====
