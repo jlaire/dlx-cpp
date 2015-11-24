@@ -24,6 +24,67 @@ Shape::Shape(char name, std::vector<std::vector<unsigned>> bs)
   }
 }
 
+std::vector<Shape> Shape::pentominoes() {
+  return {
+    Shape('I', {
+      {1, 1, 1, 1, 1}
+    }),
+
+    Shape('N', {
+      {1, 1, 1, 0},
+      {0, 0, 1, 1},
+    }),
+    Shape('L', {
+      {1, 1, 1, 1},
+      {1, 0, 0, 0},
+    }),
+    Shape('Y', {
+      {1, 1, 1, 1},
+      {0, 1, 0, 0},
+    }),
+
+    Shape('P', {
+      {1, 1, 1},
+      {1, 1, 0},
+    }),
+    Shape('C', {
+      {1, 1, 1},
+      {1, 0, 1},
+    }),
+
+    Shape('V', {
+      {1, 1, 1},
+      {1, 0, 0},
+      {1, 0, 0},
+    }),
+    Shape('T', {
+      {1, 1, 1},
+      {0, 1, 0},
+      {0, 1, 0},
+    }),
+    Shape('F', {
+      {1, 1, 0},
+      {0, 1, 1},
+      {0, 1, 0},
+    }),
+    Shape('Z', {
+      {1, 1, 0},
+      {0, 1, 0},
+      {0, 1, 1},
+    }),
+    Shape('W', {
+      {1, 1, 0},
+      {0, 1, 1},
+      {0, 0, 1},
+    }),
+    Shape('X', {
+      {0, 1, 0},
+      {1, 1, 1},
+      {0, 1, 0},
+    }),
+  };
+}
+
 Shape Shape::rotate() const {
   auto rows = std::vector<std::vector<unsigned>>(width_, std::vector<unsigned>(height_));
   for (auto y = 0u; y < height_; ++y) {

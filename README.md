@@ -139,15 +139,14 @@ Quite slow, unfortunately.
 Example: Polyominoes
 ====================
 
-`./build/polyomino` prints all tilings of a 6x10 rectangle with the 12
-pentomino pieces.
+`./build/polyomino` prints all solutions to Scott's pentomino problem.
 
 TODO
 ====
 
   - ExactCoverProblem: Export in Knuth's format for benchmarking.
   - AlgorithmDLX: Option to estimate the search tree with Monte Carlo.
-  - Other examples: Option to export the exact cover problem into a file for
+  - All examples: Option to export the exact cover problem into a file for
     analysis. A hacky solution would be an environment variable that enables
     this within the dlx library itself.
   - CMake

@@ -3,11 +3,19 @@
 #include <dlx/AlgorithmDLX.hpp>
 
 int main() {
-  auto pentomino = Polyomino();
-  auto problem = pentomino.problem();
-  auto result = AlgorithmDLX(problem).search();
+  auto scotts_problem = Polyomino(Shape::pentominoes(), {
+    {1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 1, 1, 0, 0, 1, 1, 1},
+    {1, 1, 1, 0, 0, 1, 1, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1},
+  });
+  auto result = AlgorithmDLX(scotts_problem.problem()).search();
   for (const auto& used_rows : result.solutions) {
-    auto solution = pentomino.make_solution(used_rows);
+    auto solution = scotts_problem.make_solution(used_rows);
     for (const auto& line : solution) {
       std::cout << line << '\n';
     }

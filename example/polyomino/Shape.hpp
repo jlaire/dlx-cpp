@@ -9,6 +9,8 @@ public:
   Shape(std::initializer_list<std::vector<unsigned>> bits);
   Shape(char name, std::vector<std::vector<unsigned>> bits);
 
+  static auto pentominoes() -> std::vector<Shape>;
+
   auto rotate() const -> Shape;
   auto reflect() const -> Shape;
   auto rotations() const -> std::vector<Shape>;
