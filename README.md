@@ -162,5 +162,6 @@ TODO
     would be an environment variable that enables this within the dlx library
     itself.
   - CMake
+  - Polyomino: Find unique solutions.
   - More examples:
     * Latin squares (Knuth, volume 4a)
