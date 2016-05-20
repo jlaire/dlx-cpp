@@ -1,6 +1,7 @@
 #include <dlx/ExactCoverProblem.hpp>
 
 #include <algorithm>
+#include <stdexcept>
 
 ExactCoverProblem::ExactCoverProblem(unsigned width, unsigned secondary_columns)
   : ExactCoverProblem(width, {}, secondary_columns)
