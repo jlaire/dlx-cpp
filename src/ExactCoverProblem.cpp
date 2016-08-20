@@ -59,7 +59,7 @@ auto ExactCoverProblem::width() const -> unsigned {
   return width_;
 }
 
-auto ExactCoverProblem::rows() const -> std::vector<std::vector<unsigned>> {
+auto ExactCoverProblem::rows() const -> const std::vector<std::vector<unsigned>>& {
   return rows_;
 }
 

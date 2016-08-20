@@ -23,7 +23,7 @@ public:
   );
 
   auto width() const -> unsigned;
-  auto rows() const -> std::vector<std::vector<unsigned>>;
+  auto rows() const -> const std::vector<std::vector<unsigned>>&;
   auto secondary_columns() const -> unsigned;
 
   void add_row(std::vector<unsigned> row);
